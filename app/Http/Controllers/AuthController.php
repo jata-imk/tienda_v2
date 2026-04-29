@@ -26,7 +26,7 @@ class AuthController extends Controller
      *
      * @unauthenticated
      *
-     * @bodyParam usurrio string required Nombre de usuario. Example: suriel.dzul
+     * @bodyParam usuario string required Nombre de usuario. Example: suriel.dzul
      * @bodyParam pass string required Contraseña en texto plano. Example: suriel2024
      *
      * @response 200 scenario="Login exitoso" {
@@ -67,19 +67,19 @@ class AuthController extends Controller
      * }
      *
      * @response 422 scenario="Campos faltantes" {
-     *   "message": "The usurrio field is required.",
-     *   "errors": { "usurrio": ["The usurrio field is required."] }
+     *   "message": "The usuario field is required.",
+     *   "errors": { "usuario": ["The usuario field is required."] }
      * }
      */
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'usurrio' => 'required|string',
+            'usuario' => 'required|string',
             'pass'    => 'required|string',
         ]);
 
         $result = $this->authService->login(
-            $request->input('usurrio'),
+            $request->input('usuario'),
             $request->input('pass')
         );
 

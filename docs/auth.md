@@ -11,17 +11,16 @@ Content-Type: application/json
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `usurrio` | string | sí | Nombre de usuario (campo `username` en BD) |
+| `usuario` | string | sí | Nombre de usuario (campo `username` en BD) |
 | `pass` | string | sí | Contraseña en texto plano |
 
 ```json
 {
-  "usurrio": "suriel.dzul",
+  "usuario": "suriel.dzul",
   "pass": "suriel2024"
 }
 ```
 
-> El campo se llama `usurrio` (con typo) porque así lo define el cliente en el JSON de referencia.
 
 ## Respuesta exitosa (200)
 

@@ -159,21 +159,21 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'The usurrio field is required.'
+                  message: 'The usuario field is required.'
                   errors:
-                    usurrio:
-                      - 'The usurrio field is required.'
+                    usuario:
+                      - 'The usuario field is required.'
                 properties:
                   message:
                     type: string
-                    example: 'The usurrio field is required.'
+                    example: 'The usuario field is required.'
                   errors:
                     type: object
                     properties:
-                      usurrio:
+                      usuario:
                         type: array
                         example:
-                          - 'The usurrio field is required.'
+                          - 'The usuario field is required.'
                         items:
                           type: string
       tags:
@@ -185,7 +185,7 @@ paths:
             schema:
               type: object
               properties:
-                usurrio:
+                usuario:
                   type: string
                   description: 'Nombre de usuario.'
                   example: suriel.dzul
@@ -194,7 +194,7 @@ paths:
                   description: 'Contraseña en texto plano.'
                   example: suriel2024
               required:
-                - usurrio
+                - usuario
                 - pass
       security: []
   /api/usuarios:

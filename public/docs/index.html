@@ -151,7 +151,7 @@ Si el token expiró, se genera uno nuevo y se cierra la sesión anterior.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"usurrio\": \"suriel.dzul\",
+    \"usuario\": \"suriel.dzul\",
     \"pass\": \"suriel2024\"
 }"
 </code></pre></div>
@@ -168,7 +168,7 @@ const headers = {
 };
 
 let body = {
-    "usurrio": "suriel.dzul",
+    "usuario": "suriel.dzul",
     "pass": "suriel2024"
 };
 
@@ -241,10 +241,10 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The usurrio field is required.&quot;,
+    &quot;message&quot;: &quot;The usuario field is required.&quot;,
     &quot;errors&quot;: {
-        &quot;usurrio&quot;: [
-            &quot;The usurrio field is required.&quot;
+        &quot;usuario&quot;: [
+            &quot;The usuario field is required.&quot;
         ]
     }
 }</code>
@@ -323,12 +323,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>usurrio</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>usuario</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="usurrio"                data-endpoint="POSTapi-login"
+                              name="usuario"                data-endpoint="POSTapi-login"
                value="suriel.dzul"
                data-component="body">
     <br>
