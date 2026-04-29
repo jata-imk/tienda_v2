@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "fe9ec3da-bd29-419b-ba60-5a2bbde7fe88",
+        "_postman_id": "e282bf8f-a538-40d8-a094-1c90e7374a7e",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -72,6 +72,226 @@
                             "code": 422,
                             "body": "{\n  \"message\": \"The usurrio field is required.\",\n  \"errors\": { \"usurrio\": [\"The usurrio field is required.\"] }\n}",
                             "name": "Campos faltantes"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Usuarios",
+            "description": "\nGesti\u00f3n de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador.",
+            "item": [
+                {
+                    "name": "Listar usuarios",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retorna todos los usuarios registrados en el sistema."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"result\": \"ok\",\n  \"message\": \"Usuarios obtenidos.\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"administrador\",\n      \"status\": \"activo\",\n      \"dateCreation\": \"2024-01-01 00:00:00\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Juan\",\"first_name\":\"P\u00e9rez\",\"last_name\":\"L\u00f3pez\",\"username\":\"juan.perez\",\"email\":\"juan@empresa.com\",\"password\":\"secreto123\",\"user_type_id\":1,\"status\":\"activo\"}"
+                        },
+                        "description": "Crea un nuevo usuario en el sistema."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"result\":\"ok\",\"message\":\"Usuario creado.\",\"data\":{\"id\":2,\"nombre\":\"Juan\",\"primerApellido\":\"P\u00e9rez\",\"segundoApellido\":\"L\u00f3pez\",\"usuario\":\"juan.perez\",\"email\":\"juan@empresa.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"The username has already been taken.\",\"errors\":{\"username\":[\"The username has already been taken.\"]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Ver usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retorna los datos de un usuario espec\u00edfico."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"result\":\"ok\",\"message\":\"Usuario obtenido.\",\"data\":{\"id\":1,\"nombre\":\"Suriel\",\"primerApellido\":\"Dzul\",\"segundoApellido\":\"Dzul\",\"usuario\":\"suriel.dzul\",\"email\":\"dzulsuriel@gmail.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Juan\",\"first_name\":\"P\u00e9rez\",\"last_name\":\"L\u00f3pez\",\"username\":\"juan.perez2\",\"email\":\"juan2@empresa.com\",\"password\":\"nuevapass123\",\"user_type_id\":1,\"status\":\"activo\"}"
+                        },
+                        "description": "Actualiza los datos de un usuario. Todos los campos son opcionales excepto los que se quieran cambiar.\nPara cambiar la contrase\u00f1a, incluir el campo `password`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"result\":\"ok\",\"message\":\"Usuario actualizado.\",\"data\":{\"id\":1,\"nombre\":\"Juan\",\"primerApellido\":\"P\u00e9rez\",\"segundoApellido\":\"L\u00f3pez\",\"usuario\":\"juan.perez2\",\"email\":\"juan2@empresa.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Desactivar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Cambia el status del usuario a `inactivo`. No elimina el registro (soft-delete por status)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"result\":\"ok\",\"message\":\"Usuario desactivado.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "name": ""
                         }
                     ]
                 }

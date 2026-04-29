@@ -32,6 +32,12 @@ php artisan scribe:generate    # Regenerar docs públicas y Postman collection
 - [Autenticación](docs/auth.md) — Login, JWT, sesiones, usuarios
 - [Base de datos](docs/database.md) — Esquema de tablas y relaciones
 
+## Documentación por módulo
+
+- [Autenticación](docs/auth.md)
+- [Usuarios](docs/usuarios.md)
+- [Base de datos](docs/database.md)
+
 ## Docs públicas (Scribe)
 
 Generadas en `public/docs/`. Incluyen:

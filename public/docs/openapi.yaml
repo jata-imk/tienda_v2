@@ -10,6 +10,9 @@ tags:
   -
     name: Autenticación
     description: "\nEndpoints para el manejo de sesiones de usuario."
+  -
+    name: Usuarios
+    description: "\nGestión de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador."
 paths:
   /api/login:
     post:
@@ -194,3 +197,487 @@ paths:
                 - usurrio
                 - pass
       security: []
+  /api/usuarios:
+    get:
+      summary: 'Listar usuarios'
+      operationId: listarUsuarios
+      description: 'Retorna todos los usuarios registrados en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Usuarios obtenidos.'
+                  data:
+                    -
+                      id: 1
+                      nombre: Suriel
+                      primerApellido: Dzul
+                      segundoApellido: Dzul
+                      usuario: suriel.dzul
+                      email: dzulsuriel@gmail.com
+                      tipoUsuario: administrador
+                      status: activo
+                      dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Usuarios obtenidos.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        nombre: Suriel
+                        primerApellido: Dzul
+                        segundoApellido: Dzul
+                        usuario: suriel.dzul
+                        email: dzulsuriel@gmail.com
+                        tipoUsuario: administrador
+                        status: activo
+                        dateCreation: '2024-01-01 00:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        nombre:
+                          type: string
+                          example: Suriel
+                        primerApellido:
+                          type: string
+                          example: Dzul
+                        segundoApellido:
+                          type: string
+                          example: Dzul
+                        usuario:
+                          type: string
+                          example: suriel.dzul
+                        email:
+                          type: string
+                          example: dzulsuriel@gmail.com
+                        tipoUsuario:
+                          type: string
+                          example: administrador
+                        status:
+                          type: string
+                          example: activo
+                        dateCreation:
+                          type: string
+                          example: '2024-01-01 00:00:00'
+      tags:
+        - Usuarios
+    post:
+      summary: 'Crear usuario'
+      operationId: crearUsuario
+      description: 'Crea un nuevo usuario en el sistema.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Usuario creado.'
+                  data:
+                    id: 2
+                    nombre: Juan
+                    primerApellido: Pérez
+                    segundoApellido: López
+                    usuario: juan.perez
+                    email: juan@empresa.com
+                    tipoUsuario: administrador
+                    status: activo
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Usuario creado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      nombre:
+                        type: string
+                        example: Juan
+                      primerApellido:
+                        type: string
+                        example: Pérez
+                      segundoApellido:
+                        type: string
+                        example: López
+                      usuario:
+                        type: string
+                        example: juan.perez
+                      email:
+                        type: string
+                        example: juan@empresa.com
+                      tipoUsuario:
+                        type: string
+                        example: administrador
+                      status:
+                        type: string
+                        example: activo
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The username has already been taken.'
+                  errors:
+                    username:
+                      - 'The username has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The username has already been taken.'
+                  errors:
+                    type: object
+                    properties:
+                      username:
+                        type: array
+                        example:
+                          - 'The username has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nombre.
+                  example: Juan
+                first_name:
+                  type: string
+                  description: 'Primer apellido.'
+                  example: Pérez
+                last_name:
+                  type: string
+                  description: 'Segundo apellido.'
+                  example: López
+                username:
+                  type: string
+                  description: 'Nombre de usuario único.'
+                  example: juan.perez
+                email:
+                  type: string
+                  description: 'Correo electrónico único.'
+                  example: juan@empresa.com
+                password:
+                  type: string
+                  description: 'Contraseña (mínimo 8 caracteres).'
+                  example: secreto123
+                user_type_id:
+                  type: integer
+                  description: 'ID del tipo de usuario.'
+                  example: 1
+                status:
+                  type: string
+                  description: 'optional Estado inicial. Valores: activo, inactivo.'
+                  example: activo
+              required:
+                - name
+                - first_name
+                - last_name
+                - username
+                - email
+                - password
+                - user_type_id
+  '/api/usuarios/{id}':
+    get:
+      summary: 'Ver usuario'
+      operationId: verUsuario
+      description: 'Retorna los datos de un usuario específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Usuario obtenido.'
+                  data:
+                    id: 1
+                    nombre: Suriel
+                    primerApellido: Dzul
+                    segundoApellido: Dzul
+                    usuario: suriel.dzul
+                    email: dzulsuriel@gmail.com
+                    tipoUsuario: administrador
+                    status: activo
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Usuario obtenido.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: Suriel
+                      primerApellido:
+                        type: string
+                        example: Dzul
+                      segundoApellido:
+                        type: string
+                        example: Dzul
+                      usuario:
+                        type: string
+                        example: suriel.dzul
+                      email:
+                        type: string
+                        example: dzulsuriel@gmail.com
+                      tipoUsuario:
+                        type: string
+                        example: administrador
+                      status:
+                        type: string
+                        example: activo
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: error
+                  message: 'Usuario no encontrado.'
+                  data: null
+                properties:
+                  result:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Usuario no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Usuarios
+    put:
+      summary: 'Actualizar usuario'
+      operationId: actualizarUsuario
+      description: "Actualiza los datos de un usuario. Todos los campos son opcionales excepto los que se quieran cambiar.\nPara cambiar la contraseña, incluir el campo `password`."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Usuario actualizado.'
+                  data:
+                    id: 1
+                    nombre: Juan
+                    primerApellido: Pérez
+                    segundoApellido: López
+                    usuario: juan.perez2
+                    email: juan2@empresa.com
+                    tipoUsuario: administrador
+                    status: activo
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Usuario actualizado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: Juan
+                      primerApellido:
+                        type: string
+                        example: Pérez
+                      segundoApellido:
+                        type: string
+                        example: López
+                      usuario:
+                        type: string
+                        example: juan.perez2
+                      email:
+                        type: string
+                        example: juan2@empresa.com
+                      tipoUsuario:
+                        type: string
+                        example: administrador
+                      status:
+                        type: string
+                        example: activo
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: error
+                  message: 'Usuario no encontrado.'
+                  data: null
+                properties:
+                  result:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Usuario no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Usuarios
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'optional Nombre.'
+                  example: Juan
+                first_name:
+                  type: string
+                  description: 'optional Primer apellido.'
+                  example: Pérez
+                last_name:
+                  type: string
+                  description: 'optional Segundo apellido.'
+                  example: López
+                username:
+                  type: string
+                  description: 'optional Nombre de usuario único.'
+                  example: juan.perez2
+                email:
+                  type: string
+                  description: 'optional Correo electrónico único.'
+                  example: juan2@empresa.com
+                password:
+                  type: string
+                  description: 'optional Nueva contraseña (mínimo 8 caracteres).'
+                  example: nuevapass123
+                  nullable: true
+                user_type_id:
+                  type: integer
+                  description: 'optional ID del tipo de usuario.'
+                  example: 1
+                status:
+                  type: string
+                  description: 'optional Estado. Valores: activo, inactivo.'
+                  example: activo
+    delete:
+      summary: 'Desactivar usuario'
+      operationId: desactivarUsuario
+      description: 'Cambia el status del usuario a `inactivo`. No elimina el registro (soft-delete por status).'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Usuario desactivado.'
+                  data: null
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Usuario desactivado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: error
+                  message: 'Usuario no encontrado.'
+                  data: null
+                properties:
+                  result:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Usuario no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Usuarios
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID del usuario.'
+        example: 1
+        required: true
+        schema:
+          type: integer
