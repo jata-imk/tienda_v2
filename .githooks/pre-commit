@@ -1,0 +1,18 @@
+#!/bin/sh
+# Regenera la documentación Scribe si cambiaron rutas o controladores.
+# Solo corre cuando hay cambios relevantes para no ralentizar cada commit.
+
+CHANGED=$(git diff --cached --name-only | grep -E "^(routes/|app/Http/Controllers/|app/Services/)" | wc -l)
+
+if [ "$CHANGED" -gt 0 ]; then
+    echo "[docs] Cambios en rutas/controladores detectados — regenerando docs..."
+    php artisan scribe:generate --quiet
+
+    if [ $? -ne 0 ]; then
+        echo "[docs] Error al generar docs. Verifica que el servidor esté configurado."
+        exit 1
+    fi
+
+    git add public/docs/
+    echo "[docs] Docs actualizadas y agregadas al commit."
+fi

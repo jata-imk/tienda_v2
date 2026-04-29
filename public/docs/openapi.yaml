@@ -1,0 +1,196 @@
+openapi: 3.0.3
+info:
+  title: 'TiendaBackend API Documentation'
+  description: 'Backend API del sistema de ventas Tienda. Módulo de autenticación y gestión de sesiones.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Autenticación
+    description: "\nEndpoints para el manejo de sesiones de usuario."
+paths:
+  /api/login:
+    post:
+      summary: 'Inicio de sesión'
+      operationId: inicioDeSesin
+      description: "Valida credenciales, gestiona la sesión y retorna un JWT válido por 24 horas\njunto con los datos del usuario y la empresa.\n\nSi el usuario ya tiene una sesión vigente con token activo, se reutiliza el mismo JWT.\nSi el token expiró, se genera uno nuevo y se cierra la sesión anterior."
+      parameters: []
+      responses:
+        200:
+          description: 'Login exitoso'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  result: ok
+                  message: 'Inicio de sesión exitoso'
+                  data:
+                    token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                    empresa:
+                      nombre: 'Guayaberas Lopez Silva'
+                      logo: null
+                      modoOscuro: false
+                      configImp: []
+                      fechaUpdate: '2024-01-01 00:00:00'
+                      settings:
+                        grids: []
+                    user:
+                      nombre: Suriel
+                      primerApellido: Dzul
+                      segundoApellido: Dzul
+                      usuario: suriel.dzul
+                      email: dzulsuriel@gmail.com
+                      tipoUsuario: '1'
+                      permisos: []
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: 'Inicio de sesión exitoso'
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                      empresa:
+                        type: object
+                        properties:
+                          nombre:
+                            type: string
+                            example: 'Guayaberas Lopez Silva'
+                          logo:
+                            type: string
+                            example: null
+                            nullable: true
+                          modoOscuro:
+                            type: boolean
+                            example: false
+                          configImp:
+                            type: array
+                            example: []
+                          fechaUpdate:
+                            type: string
+                            example: '2024-01-01 00:00:00'
+                          settings:
+                            type: object
+                            properties:
+                              grids:
+                                type: array
+                                example: []
+                      user:
+                        type: object
+                        properties:
+                          nombre:
+                            type: string
+                            example: Suriel
+                          primerApellido:
+                            type: string
+                            example: Dzul
+                          segundoApellido:
+                            type: string
+                            example: Dzul
+                          usuario:
+                            type: string
+                            example: suriel.dzul
+                          email:
+                            type: string
+                            example: dzulsuriel@gmail.com
+                          tipoUsuario:
+                            type: string
+                            example: '1'
+                          permisos:
+                            type: array
+                            example: []
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Credenciales incorrectas'
+                    type: object
+                    example:
+                      result: error
+                      message: 'Contraseña incorrecta'
+                      data: null
+                    properties:
+                      result:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Contraseña incorrecta'
+                      data:
+                        type: string
+                        example: null
+                        nullable: true
+                  -
+                    description: 'Usuario inactivo o no existe'
+                    type: object
+                    example:
+                      result: error
+                      message: 'Usuario no encontrado o inactivo'
+                      data: null
+                    properties:
+                      result:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Usuario no encontrado o inactivo'
+                      data:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: 'Campos faltantes'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The usurrio field is required.'
+                  errors:
+                    usurrio:
+                      - 'The usurrio field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The usurrio field is required.'
+                  errors:
+                    type: object
+                    properties:
+                      usurrio:
+                        type: array
+                        example:
+                          - 'The usurrio field is required.'
+                        items:
+                          type: string
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usurrio:
+                  type: string
+                  description: 'Nombre de usuario.'
+                  example: suriel.dzul
+                pass:
+                  type: string
+                  description: 'Contraseña en texto plano.'
+                  example: suriel2024
+              required:
+                - usurrio
+                - pass
+      security: []

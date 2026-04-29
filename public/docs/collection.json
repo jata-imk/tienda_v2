@@ -1,0 +1,84 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "TiendaBackend API Documentation",
+        "_postman_id": "f80c81e0-738a-4cc2-841f-4e273b046f3c",
+        "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Autenticaci\u00f3n",
+            "description": "\nEndpoints para el manejo de sesiones de usuario.",
+            "item": [
+                {
+                    "name": "Inicio de sesi\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"usurrio\":\"suriel.dzul\",\"pass\":\"suriel2024\"}"
+                        },
+                        "description": "Valida credenciales, gestiona la sesi\u00f3n y retorna un JWT v\u00e1lido por 24 horas\njunto con los datos del usuario y la empresa.\n\nSi el usuario ya tiene una sesi\u00f3n vigente con token activo, se reutiliza el mismo JWT.\nSi el token expir\u00f3, se genera uno nuevo y se cierra la sesi\u00f3n anterior.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"result\": \"ok\",\n  \"message\": \"Inicio de sesi\u00f3n exitoso\",\n  \"data\": {\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"empresa\": {\n      \"nombre\": \"Guayaberas Lopez Silva\",\n      \"logo\": null,\n      \"modoOscuro\": false,\n      \"configImp\": [],\n      \"fechaUpdate\": \"2024-01-01 00:00:00\",\n      \"settings\": { \"grids\": [] }\n    },\n    \"user\": {\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"1\",\n      \"permisos\": []\n    }\n  }\n}",
+                            "name": "Login exitoso"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"result\": \"error\",\n  \"message\": \"Contrase\u00f1a incorrecta\",\n  \"data\": null\n}",
+                            "name": "Credenciales incorrectas"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"result\": \"error\",\n  \"message\": \"Usuario no encontrado o inactivo\",\n  \"data\": null\n}",
+                            "name": "Usuario inactivo o no existe"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The usurrio field is required.\",\n  \"errors\": { \"usurrio\": [\"The usurrio field is required.\"] }\n}",
+                            "name": "Campos faltantes"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}
