@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://localhost";
+        var tryItOutBaseUrl = "http://127.0.0.1:8000";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -117,7 +117,7 @@
         <h1 id="introduction">Introduction</h1>
 <p>Backend API del sistema de ventas Tienda. Módulo de autenticación y gestión de sesiones.</p>
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost</code>
+    <strong>Base URL</strong>: <code>http://127.0.0.1:8000</code>
 </aside>
 <pre><code>This documentation aims to provide all the information you need to work with our API.
 
@@ -147,7 +147,7 @@ Si el token expiró, se genera uno nuevo y se cierra la sesión anterior.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/login" \
+    "http://127.0.0.1:8000/api/login" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -159,7 +159,7 @@ Si el token expiró, se genera uno nuevo y se cierra la sesión anterior.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/login"
+    "http://127.0.0.1:8000/api/login"
 );
 
 const headers = {
@@ -366,14 +366,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/usuarios" \
+    --get "http://127.0.0.1:8000/api/usuarios" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/usuarios"
+    "http://127.0.0.1:8000/api/usuarios"
 );
 
 const headers = {
@@ -501,7 +501,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/usuarios" \
+    "http://127.0.0.1:8000/api/usuarios" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -519,7 +519,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/usuarios"
+    "http://127.0.0.1:8000/api/usuarios"
 );
 
 const headers = {
@@ -767,14 +767,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/usuarios/1" \
+    --get "http://127.0.0.1:8000/api/usuarios/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/usuarios/1"
+    "http://127.0.0.1:8000/api/usuarios/1"
 );
 
 const headers = {
@@ -925,7 +925,7 @@ Para cambiar la contraseña, incluir el campo <code>password</code>.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/usuarios/1" \
+    "http://127.0.0.1:8000/api/usuarios/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -943,7 +943,7 @@ Para cambiar la contraseña, incluir el campo <code>password</code>.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/usuarios/1"
+    "http://127.0.0.1:8000/api/usuarios/1"
 );
 
 const headers = {
@@ -1205,14 +1205,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/usuarios/1" \
+    "http://127.0.0.1:8000/api/usuarios/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/usuarios/1"
+    "http://127.0.0.1:8000/api/usuarios/1"
 );
 
 const headers = {
