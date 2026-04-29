@@ -13,6 +13,15 @@ tags:
   -
     name: Usuarios
     description: "\nGestión de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador."
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Obtén tu token haciendo <b>POST /api/login</b> con tus credenciales. Luego pégalo aquí para probar los endpoints protegidos.'
+security:
+  -
+    default: []
 paths:
   /api/login:
     post:
