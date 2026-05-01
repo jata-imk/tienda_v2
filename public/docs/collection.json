@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "b550a304-4030-4d28-85cc-c7e386c34f19",
+        "_postman_id": "d8fa5ef1-ddda-4364-b455-a9821a0f8c37",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -72,6 +72,789 @@
                             "code": 422,
                             "body": "{\n  \"message\": \"The username field is required.\",\n  \"errors\": { \"username\": [\"The username field is required.\"] }\n}",
                             "name": "Campos faltantes"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Configuraci\u00f3n",
+            "description": "\nCat\u00e1logos y configuraci\u00f3n del sistema. Todos los endpoints requieren JWT y rol administrador.",
+            "item": [
+                {
+                    "name": "Listar tipos de IVA",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-iva",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-iva"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retorna el cat\u00e1logo completo de tipos de IVA disponibles."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Tipos de IVA obtenidos.\",\n  \"data\": [\n    { \"id\": 1, \"name\": \"general\", \"description\": \"General (base: 16%)\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 2, \"name\": \"tasa_producto\", \"description\": \"Tasa por producto\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 3, \"name\": \"cuota_producto\", \"description\": \"Cuota por producto\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 4, \"name\": \"no_aplica\", \"description\": \"No aplica\", \"dateCreation\": \"2024-01-01 00:00:00\" }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Ver configuraci\u00f3n de impuestos base",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/impuestos-config",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/impuestos-config"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retorna los porcentajes base de IVA, ISR e impuesto especial.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Configuraci\u00f3n de impuestos obtenida.\",\n  \"data\": { \"iva\": 16, \"isr\": 10, \"impEsp\": 0, \"dateCreation\": \"2024-01-01 00:00:00\", \"dateUpdate\": null }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar configuraci\u00f3n de impuestos base",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/impuestos-config",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/impuestos-config"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"iva\":8,\"isr\":10,\"imp_esp\":0}"
+                        },
+                        "description": "Actualiza uno o m\u00e1s porcentajes base. Solo se modifican los campos enviados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Configuraci\u00f3n de impuestos actualizada.\",\n  \"data\": { \"iva\": 8, \"isr\": 10, \"impEsp\": 0, \"dateCreation\": \"2024-01-01 00:00:00\", \"dateUpdate\": \"2024-01-02 00:00:00\" }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Listar tipos de moneda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-moneda",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-moneda"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipos de moneda obtenidos.\",\"data\":[{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear tipo de moneda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-moneda",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-moneda"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"D\u00f3lar Americano\",\"code\":\"USD\",\"symbol\":\"$\",\"status\":\"activo\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Tipo de moneda creado.\",\"data\":{\"id\":2,\"status\":\"activo\",\"name\":\"D\u00f3lar Americano\",\"code\":\"USD\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"The code has already been taken.\",\"errors\":{\"code\":[\"The code has already been taken.\"]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Ver tipo de moneda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-moneda\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del tipo de moneda."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda obtenido.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar tipo de moneda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-moneda\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del tipo de moneda."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactivo\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda actualizado.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Desactivar tipo de moneda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipos-moneda\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del tipo de moneda."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda desactivado.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Inventario",
+            "description": "\nGesti\u00f3n del inventario de productos. Todos los endpoints requieren JWT y rol administrador.",
+            "item": [
+                {
+                    "name": "Listar categor\u00edas",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categorias",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categorias"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00edas obtenidas.\",\"data\":[{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear categor\u00eda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categorias",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categorias"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"status\":\"activo\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Categor\u00eda creada.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Ver categor\u00eda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categorias\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID de la categor\u00eda."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda obtenida.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar categor\u00eda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categorias\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID de la categor\u00eda."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"activo\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda actualizada.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Desactivar categor\u00eda",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categorias\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID de la categor\u00eda."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda desactivada.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Listar productos",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventario"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Productos obtenidos.\",\"data\":[{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear producto",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventario"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"category_id\":1,\"clave\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stock_control\":true,\"stock\":20,\"discount\":0,\"type_iva_id\":1,\"rate_iva\":null,\"quota_iva\":null,\"isr\":0,\"imp_esp\":0,\"status\":\"activo\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Producto creado.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"The clave has already been taken.\",\"errors\":{\"clave\":[\"The clave has already been taken.\"]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Ver producto",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventario\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del producto."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto obtenido.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar producto",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventario\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del producto."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"category_id\":16,\"clave\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codebar\":\"v\",\"price\":42,\"cost\":37,\"stock_control\":true,\"stock\":9,\"discount\":17,\"type_iva_id\":16,\"rate_iva\":22,\"quota_iva\":84,\"isr\":16,\"imp_esp\":17,\"status\":\"activo\"}"
+                        },
+                        "description": "Todos los campos son opcionales. Solo enviar los que se quieran modificar.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto actualizado.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":900,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Dar de baja producto",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventario\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID del producto."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Cambia el status del producto a `baja`. No elimina el registro.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto dado de baja.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
+                            "name": ""
                         }
                     ]
                 }

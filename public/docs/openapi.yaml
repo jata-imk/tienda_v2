@@ -11,6 +11,12 @@ tags:
     name: Autenticación
     description: "\nEndpoints para el manejo de sesiones de usuario."
   -
+    name: Configuración
+    description: "\nCatálogos y configuración del sistema. Todos los endpoints requieren JWT y rol administrador."
+  -
+    name: Inventario
+    description: "\nGestión del inventario de productos. Todos los endpoints requieren JWT y rol administrador."
+  -
     name: Usuarios
     description: "\nGestión de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador."
 components:
@@ -206,6 +212,1938 @@ paths:
                 - username
                 - password
       security: []
+  /api/tipos-iva:
+    get:
+      summary: 'Listar tipos de IVA'
+      operationId: listarTiposDeIVA
+      description: 'Retorna el catálogo completo de tipos de IVA disponibles.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Tipos de IVA obtenidos.'
+                  data:
+                    -
+                      id: 1
+                      name: general
+                      description: 'General (base: 16%)'
+                      dateCreation: '2024-01-01 00:00:00'
+                    -
+                      id: 2
+                      name: tasa_producto
+                      description: 'Tasa por producto'
+                      dateCreation: '2024-01-01 00:00:00'
+                    -
+                      id: 3
+                      name: cuota_producto
+                      description: 'Cuota por producto'
+                      dateCreation: '2024-01-01 00:00:00'
+                    -
+                      id: 4
+                      name: no_aplica
+                      description: 'No aplica'
+                      dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Tipos de IVA obtenidos.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        name: general
+                        description: 'General (base: 16%)'
+                        dateCreation: '2024-01-01 00:00:00'
+                      -
+                        id: 2
+                        name: tasa_producto
+                        description: 'Tasa por producto'
+                        dateCreation: '2024-01-01 00:00:00'
+                      -
+                        id: 3
+                        name: cuota_producto
+                        description: 'Cuota por producto'
+                        dateCreation: '2024-01-01 00:00:00'
+                      -
+                        id: 4
+                        name: no_aplica
+                        description: 'No aplica'
+                        dateCreation: '2024-01-01 00:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: general
+                        description:
+                          type: string
+                          example: 'General (base: 16%)'
+                        dateCreation:
+                          type: string
+                          example: '2024-01-01 00:00:00'
+      tags:
+        - Configuración
+  /api/impuestos-config:
+    get:
+      summary: 'Ver configuración de impuestos base'
+      operationId: verConfiguracinDeImpuestosBase
+      description: 'Retorna los porcentajes base de IVA, ISR e impuesto especial.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Configuración de impuestos obtenida.'
+                  data:
+                    iva: 16
+                    isr: 10
+                    impEsp: 0
+                    dateCreation: '2024-01-01 00:00:00'
+                    dateUpdate: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Configuración de impuestos obtenida.'
+                  data:
+                    type: object
+                    properties:
+                      iva:
+                        type: integer
+                        example: 16
+                      isr:
+                        type: integer
+                        example: 10
+                      impEsp:
+                        type: integer
+                        example: 0
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+                      dateUpdate:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Configuración
+      security: []
+    put:
+      summary: 'Actualizar configuración de impuestos base'
+      operationId: actualizarConfiguracinDeImpuestosBase
+      description: 'Actualiza uno o más porcentajes base. Solo se modifican los campos enviados.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Configuración de impuestos actualizada.'
+                  data:
+                    iva: 8
+                    isr: 10
+                    impEsp: 0
+                    dateCreation: '2024-01-01 00:00:00'
+                    dateUpdate: '2024-01-02 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Configuración de impuestos actualizada.'
+                  data:
+                    type: object
+                    properties:
+                      iva:
+                        type: integer
+                        example: 8
+                      isr:
+                        type: integer
+                        example: 10
+                      impEsp:
+                        type: integer
+                        example: 0
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+                      dateUpdate:
+                        type: string
+                        example: '2024-01-02 00:00:00'
+      tags:
+        - Configuración
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                iva:
+                  type: number
+                  description: 'optional Porcentaje IVA base (0-100).'
+                  example: 8.0
+                isr:
+                  type: number
+                  description: 'optional Porcentaje ISR base (0-100).'
+                  example: 10.0
+                imp_esp:
+                  type: number
+                  description: 'optional Porcentaje impuesto especial base (0-100).'
+                  example: 0.0
+      security: []
+  /api/tipos-moneda:
+    get:
+      summary: 'Listar tipos de moneda'
+      operationId: listarTiposDeMoneda
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Tipos de moneda obtenidos.'
+                  data:
+                    -
+                      id: 1
+                      status: activo
+                      name: 'Pesos Mexicanos'
+                      code: MXN
+                      symbol: $
+                      dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Tipos de moneda obtenidos.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        status: activo
+                        name: 'Pesos Mexicanos'
+                        code: MXN
+                        symbol: $
+                        dateCreation: '2024-01-01 00:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        status:
+                          type: string
+                          example: activo
+                        name:
+                          type: string
+                          example: 'Pesos Mexicanos'
+                        code:
+                          type: string
+                          example: MXN
+                        symbol:
+                          type: string
+                          example: $
+                        dateCreation:
+                          type: string
+                          example: '2024-01-01 00:00:00'
+      tags:
+        - Configuración
+      security: []
+    post:
+      summary: 'Crear tipo de moneda'
+      operationId: crearTipoDeMoneda
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Tipo de moneda creado.'
+                  data:
+                    id: 2
+                    status: activo
+                    name: 'Dólar Americano'
+                    code: USD
+                    symbol: $
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Tipo de moneda creado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Dólar Americano'
+                      code:
+                        type: string
+                        example: USD
+                      symbol:
+                        type: string
+                        example: $
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The code has already been taken.'
+                  errors:
+                    code:
+                      - 'The code has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The code has already been taken.'
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: array
+                        example:
+                          - 'The code has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Configuración
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Nombre de la moneda.'
+                  example: 'Dólar Americano'
+                code:
+                  type: string
+                  description: 'Código ISO (3 letras).'
+                  example: USD
+                symbol:
+                  type: string
+                  description: Símbolo.
+                  example: $
+                status:
+                  type: string
+                  description: 'optional Estado. Valores: activo, inactivo.'
+                  example: activo
+              required:
+                - name
+                - code
+                - symbol
+      security: []
+  '/api/tipos-moneda/{id}':
+    get:
+      summary: 'Ver tipo de moneda'
+      operationId: verTipoDeMoneda
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Tipo de moneda obtenido.'
+                  data:
+                    id: 1
+                    status: activo
+                    name: 'Pesos Mexicanos'
+                    code: MXN
+                    symbol: $
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Tipo de moneda obtenido.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Pesos Mexicanos'
+                      code:
+                        type: string
+                        example: MXN
+                      symbol:
+                        type: string
+                        example: $
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Tipo de moneda no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Tipo de moneda no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuración
+      security: []
+    put:
+      summary: 'Actualizar tipo de moneda'
+      operationId: actualizarTipoDeMoneda
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Tipo de moneda actualizado.'
+                  data:
+                    id: 1
+                    status: activo
+                    name: 'Pesos Mexicanos'
+                    code: MXN
+                    symbol: $
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Tipo de moneda actualizado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Pesos Mexicanos'
+                      code:
+                        type: string
+                        example: MXN
+                      symbol:
+                        type: string
+                        example: $
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Tipo de moneda no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Tipo de moneda no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuración
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                code:
+                  type: string
+                  description: 'Must not be greater than 10 characters.'
+                  example: ngzmiy
+                symbol:
+                  type: string
+                  description: 'Must not be greater than 10 characters.'
+                  example: vdljni
+                status:
+                  type: string
+                  description: ''
+                  example: inactivo
+                  enum:
+                    - activo
+                    - inactivo
+      security: []
+    delete:
+      summary: 'Desactivar tipo de moneda'
+      operationId: desactivarTipoDeMoneda
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Tipo de moneda desactivado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Tipo de moneda desactivado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Tipo de moneda no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Tipo de moneda no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuración
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID del tipo de moneda.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/categorias:
+    get:
+      summary: 'Listar categorías'
+      operationId: listarCategoras
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Categorías obtenidas.'
+                  data:
+                    -
+                      id: 1
+                      status: activo
+                      name: 'Camisas lino'
+                      description: 'Camisas de todos tipos de lino'
+                      dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Categorías obtenidas.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        status: activo
+                        name: 'Camisas lino'
+                        description: 'Camisas de todos tipos de lino'
+                        dateCreation: '2024-01-01 00:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        status:
+                          type: string
+                          example: activo
+                        name:
+                          type: string
+                          example: 'Camisas lino'
+                        description:
+                          type: string
+                          example: 'Camisas de todos tipos de lino'
+                        dateCreation:
+                          type: string
+                          example: '2024-01-01 00:00:00'
+      tags:
+        - Inventario
+    post:
+      summary: 'Crear categoría'
+      operationId: crearCategora
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Categoría creada.'
+                  data:
+                    id: 1
+                    status: activo
+                    name: 'Camisas lino'
+                    description: 'Camisas de todos tipos de lino'
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Categoría creada.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Camisas lino'
+                      description:
+                        type: string
+                        example: 'Camisas de todos tipos de lino'
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+      tags:
+        - Inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Nombre de la categoría.'
+                  example: 'Camisas lino'
+                description:
+                  type: string
+                  description: 'optional Descripción.'
+                  example: 'Camisas de todos tipos de lino'
+                  nullable: true
+                status:
+                  type: string
+                  description: 'optional Estado. Valores: activo, inactivo.'
+                  example: activo
+              required:
+                - name
+  '/api/categorias/{id}':
+    get:
+      summary: 'Ver categoría'
+      operationId: verCategora
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Categoría obtenida.'
+                  data:
+                    id: 1
+                    status: activo
+                    name: 'Camisas lino'
+                    description: 'Camisas de todos tipos de lino'
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Categoría obtenida.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Camisas lino'
+                      description:
+                        type: string
+                        example: 'Camisas de todos tipos de lino'
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Categoría no encontrada.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Categoría no encontrada.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+    put:
+      summary: 'Actualizar categoría'
+      operationId: actualizarCategora
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Categoría actualizada.'
+                  data:
+                    id: 1
+                    status: activo
+                    name: 'Camisas lino'
+                    description: 'Camisas de todos tipos de lino'
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Categoría actualizada.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: activo
+                      name:
+                        type: string
+                        example: 'Camisas lino'
+                      description:
+                        type: string
+                        example: 'Camisas de todos tipos de lino'
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Categoría no encontrada.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Categoría no encontrada.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: activo
+                  enum:
+                    - activo
+                    - inactivo
+    delete:
+      summary: 'Desactivar categoría'
+      operationId: desactivarCategora
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Categoría desactivada.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Categoría desactivada.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Categoría no encontrada.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Categoría no encontrada.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la categoría.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/inventario:
+    get:
+      summary: 'Listar productos'
+      operationId: listarProductos
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Productos obtenidos.'
+                  data:
+                    -
+                      id: 1
+                      idCategory: 1
+                      category: 'Camisas lino'
+                      status: activo
+                      key: '000001'
+                      name: 'Guayabera blanca'
+                      description: 'Guayabera caballero 100% lino'
+                      codebar: '8888888888881'
+                      price: 800
+                      cost: 600
+                      stockControl: true
+                      stock: 20
+                      discount: 0
+                      typeIVA: 1
+                      tipoIva: general
+                      rateIVA: null
+                      quotaIVA: null
+                      ISR: 0
+                      impESP: 0
+                      dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Productos obtenidos.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        idCategory: 1
+                        category: 'Camisas lino'
+                        status: activo
+                        key: '000001'
+                        name: 'Guayabera blanca'
+                        description: 'Guayabera caballero 100% lino'
+                        codebar: '8888888888881'
+                        price: 800
+                        cost: 600
+                        stockControl: true
+                        stock: 20
+                        discount: 0
+                        typeIVA: 1
+                        tipoIva: general
+                        rateIVA: null
+                        quotaIVA: null
+                        ISR: 0
+                        impESP: 0
+                        dateCreation: '2024-01-01 00:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        idCategory:
+                          type: integer
+                          example: 1
+                        category:
+                          type: string
+                          example: 'Camisas lino'
+                        status:
+                          type: string
+                          example: activo
+                        key:
+                          type: string
+                          example: '000001'
+                        name:
+                          type: string
+                          example: 'Guayabera blanca'
+                        description:
+                          type: string
+                          example: 'Guayabera caballero 100% lino'
+                        codebar:
+                          type: string
+                          example: '8888888888881'
+                        price:
+                          type: integer
+                          example: 800
+                        cost:
+                          type: integer
+                          example: 600
+                        stockControl:
+                          type: boolean
+                          example: true
+                        stock:
+                          type: integer
+                          example: 20
+                        discount:
+                          type: integer
+                          example: 0
+                        typeIVA:
+                          type: integer
+                          example: 1
+                        tipoIva:
+                          type: string
+                          example: general
+                        rateIVA:
+                          type: string
+                          example: null
+                          nullable: true
+                        quotaIVA:
+                          type: string
+                          example: null
+                          nullable: true
+                        ISR:
+                          type: integer
+                          example: 0
+                        impESP:
+                          type: integer
+                          example: 0
+                        dateCreation:
+                          type: string
+                          example: '2024-01-01 00:00:00'
+      tags:
+        - Inventario
+      security: []
+    post:
+      summary: 'Crear producto'
+      operationId: crearProducto
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Producto creado.'
+                  data:
+                    id: 1
+                    idCategory: 1
+                    category: 'Camisas lino'
+                    status: activo
+                    key: '000001'
+                    name: 'Guayabera blanca'
+                    description: 'Guayabera caballero 100% lino'
+                    codebar: '8888888888881'
+                    price: 800
+                    cost: 600
+                    stockControl: true
+                    stock: 20
+                    discount: 0
+                    typeIVA: 1
+                    tipoIva: general
+                    rateIVA: null
+                    quotaIVA: null
+                    ISR: 0
+                    impESP: 0
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Producto creado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      idCategory:
+                        type: integer
+                        example: 1
+                      category:
+                        type: string
+                        example: 'Camisas lino'
+                      status:
+                        type: string
+                        example: activo
+                      key:
+                        type: string
+                        example: '000001'
+                      name:
+                        type: string
+                        example: 'Guayabera blanca'
+                      description:
+                        type: string
+                        example: 'Guayabera caballero 100% lino'
+                      codebar:
+                        type: string
+                        example: '8888888888881'
+                      price:
+                        type: integer
+                        example: 800
+                      cost:
+                        type: integer
+                        example: 600
+                      stockControl:
+                        type: boolean
+                        example: true
+                      stock:
+                        type: integer
+                        example: 20
+                      discount:
+                        type: integer
+                        example: 0
+                      typeIVA:
+                        type: integer
+                        example: 1
+                      tipoIva:
+                        type: string
+                        example: general
+                      rateIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      quotaIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      ISR:
+                        type: integer
+                        example: 0
+                      impESP:
+                        type: integer
+                        example: 0
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The clave has already been taken.'
+                  errors:
+                    clave:
+                      - 'The clave has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The clave has already been taken.'
+                  errors:
+                    type: object
+                    properties:
+                      clave:
+                        type: array
+                        example:
+                          - 'The clave has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_id:
+                  type: integer
+                  description: 'ID de la categoría.'
+                  example: 1
+                clave:
+                  type: string
+                  description: 'Clave interna única del producto.'
+                  example: '000001'
+                name:
+                  type: string
+                  description: 'Nombre del producto.'
+                  example: 'Guayabera blanca'
+                description:
+                  type: string
+                  description: 'optional Descripción.'
+                  example: 'Guayabera caballero 100% lino'
+                  nullable: true
+                codebar:
+                  type: string
+                  description: 'optional Código de barras.'
+                  example: '8888888888881'
+                  nullable: true
+                price:
+                  type: number
+                  description: 'Precio base (sin IVA).'
+                  example: 800.0
+                cost:
+                  type: number
+                  description: Costo.
+                  example: 600.0
+                stock_control:
+                  type: boolean
+                  description: 'Activar control de stock.'
+                  example: true
+                stock:
+                  type: number
+                  description: 'Stock inicial.'
+                  example: 20.0
+                discount:
+                  type: number
+                  description: 'optional Porcentaje de descuento (0-100).'
+                  example: 0.0
+                type_iva_id:
+                  type: integer
+                  description: 'ID del tipo de IVA (1=general, 2=tasa, 3=cuota, 4=no aplica).'
+                  example: 1
+                rate_iva:
+                  type: number
+                  description: 'optional Tasa IVA específica. Requerido si type_iva_id=2.'
+                  example: null
+                  nullable: true
+                quota_iva:
+                  type: number
+                  description: 'optional Cuota IVA fija por unidad. Requerido si type_iva_id=3.'
+                  example: null
+                  nullable: true
+                isr:
+                  type: number
+                  description: 'optional Porcentaje ISR (0-100).'
+                  example: 0.0
+                imp_esp:
+                  type: number
+                  description: 'optional Porcentaje impuesto especial (0-100).'
+                  example: 0.0
+                status:
+                  type: string
+                  description: 'optional Estado. Valores: activo, baja.'
+                  example: activo
+              required:
+                - category_id
+                - clave
+                - name
+                - price
+                - cost
+                - stock_control
+                - stock
+                - type_iva_id
+      security: []
+  '/api/inventario/{id}':
+    get:
+      summary: 'Ver producto'
+      operationId: verProducto
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Producto obtenido.'
+                  data:
+                    id: 1
+                    idCategory: 1
+                    category: 'Camisas lino'
+                    status: activo
+                    key: '000001'
+                    name: 'Guayabera blanca'
+                    description: 'Guayabera caballero 100% lino'
+                    codebar: '8888888888881'
+                    price: 800
+                    cost: 600
+                    stockControl: true
+                    stock: 20
+                    discount: 0
+                    typeIVA: 1
+                    tipoIva: general
+                    rateIVA: null
+                    quotaIVA: null
+                    ISR: 0
+                    impESP: 0
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Producto obtenido.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      idCategory:
+                        type: integer
+                        example: 1
+                      category:
+                        type: string
+                        example: 'Camisas lino'
+                      status:
+                        type: string
+                        example: activo
+                      key:
+                        type: string
+                        example: '000001'
+                      name:
+                        type: string
+                        example: 'Guayabera blanca'
+                      description:
+                        type: string
+                        example: 'Guayabera caballero 100% lino'
+                      codebar:
+                        type: string
+                        example: '8888888888881'
+                      price:
+                        type: integer
+                        example: 800
+                      cost:
+                        type: integer
+                        example: 600
+                      stockControl:
+                        type: boolean
+                        example: true
+                      stock:
+                        type: integer
+                        example: 20
+                      discount:
+                        type: integer
+                        example: 0
+                      typeIVA:
+                        type: integer
+                        example: 1
+                      tipoIva:
+                        type: string
+                        example: general
+                      rateIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      quotaIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      ISR:
+                        type: integer
+                        example: 0
+                      impESP:
+                        type: integer
+                        example: 0
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Producto no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Producto no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+      security: []
+    put:
+      summary: 'Actualizar producto'
+      operationId: actualizarProducto
+      description: 'Todos los campos son opcionales. Solo enviar los que se quieran modificar.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Producto actualizado.'
+                  data:
+                    id: 1
+                    idCategory: 1
+                    category: 'Camisas lino'
+                    status: activo
+                    key: '000001'
+                    name: 'Guayabera blanca'
+                    description: 'Guayabera caballero 100% lino'
+                    codebar: '8888888888881'
+                    price: 900
+                    cost: 600
+                    stockControl: true
+                    stock: 20
+                    discount: 0
+                    typeIVA: 1
+                    tipoIva: general
+                    rateIVA: null
+                    quotaIVA: null
+                    ISR: 0
+                    impESP: 0
+                    dateCreation: '2024-01-01 00:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Producto actualizado.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      idCategory:
+                        type: integer
+                        example: 1
+                      category:
+                        type: string
+                        example: 'Camisas lino'
+                      status:
+                        type: string
+                        example: activo
+                      key:
+                        type: string
+                        example: '000001'
+                      name:
+                        type: string
+                        example: 'Guayabera blanca'
+                      description:
+                        type: string
+                        example: 'Guayabera caballero 100% lino'
+                      codebar:
+                        type: string
+                        example: '8888888888881'
+                      price:
+                        type: integer
+                        example: 900
+                      cost:
+                        type: integer
+                        example: 600
+                      stockControl:
+                        type: boolean
+                        example: true
+                      stock:
+                        type: integer
+                        example: 20
+                      discount:
+                        type: integer
+                        example: 0
+                      typeIVA:
+                        type: integer
+                        example: 1
+                      tipoIva:
+                        type: string
+                        example: general
+                      rateIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      quotaIVA:
+                        type: string
+                        example: null
+                        nullable: true
+                      ISR:
+                        type: integer
+                        example: 0
+                      impESP:
+                        type: integer
+                        example: 0
+                      dateCreation:
+                        type: string
+                        example: '2024-01-01 00:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Producto no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Producto no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the categorias table.'
+                  example: 16
+                clave:
+                  type: string
+                  description: 'Must not be greater than 50 characters.'
+                  example: 'n'
+                name:
+                  type: string
+                  description: 'Must not be greater than 200 characters.'
+                  example: g
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                  nullable: true
+                codebar:
+                  type: string
+                  description: 'Must not be greater than 50 characters.'
+                  example: v
+                  nullable: true
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 42
+                cost:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 37
+                stock_control:
+                  type: boolean
+                  description: ''
+                  example: true
+                stock:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 9
+                discount:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 17
+                type_iva_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the tipos_iva table.'
+                  example: 16
+                rate_iva:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 22
+                  nullable: true
+                quota_iva:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 84
+                  nullable: true
+                isr:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 16
+                imp_esp:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 17
+                status:
+                  type: string
+                  description: ''
+                  example: activo
+                  enum:
+                    - activo
+                    - baja
+      security: []
+    delete:
+      summary: 'Dar de baja producto'
+      operationId: darDeBajaProducto
+      description: 'Cambia el status del producto a `baja`. No elimina el registro.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Producto dado de baja.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Producto dado de baja.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Producto no encontrado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Producto no encontrado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventario
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID del producto.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/usuarios:
     get:
       summary: 'Listar usuarios'

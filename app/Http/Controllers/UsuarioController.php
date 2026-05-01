@@ -6,6 +6,7 @@ use App\Http\Requests\Usuario\ActualizarUsuarioRequest;
 use App\Http\Requests\Usuario\CrearUsuarioRequest;
 use App\Http\Resources\Usuario\UsuarioResource;
 use App\Services\UsuarioService;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -46,11 +47,7 @@ class UsuarioController extends Controller
     {
         $usuarios = $this->usuarioService->index();
 
-        return response()->json([
-            'result'  => 'ok',
-            'message' => 'Usuarios obtenidos.',
-            'data'    => UsuarioResource::collection($usuarios),
-        ]);
+        return ApiResponse::ok('Usuarios obtenidos.', UsuarioResource::collection($usuarios));
     }
 
     /**
@@ -68,14 +65,10 @@ class UsuarioController extends Controller
         $usuario = $this->usuarioService->show($id);
 
         if (!$usuario) {
-            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+            return ApiResponse::error('Usuario no encontrado.', 404);
         }
 
-        return response()->json([
-            'result'  => 'ok',
-            'message' => 'Usuario obtenido.',
-            'data'    => new UsuarioResource($usuario),
-        ]);
+        return ApiResponse::ok('Usuario obtenido.', new UsuarioResource($usuario));
     }
 
     /**
@@ -99,11 +92,7 @@ class UsuarioController extends Controller
     {
         $usuario = $this->usuarioService->store($request->toDTO());
 
-        return response()->json([
-            'result'  => 'ok',
-            'message' => 'Usuario creado.',
-            'data'    => new UsuarioResource($usuario),
-        ], 201);
+        return ApiResponse::created('Usuario creado.', new UsuarioResource($usuario));
     }
 
     /**
@@ -131,14 +120,10 @@ class UsuarioController extends Controller
         $usuario = $this->usuarioService->update($id, $request->toDTO());
 
         if (!$usuario) {
-            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+            return ApiResponse::error('Usuario no encontrado.', 404);
         }
 
-        return response()->json([
-            'result'  => 'ok',
-            'message' => 'Usuario actualizado.',
-            'data'    => new UsuarioResource($usuario),
-        ]);
+        return ApiResponse::ok('Usuario actualizado.', new UsuarioResource($usuario));
     }
 
     /**
@@ -156,9 +141,9 @@ class UsuarioController extends Controller
         $encontrado = $this->usuarioService->destroy($id);
 
         if (!$encontrado) {
-            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+            return ApiResponse::error('Usuario no encontrado.', 404);
         }
 
-        return response()->json(['result' => 'ok', 'message' => 'Usuario desactivado.', 'data' => null]);
+        return ApiResponse::ok('Usuario desactivado.');
     }
 }

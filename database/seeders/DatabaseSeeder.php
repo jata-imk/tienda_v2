@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
             CompanySeeder::class,
             UserSeeder::class,
+            TipoIvaSeeder::class,
+            ImpuestosConfigSeeder::class,
+            TipoMonedaSeeder::class,
         ]);
     }
 }

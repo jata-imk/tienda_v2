@@ -29,13 +29,10 @@ php artisan scribe:generate    # Regenerar docs públicas y Postman collection
 
 ## Documentación por módulo
 
-- [Autenticación](docs/auth.md) — Login, JWT, sesiones, usuarios
-- [Base de datos](docs/database.md) — Esquema de tablas y relaciones
-
-## Documentación por módulo
-
 - [Autenticación](docs/auth.md)
 - [Usuarios](docs/usuarios.md)
+- [Inventario](docs/inventario.md) — Categorías, productos
+- [Configuración](docs/config.md) — Tipos IVA, impuestos base, tipos de moneda
 - [Base de datos](docs/database.md)
 
 ## Docs públicas (Scribe)
@@ -54,10 +51,17 @@ php artisan scribe:generate
 
 ```
 app/
-├── Http/Controllers/   # Delgados: validan request, llaman al Service, retornan JSON
-├── Services/           # Lógica de negocio (AuthService, etc.)
-└── Models/             # Eloquent: relaciones, fillable, casts
+├── Http/
+│   ├── Controllers/   # Delgados: reciben FormRequest, llaman al Service, retornan JSON
+│   ├── Requests/      # Validación HTTP + método toDTO()
+│   └── Resources/     # Transforma modelos al formato JSON de respuesta
+├── DTOs/              # Objetos tipados (readonly class) para Controller → Service
+├── Services/          # Lógica de negocio
+├── Models/            # Eloquent: relaciones, fillable, casts
+└── Support/
+    └── ApiResponse.php  # Helper: formato estándar { ok, code, status, message, data }
 ```
 
-El patrón es **MVC + Service Layer**: el controlador no tiene lógica de negocio,
-toda la lógica vive en el Service correspondiente.
+Patrón: **FormRequest → DTO → Service → Model → Resource**
+
+Todas las respuestas usan `ApiResponse::ok()`, `::created()` o `::error()`.

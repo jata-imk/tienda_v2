@@ -6,6 +6,7 @@ use App\DTOs\Auth\LoginDTO;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Services\AuthService;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -77,16 +78,11 @@ class AuthController extends Controller
     {
         $dto    = $request->toDTO();
         $result = $this->authService->login($dto);
-        $status = $result['result'] === 'ok' ? 200 : 401;
 
         if ($result['result'] !== 'ok') {
-            return response()->json($result, $status);
+            return ApiResponse::error($result['message'], 401);
         }
 
-        return response()->json([
-            'result'  => 'ok',
-            'message' => $result['message'],
-            'data'    => new LoginResource($result['data']),
-        ], $status);
+        return ApiResponse::ok($result['message'], new LoginResource($result['data']));
     }
 }
