@@ -107,7 +107,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: April 29, 2026</li>
+        <li>Last updated: May 1, 2026</li>
     </ul>
 </div>
 
@@ -153,8 +153,8 @@ Si el token expiró, se genera uno nuevo y se cierra la sesión anterior.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"usuario\": \"suriel.dzul\",
-    \"pass\": \"suriel2024\"
+    \"username\": \"suriel.dzul\",
+    \"password\": \"suriel2024\"
 }"
 </code></pre></div>
 
@@ -170,8 +170,8 @@ const headers = {
 };
 
 let body = {
-    "usuario": "suriel.dzul",
-    "pass": "suriel2024"
+    "username": "suriel.dzul",
+    "password": "suriel2024"
 };
 
 fetch(url, {
@@ -243,10 +243,10 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The usuario field is required.&quot;,
+    &quot;message&quot;: &quot;The username field is required.&quot;,
     &quot;errors&quot;: {
-        &quot;usuario&quot;: [
-            &quot;The usuario field is required.&quot;
+        &quot;username&quot;: [
+            &quot;The username field is required.&quot;
         ]
     }
 }</code>
@@ -325,24 +325,24 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>usuario</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>username</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="usuario"                data-endpoint="POSTapi-login"
+                              name="username"                data-endpoint="POSTapi-login"
                value="suriel.dzul"
                data-component="body">
     <br>
 <p>Nombre de usuario. Example: <code>suriel.dzul</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>pass</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="pass"                data-endpoint="POSTapi-login"
+                              name="password"                data-endpoint="POSTapi-login"
                value="suriel2024"
                data-component="body">
     <br>

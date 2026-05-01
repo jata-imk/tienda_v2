@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Auth\LoginDTO;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\Auth\LoginResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * @group Autenticación
@@ -26,8 +28,8 @@ class AuthController extends Controller
      *
      * @unauthenticated
      *
-     * @bodyParam usuario string required Nombre de usuario. Example: suriel.dzul
-     * @bodyParam pass string required Contraseña en texto plano. Example: suriel2024
+     * @bodyParam username string required Nombre de usuario. Example: suriel.dzul
+     * @bodyParam password string required Contraseña en texto plano. Example: suriel2024
      *
      * @response 200 scenario="Login exitoso" {
      *   "result": "ok",
@@ -67,24 +69,24 @@ class AuthController extends Controller
      * }
      *
      * @response 422 scenario="Campos faltantes" {
-     *   "message": "The usuario field is required.",
-     *   "errors": { "usuario": ["The usuario field is required."] }
+     *   "message": "The username field is required.",
+     *   "errors": { "username": ["The username field is required."] }
      * }
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $request->validate([
-            'usuario' => 'required|string',
-            'pass'    => 'required|string',
-        ]);
-
-        $result = $this->authService->login(
-            $request->input('usuario'),
-            $request->input('pass')
-        );
-
+        $dto    = $request->toDTO();
+        $result = $this->authService->login($dto);
         $status = $result['result'] === 'ok' ? 200 : 401;
 
-        return response()->json($result, $status);
+        if ($result['result'] !== 'ok') {
+            return response()->json($result, $status);
+        }
+
+        return response()->json([
+            'result'  => 'ok',
+            'message' => $result['message'],
+            'data'    => new LoginResource($result['data']),
+        ], $status);
     }
 }

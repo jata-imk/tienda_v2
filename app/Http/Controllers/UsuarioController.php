@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Usuario\ActualizarUsuarioRequest;
+use App\Http\Requests\Usuario\CrearUsuarioRequest;
+use App\Http\Resources\Usuario\UsuarioResource;
 use App\Services\UsuarioService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * @group Usuarios
@@ -42,7 +44,13 @@ class UsuarioController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json($this->usuarioService->index());
+        $usuarios = $this->usuarioService->index();
+
+        return response()->json([
+            'result'  => 'ok',
+            'message' => 'Usuarios obtenidos.',
+            'data'    => UsuarioResource::collection($usuarios),
+        ]);
     }
 
     /**
@@ -57,10 +65,17 @@ class UsuarioController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $result = $this->usuarioService->show($id);
-        $status = $result['result'] === 'ok' ? 200 : 404;
+        $usuario = $this->usuarioService->show($id);
 
-        return response()->json($result, $status);
+        if (!$usuario) {
+            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+        }
+
+        return response()->json([
+            'result'  => 'ok',
+            'message' => 'Usuario obtenido.',
+            'data'    => new UsuarioResource($usuario),
+        ]);
     }
 
     /**
@@ -80,20 +95,15 @@ class UsuarioController extends Controller
      * @response 201 {"result":"ok","message":"Usuario creado.","data":{"id":2,"nombre":"Juan","primerApellido":"Pérez","segundoApellido":"López","usuario":"juan.perez","email":"juan@empresa.com","tipoUsuario":"administrador","status":"activo","dateCreation":"2024-01-01 00:00:00"}}
      * @response 422 {"message":"The username has already been taken.","errors":{"username":["The username has already been taken."]}}
      */
-    public function store(Request $request): JsonResponse
+    public function store(CrearUsuarioRequest $request): JsonResponse
     {
-        $request->validate([
-            'name'         => 'required|string|max:100',
-            'first_name'   => 'required|string|max:100',
-            'last_name'    => 'required|string|max:100',
-            'username'     => 'required|string|max:100|unique:usuarios,username',
-            'email'        => 'required|email|unique:usuarios,email',
-            'password'     => 'required|string|min:8',
-            'user_type_id' => 'required|integer|exists:tipos_usuario,id',
-            'status'       => 'sometimes|in:activo,inactivo',
-        ]);
+        $usuario = $this->usuarioService->store($request->toDTO());
 
-        return response()->json($this->usuarioService->store($request->all()), 201);
+        return response()->json([
+            'result'  => 'ok',
+            'message' => 'Usuario creado.',
+            'data'    => new UsuarioResource($usuario),
+        ], 201);
     }
 
     /**
@@ -116,23 +126,19 @@ class UsuarioController extends Controller
      * @response 200 {"result":"ok","message":"Usuario actualizado.","data":{"id":1,"nombre":"Juan","primerApellido":"Pérez","segundoApellido":"López","usuario":"juan.perez2","email":"juan2@empresa.com","tipoUsuario":"administrador","status":"activo","dateCreation":"2024-01-01 00:00:00"}}
      * @response 404 {"result":"error","message":"Usuario no encontrado.","data":null}
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(ActualizarUsuarioRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'name'         => 'sometimes|string|max:100',
-            'first_name'   => 'sometimes|string|max:100',
-            'last_name'    => 'sometimes|string|max:100',
-            'username'     => "sometimes|string|max:100|unique:usuarios,username,{$id}",
-            'email'        => "sometimes|email|unique:usuarios,email,{$id}",
-            'password'     => 'nullable|string|min:8',
-            'user_type_id' => 'sometimes|integer|exists:tipos_usuario,id',
-            'status'       => 'sometimes|in:activo,inactivo',
+        $usuario = $this->usuarioService->update($id, $request->toDTO());
+
+        if (!$usuario) {
+            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+        }
+
+        return response()->json([
+            'result'  => 'ok',
+            'message' => 'Usuario actualizado.',
+            'data'    => new UsuarioResource($usuario),
         ]);
-
-        $result = $this->usuarioService->update($id, $request->all());
-        $status = $result['result'] === 'ok' ? 200 : 404;
-
-        return response()->json($result, $status);
     }
 
     /**
@@ -147,9 +153,12 @@ class UsuarioController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $result = $this->usuarioService->destroy($id);
-        $status = $result['result'] === 'ok' ? 200 : 404;
+        $encontrado = $this->usuarioService->destroy($id);
 
-        return response()->json($result, $status);
+        if (!$encontrado) {
+            return response()->json(['result' => 'error', 'message' => 'Usuario no encontrado.', 'data' => null], 404);
+        }
+
+        return response()->json(['result' => 'ok', 'message' => 'Usuario desactivado.', 'data' => null]);
     }
 }

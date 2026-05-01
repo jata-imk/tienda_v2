@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Auth\LoginDTO;
 use App\Models\Company;
 use App\Models\Sesion;
 use App\Models\Token;
@@ -12,15 +13,15 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
-    public function login(string $username, string $password): array
+    public function login(LoginDTO $dto): array
     {
-        $usuario = Usuario::where('username', $username)->first();
+        $usuario = Usuario::where('username', $dto->username)->first();
 
         if (!$usuario || $usuario->status !== 'activo') {
             return ['result' => 'error', 'message' => 'Usuario no encontrado o inactivo', 'data' => null];
         }
 
-        if (!Hash::check($password, $usuario->password)) {
+        if (!Hash::check($dto->password, $usuario->password)) {
             return ['result' => 'error', 'message' => 'Contraseña incorrecta', 'data' => null];
         }
 

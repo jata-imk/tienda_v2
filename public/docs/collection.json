@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "c3487e74-f77d-44f7-b843-bdc43d48e8fd",
+        "_postman_id": "b550a304-4030-4d28-85cc-c7e386c34f19",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -41,7 +41,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"usuario\":\"suriel.dzul\",\"pass\":\"suriel2024\"}"
+                            "raw": "{\"username\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
                         },
                         "description": "Valida credenciales, gestiona la sesi\u00f3n y retorna un JWT v\u00e1lido por 24 horas\njunto con los datos del usuario y la empresa.\n\nSi el usuario ya tiene una sesi\u00f3n vigente con token activo, se reutiliza el mismo JWT.\nSi el token expir\u00f3, se genera uno nuevo y se cierra la sesi\u00f3n anterior.",
                         "auth": {
@@ -70,7 +70,7 @@
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{\n  \"message\": \"The usuario field is required.\",\n  \"errors\": { \"usuario\": [\"The usuario field is required.\"] }\n}",
+                            "body": "{\n  \"message\": \"The username field is required.\",\n  \"errors\": { \"username\": [\"The username field is required.\"] }\n}",
                             "name": "Campos faltantes"
                         }
                     ]

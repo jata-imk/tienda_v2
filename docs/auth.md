@@ -11,13 +11,13 @@ Content-Type: application/json
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `usuario` | string | sí | Nombre de usuario (campo `username` en BD) |
-| `pass` | string | sí | Contraseña en texto plano |
+| `username` | string | sí | Nombre de usuario |
+| `password` | string | sí | Contraseña en texto plano |
 
 ```json
 {
-  "usuario": "suriel.dzul",
-  "pass": "suriel2024"
+  "username": "suriel.dzul",
+  "password": "suriel2024"
 }
 ```
 
