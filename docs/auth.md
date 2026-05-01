@@ -26,7 +26,9 @@ Content-Type: application/json
 
 ```json
 {
-  "result": "ok",
+  "ok": true,
+  "code": 200,
+  "status": "OK",
   "message": "Inicio de sesión exitoso",
   "data": {
     "token": "<JWT válido 24h>",
@@ -55,7 +57,9 @@ Content-Type: application/json
 
 ```json
 {
-  "result": "error",
+  "ok": false,
+  "code": 401,
+  "status": "Unauthorized",
   "message": "Contraseña incorrecta",
   "data": null
 }

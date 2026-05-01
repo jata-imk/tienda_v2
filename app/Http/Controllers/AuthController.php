@@ -33,7 +33,9 @@ class AuthController extends Controller
      * @bodyParam password string required Contraseña en texto plano. Example: suriel2024
      *
      * @response 200 scenario="Login exitoso" {
-     *   "result": "ok",
+     *   "ok": true,
+     *   "code": 200,
+     *   "status": "OK",
      *   "message": "Inicio de sesión exitoso",
      *   "data": {
      *     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -58,13 +60,17 @@ class AuthController extends Controller
      * }
      *
      * @response 401 scenario="Credenciales incorrectas" {
-     *   "result": "error",
+     *   "ok": false,
+     *   "code": 401,
+     *   "status": "Unauthorized",
      *   "message": "Contraseña incorrecta",
      *   "data": null
      * }
      *
      * @response 401 scenario="Usuario inactivo o no existe" {
-     *   "result": "error",
+     *   "ok": false,
+     *   "code": 401,
+     *   "status": "Unauthorized",
      *   "message": "Usuario no encontrado o inactivo",
      *   "data": null
      * }

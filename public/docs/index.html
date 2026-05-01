@@ -257,7 +257,9 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;result&quot;: &quot;ok&quot;,
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
     &quot;message&quot;: &quot;Inicio de sesi&oacute;n exitoso&quot;,
     &quot;data&quot;: {
         &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...&quot;,
@@ -289,7 +291,9 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;result&quot;: &quot;error&quot;,
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 401,
+    &quot;status&quot;: &quot;Unauthorized&quot;,
     &quot;message&quot;: &quot;Contrase&ntilde;a incorrecta&quot;,
     &quot;data&quot;: null
 }</code>
@@ -300,7 +304,9 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;result&quot;: &quot;error&quot;,
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 401,
+    &quot;status&quot;: &quot;Unauthorized&quot;,
     &quot;message&quot;: &quot;Usuario no encontrado o inactivo&quot;,
     &quot;data&quot;: null
 }</code>
@@ -3418,7 +3424,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"codebar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stock_control\": true,
+    \"stock_control\": false,
     \"stock\": 9,
     \"discount\": 17,
     \"type_iva_id\": 16,
@@ -3449,7 +3455,7 @@ let body = {
     "codebar": "v",
     "price": 42,
     "cost": 37,
-    "stock_control": true,
+    "stock_control": false,
     "stock": 9,
     "discount": 17,
     "type_iva_id": 16,
@@ -3710,7 +3716,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;

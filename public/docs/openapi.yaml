@@ -43,7 +43,9 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
+                  ok: true
+                  code: 200
+                  status: OK
                   message: 'Inicio de sesión exitoso'
                   data:
                     token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
@@ -64,9 +66,15 @@ paths:
                       tipoUsuario: '1'
                       permisos: []
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
                     type: string
-                    example: ok
+                    example: OK
                   message:
                     type: string
                     example: 'Inicio de sesión exitoso'
@@ -135,13 +143,21 @@ paths:
                     description: 'Credenciales incorrectas'
                     type: object
                     example:
-                      result: error
+                      ok: false
+                      code: 401
+                      status: Unauthorized
                       message: 'Contraseña incorrecta'
                       data: null
                     properties:
-                      result:
+                      ok:
+                        type: boolean
+                        example: false
+                      code:
+                        type: integer
+                        example: 401
+                      status:
                         type: string
-                        example: error
+                        example: Unauthorized
                       message:
                         type: string
                         example: 'Contraseña incorrecta'
@@ -153,13 +169,21 @@ paths:
                     description: 'Usuario inactivo o no existe'
                     type: object
                     example:
-                      result: error
+                      ok: false
+                      code: 401
+                      status: Unauthorized
                       message: 'Usuario no encontrado o inactivo'
                       data: null
                     properties:
-                      result:
+                      ok:
+                        type: boolean
+                        example: false
+                      code:
+                        type: integer
+                        example: 401
+                      status:
                         type: string
-                        example: error
+                        example: Unauthorized
                       message:
                         type: string
                         example: 'Usuario no encontrado o inactivo'
@@ -2029,7 +2053,7 @@ paths:
                 stock_control:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 stock:
                   type: number
                   description: 'Must be at least 0.'

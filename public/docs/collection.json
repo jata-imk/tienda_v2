@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "d8fa5ef1-ddda-4364-b455-a9821a0f8c37",
+        "_postman_id": "b29704d3-b025-46e9-98d2-b2266d789c5b",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -52,19 +52,19 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"result\": \"ok\",\n  \"message\": \"Inicio de sesi\u00f3n exitoso\",\n  \"data\": {\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"empresa\": {\n      \"nombre\": \"Guayaberas Lopez Silva\",\n      \"logo\": null,\n      \"modoOscuro\": false,\n      \"configImp\": [],\n      \"fechaUpdate\": \"2024-01-01 00:00:00\",\n      \"settings\": { \"grids\": [] }\n    },\n    \"user\": {\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"1\",\n      \"permisos\": []\n    }\n  }\n}",
+                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Inicio de sesi\u00f3n exitoso\",\n  \"data\": {\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"empresa\": {\n      \"nombre\": \"Guayaberas Lopez Silva\",\n      \"logo\": null,\n      \"modoOscuro\": false,\n      \"configImp\": [],\n      \"fechaUpdate\": \"2024-01-01 00:00:00\",\n      \"settings\": { \"grids\": [] }\n    },\n    \"user\": {\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"1\",\n      \"permisos\": []\n    }\n  }\n}",
                             "name": "Login exitoso"
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"result\": \"error\",\n  \"message\": \"Contrase\u00f1a incorrecta\",\n  \"data\": null\n}",
+                            "body": "{\n  \"ok\": false,\n  \"code\": 401,\n  \"status\": \"Unauthorized\",\n  \"message\": \"Contrase\u00f1a incorrecta\",\n  \"data\": null\n}",
                             "name": "Credenciales incorrectas"
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"result\": \"error\",\n  \"message\": \"Usuario no encontrado o inactivo\",\n  \"data\": null\n}",
+                            "body": "{\n  \"ok\": false,\n  \"code\": 401,\n  \"status\": \"Unauthorized\",\n  \"message\": \"Usuario no encontrado o inactivo\",\n  \"data\": null\n}",
                             "name": "Usuario inactivo o no existe"
                         },
                         {
@@ -787,7 +787,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"category_id\":16,\"clave\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codebar\":\"v\",\"price\":42,\"cost\":37,\"stock_control\":true,\"stock\":9,\"discount\":17,\"type_iva_id\":16,\"rate_iva\":22,\"quota_iva\":84,\"isr\":16,\"imp_esp\":17,\"status\":\"activo\"}"
+                            "raw": "{\"category_id\":16,\"clave\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codebar\":\"v\",\"price\":42,\"cost\":37,\"stock_control\":false,\"stock\":9,\"discount\":17,\"type_iva_id\":16,\"rate_iva\":22,\"quota_iva\":84,\"isr\":16,\"imp_esp\":17,\"status\":\"activo\"}"
                         },
                         "description": "Todos los campos son opcionales. Solo enviar los que se quieran modificar.",
                         "auth": {
