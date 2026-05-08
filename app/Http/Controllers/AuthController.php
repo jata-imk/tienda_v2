@@ -26,12 +26,12 @@ class AuthController extends Controller
      *
      * @unauthenticated
      *
-     * @bodyParam user_name string required Username. Example: suriel.dzul
+     * @bodyParam userName string required Username. Example: suriel.dzul
      * @bodyParam password string required Password. Example: suriel2024
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Login successful","data":{"token":"eyJ...","companyInfo":{},"user":{}}}
      * @response 401 {"ok":false,"code":401,"status":"Unauthorized","message":"Incorrect password","data":null}
-     * @response 422 {"message":"The user_name field is required.","errors":{}}
+     * @response 422 {"message":"The userName field is required.","errors":{}}
      */
     public function login(LoginRequest $request): JsonResponse
     {

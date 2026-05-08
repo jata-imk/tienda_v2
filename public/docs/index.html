@@ -213,7 +213,7 @@ If the user already has an active session, the same JWT is reused.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"user_name\": \"suriel.dzul\",
+    \"userName\": \"suriel.dzul\",
     \"password\": \"suriel2024\"
 }"
 </code></pre></div>
@@ -230,7 +230,7 @@ const headers = {
 };
 
 let body = {
-    "user_name": "suriel.dzul",
+    "userName": "suriel.dzul",
     "password": "suriel2024"
 };
 
@@ -279,7 +279,7 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The user_name field is required.&quot;,
+    &quot;message&quot;: &quot;The userName field is required.&quot;,
     &quot;errors&quot;: {}
 }</code>
  </pre>
@@ -357,12 +357,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>user_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>userName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="user_name"                data-endpoint="POSTapi-login"
+                              name="userName"                data-endpoint="POSTapi-login"
                value="suriel.dzul"
                data-component="body">
     <br>
@@ -699,7 +699,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -719,7 +719,7 @@ let body = {
     "name": "b",
     "code": "ngzmiy",
     "symbol": "vdljni",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -872,10 +872,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-currencies"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1068,7 +1068,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1088,7 +1088,7 @@ let body = {
     "name": "b",
     "code": "ngzmiy",
     "symbol": "vdljni",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -1271,10 +1271,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1719,7 +1719,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1738,7 +1738,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -1879,10 +1879,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-categories"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2074,7 +2074,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -2093,7 +2093,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -2264,10 +2264,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2706,23 +2706,23 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"id_category\": 1,
+    \"idCategory\": 1,
     \"key\": \"000001\",
     \"name\": \"g\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"code_bar\": \"v\",
+    \"codeBar\": \"v\",
     \"size\": \"dljnikhwaykcmyuw\",
     \"price\": 67,
     \"cost\": 61,
-    \"stock_control\": true,
+    \"stockControl\": true,
     \"stock\": 89,
     \"discount\": 20,
-    \"type_iva\": 1,
-    \"rate_iva\": 3,
-    \"quota_iva\": 22,
+    \"typeIva\": 1,
+    \"rateIva\": 3,
+    \"quotaIva\": 22,
     \"isr\": 5,
-    \"imp_esp\": 10,
-    \"status\": \"inactive\"
+    \"impEsp\": 10,
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -2739,23 +2739,23 @@ const headers = {
 };
 
 let body = {
-    "id_category": 1,
+    "idCategory": 1,
     "key": "000001",
     "name": "g",
     "description": "Eius et animi quos velit et.",
-    "code_bar": "v",
+    "codeBar": "v",
     "size": "dljnikhwaykcmyuw",
     "price": 67,
     "cost": 61,
-    "stock_control": true,
+    "stockControl": true,
     "stock": 89,
     "discount": 20,
-    "type_iva": 1,
-    "rate_iva": 3,
-    "quota_iva": 22,
+    "typeIva": 1,
+    "rateIva": 3,
+    "quotaIva": 22,
     "isr": 5,
-    "imp_esp": 10,
-    "status": "inactive"
+    "impEsp": 10,
+    "status": "active"
 };
 
 fetch(url, {
@@ -2866,12 +2866,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>id_category</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>idCategory</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="id_category"                data-endpoint="POSTapi-products"
+               step="any"               name="idCategory"                data-endpoint="POSTapi-products"
                value="1"
                data-component="body">
     <br>
@@ -2914,12 +2914,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>Eius et animi quos velit et.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>code_bar</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>codeBar</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="code_bar"                data-endpoint="POSTapi-products"
+                              name="codeBar"                data-endpoint="POSTapi-products"
                value="v"
                data-component="body">
     <br>
@@ -2962,19 +2962,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must be at least 0. Example: <code>61</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>stock_control</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>stockControl</code></b>&nbsp;&nbsp;
 <small>boolean</small>&nbsp;
  &nbsp;
  &nbsp;
                 <label data-endpoint="POSTapi-products" style="display: none">
-            <input type="radio" name="stock_control"
+            <input type="radio" name="stockControl"
                    value="true"
                    data-endpoint="POSTapi-products"
                    data-component="body"             >
             <code>true</code>
         </label>
         <label data-endpoint="POSTapi-products" style="display: none">
-            <input type="radio" name="stock_control"
+            <input type="radio" name="stockControl"
                    value="false"
                    data-endpoint="POSTapi-products"
                    data-component="body"             >
@@ -3008,36 +3008,36 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must be at least 0. Must not be greater than 100. Example: <code>20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>type_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>typeIva</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="type_iva"                data-endpoint="POSTapi-products"
+               step="any"               name="typeIva"                data-endpoint="POSTapi-products"
                value="1"
                data-component="body">
     <br>
 <p>IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A). Example: <code>1</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>rate_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>rateIva</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="rate_iva"                data-endpoint="POSTapi-products"
+               step="any"               name="rateIva"                data-endpoint="POSTapi-products"
                value="3"
                data-component="body">
     <br>
 <p>Must be at least 0. Must not be greater than 100. Example: <code>3</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>quota_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>quotaIva</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="quota_iva"                data-endpoint="POSTapi-products"
+               step="any"               name="quotaIva"                data-endpoint="POSTapi-products"
                value="22"
                data-component="body">
     <br>
@@ -3056,12 +3056,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must be at least 0. Must not be greater than 100. Example: <code>5</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>imp_esp</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>impEsp</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="imp_esp"                data-endpoint="POSTapi-products"
+               step="any"               name="impEsp"                data-endpoint="POSTapi-products"
                value="10"
                data-component="body">
     <br>
@@ -3074,10 +3074,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3267,23 +3267,23 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"id_category\": 16,
+    \"idCategory\": 16,
     \"key\": \"n\",
     \"name\": \"g\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"code_bar\": \"v\",
+    \"codeBar\": \"v\",
     \"size\": \"dljnikhwaykcmyuw\",
     \"price\": 67,
     \"cost\": 61,
-    \"stock_control\": true,
+    \"stockControl\": false,
     \"stock\": 89,
     \"discount\": 20,
-    \"type_iva\": 1,
-    \"rate_iva\": 3,
-    \"quota_iva\": 22,
+    \"typeIva\": 1,
+    \"rateIva\": 3,
+    \"quotaIva\": 22,
     \"isr\": 5,
-    \"imp_esp\": 10,
-    \"status\": \"inactive\"
+    \"impEsp\": 10,
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -3300,23 +3300,23 @@ const headers = {
 };
 
 let body = {
-    "id_category": 16,
+    "idCategory": 16,
     "key": "n",
     "name": "g",
     "description": "Eius et animi quos velit et.",
-    "code_bar": "v",
+    "codeBar": "v",
     "size": "dljnikhwaykcmyuw",
     "price": 67,
     "cost": 61,
-    "stock_control": true,
+    "stockControl": false,
     "stock": 89,
     "discount": 20,
-    "type_iva": 1,
-    "rate_iva": 3,
-    "quota_iva": 22,
+    "typeIva": 1,
+    "rateIva": 3,
+    "quotaIva": 22,
     "isr": 5,
-    "imp_esp": 10,
-    "status": "inactive"
+    "impEsp": 10,
+    "status": "active"
 };
 
 fetch(url, {
@@ -3457,12 +3457,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>id_category</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>idCategory</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="id_category"                data-endpoint="PUTapi-products--id-"
+               step="any"               name="idCategory"                data-endpoint="PUTapi-products--id-"
                value="16"
                data-component="body">
     <br>
@@ -3505,12 +3505,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>Eius et animi quos velit et.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>code_bar</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>codeBar</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="code_bar"                data-endpoint="PUTapi-products--id-"
+                              name="codeBar"                data-endpoint="PUTapi-products--id-"
                value="v"
                data-component="body">
     <br>
@@ -3553,26 +3553,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must be at least 0. Example: <code>61</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>stock_control</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>stockControl</code></b>&nbsp;&nbsp;
 <small>boolean</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <label data-endpoint="PUTapi-products--id-" style="display: none">
-            <input type="radio" name="stock_control"
+            <input type="radio" name="stockControl"
                    value="true"
                    data-endpoint="PUTapi-products--id-"
                    data-component="body"             >
             <code>true</code>
         </label>
         <label data-endpoint="PUTapi-products--id-" style="display: none">
-            <input type="radio" name="stock_control"
+            <input type="radio" name="stockControl"
                    value="false"
                    data-endpoint="PUTapi-products--id-"
                    data-component="body"             >
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;
@@ -3599,12 +3599,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must be at least 0. Must not be greater than 100. Example: <code>20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>type_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>typeIva</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="type_iva"                data-endpoint="PUTapi-products--id-"
+               step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
                value="1"
                data-component="body">
     <br>
@@ -3613,24 +3613,24 @@ Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>rate_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>rateIva</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="rate_iva"                data-endpoint="PUTapi-products--id-"
+               step="any"               name="rateIva"                data-endpoint="PUTapi-products--id-"
                value="3"
                data-component="body">
     <br>
 <p>Must be at least 0. Must not be greater than 100. Example: <code>3</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>quota_iva</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>quotaIva</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="quota_iva"                data-endpoint="PUTapi-products--id-"
+               step="any"               name="quotaIva"                data-endpoint="PUTapi-products--id-"
                value="22"
                data-component="body">
     <br>
@@ -3649,12 +3649,12 @@ Must be one of:
 <p>Must be at least 0. Must not be greater than 100. Example: <code>5</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>imp_esp</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>impEsp</code></b>&nbsp;&nbsp;
 <small>number</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="imp_esp"                data-endpoint="PUTapi-products--id-"
+               step="any"               name="impEsp"                data-endpoint="PUTapi-products--id-"
                value="10"
                data-component="body">
     <br>
@@ -3667,10 +3667,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4003,13 +4003,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"id_user_type\": 16,
-    \"first_name\": \"n\",
-    \"last_name\": \"g\",
-    \"user_name\": \"z\",
+    \"idUserType\": 16,
+    \"firstName\": \"n\",
+    \"lastName\": \"g\",
+    \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -4026,13 +4026,13 @@ const headers = {
 };
 
 let body = {
-    "id_user_type": 16,
-    "first_name": "n",
-    "last_name": "g",
-    "user_name": "z",
+    "idUserType": 16,
+    "firstName": "n",
+    "lastName": "g",
+    "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -4143,48 +4143,48 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>id_user_type</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>idUserType</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="id_user_type"                data-endpoint="POSTapi-users"
+               step="any"               name="idUserType"                data-endpoint="POSTapi-users"
                value="16"
                data-component="body">
     <br>
 <p>The <code>id</code> of an existing record in the user_types table. Example: <code>16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>first_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>firstName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="first_name"                data-endpoint="POSTapi-users"
+                              name="firstName"                data-endpoint="POSTapi-users"
                value="n"
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>n</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>last_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>lastName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="last_name"                data-endpoint="POSTapi-users"
+                              name="lastName"                data-endpoint="POSTapi-users"
                value="g"
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>g</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>user_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>userName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="user_name"                data-endpoint="POSTapi-users"
+                              name="userName"                data-endpoint="POSTapi-users"
                value="z"
                data-component="body">
     <br>
@@ -4221,10 +4221,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-users"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4414,13 +4414,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"id_user_type\": 16,
-    \"first_name\": \"n\",
-    \"last_name\": \"g\",
-    \"user_name\": \"z\",
+    \"idUserType\": 16,
+    \"firstName\": \"n\",
+    \"lastName\": \"g\",
+    \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -4437,13 +4437,13 @@ const headers = {
 };
 
 let body = {
-    "id_user_type": 16,
-    "first_name": "n",
-    "last_name": "g",
-    "user_name": "z",
+    "idUserType": 16,
+    "firstName": "n",
+    "lastName": "g",
+    "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -4584,48 +4584,48 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>id_user_type</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>idUserType</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="id_user_type"                data-endpoint="PUTapi-users--id-"
+               step="any"               name="idUserType"                data-endpoint="PUTapi-users--id-"
                value="16"
                data-component="body">
     <br>
 <p>The <code>id</code> of an existing record in the user_types table. Example: <code>16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>first_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>firstName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="first_name"                data-endpoint="PUTapi-users--id-"
+                              name="firstName"                data-endpoint="PUTapi-users--id-"
                value="n"
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>n</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>last_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>lastName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="last_name"                data-endpoint="PUTapi-users--id-"
+                              name="lastName"                data-endpoint="PUTapi-users--id-"
                value="g"
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>g</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>user_name</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>userName</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="user_name"                data-endpoint="PUTapi-users--id-"
+                              name="userName"                data-endpoint="PUTapi-users--id-"
                value="z"
                data-component="body">
     <br>
@@ -4662,10 +4662,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-users--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>

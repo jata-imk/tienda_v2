@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "7ece4399-1817-4cd1-978c-910a04dc1480",
+        "_postman_id": "fa47bd5a-a9ae-4563-96f5-841f6df85c92",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -41,7 +41,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_name\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
+                            "raw": "{\"userName\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
                         },
                         "description": "Validates credentials, manages session, returns a JWT valid for 24 hours.\nIf the user already has an active session, the same JWT is reused.",
                         "auth": {
@@ -64,7 +64,7 @@
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{\"message\":\"The user_name field is required.\",\"errors\":{}}",
+                            "body": "{\"message\":\"The userName field is required.\",\"errors\":{}}",
                             "name": ""
                         }
                     ]
@@ -167,7 +167,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -256,7 +256,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -430,7 +430,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -519,7 +519,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -687,7 +687,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id_category\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"code_bar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stock_control\":true,\"stock\":89,\"discount\":20,\"type_iva\":1,\"rate_iva\":3,\"quota_iva\":22,\"isr\":5,\"imp_esp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -776,7 +776,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id_category\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"code_bar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stock_control\":true,\"stock\":89,\"discount\":20,\"type_iva\":1,\"rate_iva\":3,\"quota_iva\":22,\"isr\":5,\"imp_esp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -901,7 +901,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id_user_type\":16,\"first_name\":\"n\",\"last_name\":\"g\",\"user_name\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -990,7 +990,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id_user_type\":16,\"first_name\":\"n\",\"last_name\":\"g\",\"user_name\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },

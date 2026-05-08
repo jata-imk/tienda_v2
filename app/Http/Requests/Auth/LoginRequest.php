@@ -15,15 +15,15 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_name' => 'required|string',
-            'password'  => 'required|string',
+            'userName' => 'required|string',
+            'password' => 'required|string',
         ];
     }
 
     public function toDTO(): LoginDTO
     {
         return new LoginDTO(
-            userName: $this->input('user_name'),
+            userName: $this->input('userName'),
             password: $this->input('password'),
         );
     }

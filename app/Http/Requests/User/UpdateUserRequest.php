@@ -17,23 +17,23 @@ class UpdateUserRequest extends FormRequest
         $id = $this->route('user');
 
         return [
-            'id_user_type' => 'sometimes|integer|exists:user_types,id',
-            'first_name'   => 'sometimes|string|max:100',
-            'last_name'    => 'sometimes|string|max:100',
-            'user_name'    => "sometimes|string|max:100|unique:users,user_name,{$id}",
-            'email'        => "sometimes|email|unique:users,email,{$id}",
-            'password'     => 'nullable|string|min:8',
-            'status'       => 'sometimes|in:active,inactive',
+            'idUserType' => 'sometimes|integer|exists:user_types,id',
+            'firstName'  => 'sometimes|string|max:100',
+            'lastName'   => 'sometimes|string|max:100',
+            'userName'   => "sometimes|string|max:100|unique:users,user_name,{$id}",
+            'email'      => "sometimes|email|unique:users,email,{$id}",
+            'password'   => 'nullable|string|min:8',
+            'status'     => 'sometimes|in:active,inactive',
         ];
     }
 
     public function toDTO(): UpdateUserDTO
     {
         return new UpdateUserDTO(
-            userTypeId: $this->filled('id_user_type') ? (int) $this->input('id_user_type') : null,
-            firstName:  $this->input('first_name'),
-            lastName:   $this->input('last_name'),
-            userName:   $this->input('user_name'),
+            userTypeId: $this->filled('idUserType') ? (int) $this->input('idUserType') : null,
+            firstName:  $this->input('firstName'),
+            lastName:   $this->input('lastName'),
+            userName:   $this->input('userName'),
             email:      $this->input('email'),
             password:   $this->filled('password') ? $this->input('password') : null,
             status:     $this->input('status'),

@@ -15,23 +15,23 @@ class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_user_type' => 'required|integer|exists:user_types,id',
-            'first_name'   => 'required|string|max:100',
-            'last_name'    => 'required|string|max:100',
-            'user_name'    => 'required|string|max:100|unique:users,user_name',
-            'email'        => 'required|email|unique:users,email',
-            'password'     => 'required|string|min:8',
-            'status'       => 'sometimes|in:active,inactive',
+            'idUserType' => 'required|integer|exists:user_types,id',
+            'firstName'  => 'required|string|max:100',
+            'lastName'   => 'required|string|max:100',
+            'userName'   => 'required|string|max:100|unique:users,user_name',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|string|min:8',
+            'status'     => 'sometimes|in:active,inactive',
         ];
     }
 
     public function toDTO(): CreateUserDTO
     {
         return new CreateUserDTO(
-            userTypeId: (int) $this->input('id_user_type'),
-            firstName:  $this->input('first_name'),
-            lastName:   $this->input('last_name'),
-            userName:   $this->input('user_name'),
+            userTypeId: (int) $this->input('idUserType'),
+            firstName:  $this->input('firstName'),
+            lastName:   $this->input('lastName'),
+            userName:   $this->input('userName'),
             email:      $this->input('email'),
             password:   $this->input('password'),
             status:     $this->input('status', 'active'),

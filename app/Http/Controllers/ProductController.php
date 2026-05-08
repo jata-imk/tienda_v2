@@ -67,9 +67,9 @@ class ProductController extends Controller
     /**
      * Create product
      *
-     * @bodyParam id_category integer required Category ID. Example: 1
+     * @bodyParam idCategory integer required Category ID. Example: 1
      * @bodyParam key string required Internal unique key. Example: 000001
-     * @bodyParam type_iva integer required IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A). Example: 1
+     * @bodyParam typeIva integer required IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A). Example: 1
      *
      * @response 201 {"ok":true,"code":201,"status":"Created","message":"Product created.","data":{}}
      */
