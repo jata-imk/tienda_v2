@@ -1,27 +1,24 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ImpuestosConfigController;
-use App\Http\Controllers\InventarioController;
-use App\Http\Controllers\TipoIvaController;
-use App\Http\Controllers\TipoMonedaController;
-use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:api', 'es.administrador'])->group(function () {
-    // Usuarios
-    Route::apiResource('usuarios', UsuarioController::class);
+    Route::delete('/logout', [AuthController::class, 'logout']);
 
-    // Configuración
-    Route::get('tipos-iva', [TipoIvaController::class, 'index']);
-    Route::get('impuestos-config', [ImpuestosConfigController::class, 'show']);
-    Route::put('impuestos-config', [ImpuestosConfigController::class, 'update']);
-    Route::apiResource('tipos-moneda', TipoMonedaController::class);
+    // Users
+    Route::apiResource('users', UserController::class);
 
-    // Inventario
-    Route::apiResource('categorias', CategoriaController::class);
-    Route::apiResource('inventario', InventarioController::class);
+    // Inventory
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class);
+
+    // Configuration
+    Route::apiResource('currencies', CurrencyController::class);
 });

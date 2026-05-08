@@ -8,17 +8,17 @@ servers:
     url: 'http://127.0.0.1:8000'
 tags:
   -
-    name: Autenticación
-    description: "\nEndpoints para el manejo de sesiones de usuario."
+    name: Authentication
+    description: "\nSession management endpoints."
   -
-    name: Configuración
-    description: "\nCatálogos y configuración del sistema. Todos los endpoints requieren JWT y rol administrador."
+    name: Configuration
+    description: ''
   -
-    name: Inventario
-    description: "\nGestión del inventario de productos. Todos los endpoints requieren JWT y rol administrador."
+    name: Inventory
+    description: ''
   -
-    name: Usuarios
-    description: "\nGestión de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador."
+    name: Users
+    description: ''
 components:
   securitySchemes:
     default:
@@ -31,13 +31,13 @@ security:
 paths:
   /api/login:
     post:
-      summary: 'Inicio de sesión'
-      operationId: inicioDeSesin
-      description: "Valida credenciales, gestiona la sesión y retorna un JWT válido por 24 horas\njunto con los datos del usuario y la empresa.\n\nSi el usuario ya tiene una sesión vigente con token activo, se reutiliza el mismo JWT.\nSi el token expiró, se genera uno nuevo y se cierra la sesión anterior."
+      summary: Login
+      operationId: login
+      description: "Validates credentials, manages session, returns a JWT valid for 24 hours.\nIf the user already has an active session, the same JWT is reused."
       parameters: []
       responses:
         200:
-          description: 'Login exitoso'
+          description: ''
           content:
             application/json:
               schema:
@@ -46,25 +46,11 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Inicio de sesión exitoso'
+                  message: 'Login successful'
                   data:
-                    token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
-                    empresa:
-                      nombre: 'Guayaberas Lopez Silva'
-                      logo: null
-                      modoOscuro: false
-                      configImp: []
-                      fechaUpdate: '2024-01-01 00:00:00'
-                      settings:
-                        grids: []
-                    user:
-                      nombre: Suriel
-                      primerApellido: Dzul
-                      segundoApellido: Dzul
-                      usuario: suriel.dzul
-                      email: dzulsuriel@gmail.com
-                      tipoUsuario: '1'
-                      permisos: []
+                    token: eyJ...
+                    companyInfo: {  }
+                    user: {  }
                 properties:
                   ok:
                     type: boolean
@@ -77,146 +63,66 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Inicio de sesión exitoso'
+                    example: 'Login successful'
                   data:
                     type: object
                     properties:
                       token:
                         type: string
-                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
-                      empresa:
+                        example: eyJ...
+                      companyInfo:
                         type: object
-                        properties:
-                          nombre:
-                            type: string
-                            example: 'Guayaberas Lopez Silva'
-                          logo:
-                            type: string
-                            example: null
-                            nullable: true
-                          modoOscuro:
-                            type: boolean
-                            example: false
-                          configImp:
-                            type: array
-                            example: []
-                          fechaUpdate:
-                            type: string
-                            example: '2024-01-01 00:00:00'
-                          settings:
-                            type: object
-                            properties:
-                              grids:
-                                type: array
-                                example: []
+                        properties: {  }
                       user:
                         type: object
-                        properties:
-                          nombre:
-                            type: string
-                            example: Suriel
-                          primerApellido:
-                            type: string
-                            example: Dzul
-                          segundoApellido:
-                            type: string
-                            example: Dzul
-                          usuario:
-                            type: string
-                            example: suriel.dzul
-                          email:
-                            type: string
-                            example: dzulsuriel@gmail.com
-                          tipoUsuario:
-                            type: string
-                            example: '1'
-                          permisos:
-                            type: array
-                            example: []
+                        properties: {  }
         401:
           description: ''
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: 'Credenciales incorrectas'
-                    type: object
-                    example:
-                      ok: false
-                      code: 401
-                      status: Unauthorized
-                      message: 'Contraseña incorrecta'
-                      data: null
-                    properties:
-                      ok:
-                        type: boolean
-                        example: false
-                      code:
-                        type: integer
-                        example: 401
-                      status:
-                        type: string
-                        example: Unauthorized
-                      message:
-                        type: string
-                        example: 'Contraseña incorrecta'
-                      data:
-                        type: string
-                        example: null
-                        nullable: true
-                  -
-                    description: 'Usuario inactivo o no existe'
-                    type: object
-                    example:
-                      ok: false
-                      code: 401
-                      status: Unauthorized
-                      message: 'Usuario no encontrado o inactivo'
-                      data: null
-                    properties:
-                      ok:
-                        type: boolean
-                        example: false
-                      code:
-                        type: integer
-                        example: 401
-                      status:
-                        type: string
-                        example: Unauthorized
-                      message:
-                        type: string
-                        example: 'Usuario no encontrado o inactivo'
-                      data:
-                        type: string
-                        example: null
-                        nullable: true
+                type: object
+                example:
+                  ok: false
+                  code: 401
+                  status: Unauthorized
+                  message: 'Incorrect password'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 401
+                  status:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Incorrect password'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
         422:
-          description: 'Campos faltantes'
+          description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'The username field is required.'
-                  errors:
-                    username:
-                      - 'The username field is required.'
+                  message: 'The user_name field is required.'
+                  errors: {  }
                 properties:
                   message:
                     type: string
-                    example: 'The username field is required.'
+                    example: 'The user_name field is required.'
                   errors:
                     type: object
-                    properties:
-                      username:
-                        type: array
-                        example:
-                          - 'The username field is required.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
-        - Autenticación
+        - Authentication
       requestBody:
         required: true
         content:
@@ -224,23 +130,23 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                user_name:
                   type: string
-                  description: 'Nombre de usuario.'
+                  description: Username.
                   example: suriel.dzul
                 password:
                   type: string
-                  description: 'Contraseña en texto plano.'
+                  description: Password.
                   example: suriel2024
               required:
-                - username
+                - user_name
                 - password
       security: []
-  /api/tipos-iva:
-    get:
-      summary: 'Listar tipos de IVA'
-      operationId: listarTiposDeIVA
-      description: 'Retorna el catálogo completo de tipos de IVA disponibles.'
+  /api/logout:
+    delete:
+      summary: Logout
+      operationId: logout
+      description: 'Revokes the current session token.'
       parameters: []
       responses:
         200:
@@ -253,28 +159,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Tipos de IVA obtenidos.'
-                  data:
-                    -
-                      id: 1
-                      name: general
-                      description: 'General (base: 16%)'
-                      dateCreation: '2024-01-01 00:00:00'
-                    -
-                      id: 2
-                      name: tasa_producto
-                      description: 'Tasa por producto'
-                      dateCreation: '2024-01-01 00:00:00'
-                    -
-                      id: 3
-                      name: cuota_producto
-                      description: 'Cuota por producto'
-                      dateCreation: '2024-01-01 00:00:00'
-                    -
-                      id: 4
-                      name: no_aplica
-                      description: 'No aplica'
-                      dateCreation: '2024-01-01 00:00:00'
+                  message: 'Session closed.'
+                  data: null
                 properties:
                   ok:
                     type: boolean
@@ -287,186 +173,46 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Tipos de IVA obtenidos.'
+                    example: 'Session closed.'
                   data:
-                    type: array
-                    example:
-                      -
-                        id: 1
-                        name: general
-                        description: 'General (base: 16%)'
-                        dateCreation: '2024-01-01 00:00:00'
-                      -
-                        id: 2
-                        name: tasa_producto
-                        description: 'Tasa por producto'
-                        dateCreation: '2024-01-01 00:00:00'
-                      -
-                        id: 3
-                        name: cuota_producto
-                        description: 'Cuota por producto'
-                        dateCreation: '2024-01-01 00:00:00'
-                      -
-                        id: 4
-                        name: no_aplica
-                        description: 'No aplica'
-                        dateCreation: '2024-01-01 00:00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: general
-                        description:
-                          type: string
-                          example: 'General (base: 16%)'
-                        dateCreation:
-                          type: string
-                          example: '2024-01-01 00:00:00'
-      tags:
-        - Configuración
-  /api/impuestos-config:
-    get:
-      summary: 'Ver configuración de impuestos base'
-      operationId: verConfiguracinDeImpuestosBase
-      description: 'Retorna los porcentajes base de IVA, ISR e impuesto especial.'
-      parameters: []
-      responses:
-        200:
+                    type: string
+                    example: null
+                    nullable: true
+        401:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  ok: true
-                  code: 200
-                  status: OK
-                  message: 'Configuración de impuestos obtenida.'
-                  data:
-                    iva: 16
-                    isr: 10
-                    impEsp: 0
-                    dateCreation: '2024-01-01 00:00:00'
-                    dateUpdate: null
+                  ok: false
+                  code: 401
+                  status: Unauthorized
+                  message: 'No active session found.'
+                  data: null
                 properties:
                   ok:
                     type: boolean
-                    example: true
+                    example: false
                   code:
                     type: integer
-                    example: 200
+                    example: 401
                   status:
                     type: string
-                    example: OK
+                    example: Unauthorized
                   message:
                     type: string
-                    example: 'Configuración de impuestos obtenida.'
+                    example: 'No active session found.'
                   data:
-                    type: object
-                    properties:
-                      iva:
-                        type: integer
-                        example: 16
-                      isr:
-                        type: integer
-                        example: 10
-                      impEsp:
-                        type: integer
-                        example: 0
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
-                      dateUpdate:
-                        type: string
-                        example: null
-                        nullable: true
-      tags:
-        - Configuración
-      security: []
-    put:
-      summary: 'Actualizar configuración de impuestos base'
-      operationId: actualizarConfiguracinDeImpuestosBase
-      description: 'Actualiza uno o más porcentajes base. Solo se modifican los campos enviados.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  ok: true
-                  code: 200
-                  status: OK
-                  message: 'Configuración de impuestos actualizada.'
-                  data:
-                    iva: 8
-                    isr: 10
-                    impEsp: 0
-                    dateCreation: '2024-01-01 00:00:00'
-                    dateUpdate: '2024-01-02 00:00:00'
-                properties:
-                  ok:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  status:
                     type: string
-                    example: OK
-                  message:
-                    type: string
-                    example: 'Configuración de impuestos actualizada.'
-                  data:
-                    type: object
-                    properties:
-                      iva:
-                        type: integer
-                        example: 8
-                      isr:
-                        type: integer
-                        example: 10
-                      impEsp:
-                        type: integer
-                        example: 0
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
-                      dateUpdate:
-                        type: string
-                        example: '2024-01-02 00:00:00'
+                    example: null
+                    nullable: true
       tags:
-        - Configuración
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                iva:
-                  type: number
-                  description: 'optional Porcentaje IVA base (0-100).'
-                  example: 8.0
-                isr:
-                  type: number
-                  description: 'optional Porcentaje ISR base (0-100).'
-                  example: 10.0
-                imp_esp:
-                  type: number
-                  description: 'optional Porcentaje impuesto especial base (0-100).'
-                  example: 0.0
-      security: []
-  /api/tipos-moneda:
+        - Authentication
+  /api/currencies:
     get:
-      summary: 'Listar tipos de moneda'
-      operationId: listarTiposDeMoneda
+      summary: 'List currencies'
+      operationId: listCurrencies
       description: ''
       parameters: []
       responses:
@@ -480,15 +226,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Tipos de moneda obtenidos.'
-                  data:
-                    -
-                      id: 1
-                      status: activo
-                      name: 'Pesos Mexicanos'
-                      code: MXN
-                      symbol: $
-                      dateCreation: '2024-01-01 00:00:00'
+                  message: 'Currencies retrieved.'
+                  data: []
                 properties:
                   ok:
                     type: boolean
@@ -501,44 +240,15 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Tipos de moneda obtenidos.'
+                    example: 'Currencies retrieved.'
                   data:
                     type: array
-                    example:
-                      -
-                        id: 1
-                        status: activo
-                        name: 'Pesos Mexicanos'
-                        code: MXN
-                        symbol: $
-                        dateCreation: '2024-01-01 00:00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        status:
-                          type: string
-                          example: activo
-                        name:
-                          type: string
-                          example: 'Pesos Mexicanos'
-                        code:
-                          type: string
-                          example: MXN
-                        symbol:
-                          type: string
-                          example: $
-                        dateCreation:
-                          type: string
-                          example: '2024-01-01 00:00:00'
+                    example: []
       tags:
-        - Configuración
-      security: []
+        - Configuration
     post:
-      summary: 'Crear tipo de moneda'
-      operationId: crearTipoDeMoneda
+      summary: 'Create currency'
+      operationId: createCurrency
       description: ''
       parameters: []
       responses:
@@ -552,14 +262,8 @@ paths:
                   ok: true
                   code: 201
                   status: Created
-                  message: 'Tipo de moneda creado.'
-                  data:
-                    id: 2
-                    status: activo
-                    name: 'Dólar Americano'
-                    code: USD
-                    symbol: $
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Currency created.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -572,54 +276,12 @@ paths:
                     example: Created
                   message:
                     type: string
-                    example: 'Tipo de moneda creado.'
+                    example: 'Currency created.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 2
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Dólar Americano'
-                      code:
-                        type: string
-                        example: USD
-                      symbol:
-                        type: string
-                        example: $
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'The code has already been taken.'
-                  errors:
-                    code:
-                      - 'The code has already been taken.'
-                properties:
-                  message:
-                    type: string
-                    example: 'The code has already been taken.'
-                  errors:
-                    type: object
-                    properties:
-                      code:
-                        type: array
-                        example:
-                          - 'The code has already been taken.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
-        - Configuración
+        - Configuration
       requestBody:
         required: true
         content:
@@ -629,29 +291,31 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Nombre de la moneda.'
-                  example: 'Dólar Americano'
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
                 code:
                   type: string
-                  description: 'Código ISO (3 letras).'
-                  example: USD
+                  description: 'Must not be greater than 10 characters.'
+                  example: ngzmiy
                 symbol:
                   type: string
-                  description: Símbolo.
-                  example: $
+                  description: 'Must not be greater than 10 characters.'
+                  example: vdljni
                 status:
                   type: string
-                  description: 'optional Estado. Valores: activo, inactivo.'
-                  example: activo
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
               required:
                 - name
                 - code
                 - symbol
-      security: []
-  '/api/tipos-moneda/{id}':
+  '/api/currencies/{id}':
     get:
-      summary: 'Ver tipo de moneda'
-      operationId: verTipoDeMoneda
+      summary: 'Get currency'
+      operationId: getCurrency
       description: ''
       parameters: []
       responses:
@@ -665,14 +329,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Tipo de moneda obtenido.'
-                  data:
-                    id: 1
-                    status: activo
-                    name: 'Pesos Mexicanos'
-                    code: MXN
-                    symbol: $
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Currency retrieved.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -685,28 +343,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Tipo de moneda obtenido.'
+                    example: 'Currency retrieved.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Pesos Mexicanos'
-                      code:
-                        type: string
-                        example: MXN
-                      symbol:
-                        type: string
-                        example: $
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -717,7 +357,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Tipo de moneda no encontrado.'
+                  message: 'Currency not found.'
                   data: null
                 properties:
                   ok:
@@ -731,17 +371,16 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Tipo de moneda no encontrado.'
+                    example: 'Currency not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Configuración
-      security: []
+        - Configuration
     put:
-      summary: 'Actualizar tipo de moneda'
-      operationId: actualizarTipoDeMoneda
+      summary: 'Update currency'
+      operationId: updateCurrency
       description: ''
       parameters: []
       responses:
@@ -755,14 +394,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Tipo de moneda actualizado.'
-                  data:
-                    id: 1
-                    status: activo
-                    name: 'Pesos Mexicanos'
-                    code: MXN
-                    symbol: $
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Currency updated.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -775,28 +408,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Tipo de moneda actualizado.'
+                    example: 'Currency updated.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Pesos Mexicanos'
-                      code:
-                        type: string
-                        example: MXN
-                      symbol:
-                        type: string
-                        example: $
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -807,7 +422,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Tipo de moneda no encontrado.'
+                  message: 'Currency not found.'
                   data: null
                 properties:
                   ok:
@@ -821,13 +436,13 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Tipo de moneda no encontrado.'
+                    example: 'Currency not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Configuración
+        - Configuration
       requestBody:
         required: false
         content:
@@ -850,14 +465,13 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactivo
+                  example: inactive
                   enum:
-                    - activo
-                    - inactivo
-      security: []
+                    - active
+                    - inactive
     delete:
-      summary: 'Desactivar tipo de moneda'
-      operationId: desactivarTipoDeMoneda
+      summary: 'Deactivate currency'
+      operationId: deactivateCurrency
       description: ''
       parameters: []
       responses:
@@ -871,7 +485,7 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Tipo de moneda desactivado.'
+                  message: 'Currency deactivated.'
                   data: null
                 properties:
                   ok:
@@ -885,7 +499,7 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Tipo de moneda desactivado.'
+                    example: 'Currency deactivated.'
                   data:
                     type: string
                     example: null
@@ -900,7 +514,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Tipo de moneda no encontrado.'
+                  message: 'Currency not found.'
                   data: null
                 properties:
                   ok:
@@ -914,29 +528,104 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Tipo de moneda no encontrado.'
+                    example: 'Currency not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Configuración
-      security: []
+        - Configuration
     parameters:
       -
         in: path
         name: id
-        description: 'ID del tipo de moneda.'
+        description: 'Currency ID.'
         example: 1
         required: true
         schema:
           type: integer
-  /api/categorias:
+  /api/categories:
     get:
-      summary: 'Listar categorías'
-      operationId: listarCategoras
-      description: ''
-      parameters: []
+      summary: 'List categories'
+      operationId: listCategories
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters:
+        -
+          in: query
+          name: 'p[page]'
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+        -
+          in: query
+          name: 'p[per_page]'
+          description: 'Items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page.'
+            example: 15
+        -
+          in: query
+          name: 'f[]'
+          description: 'Fields to return.'
+          example:
+            - id
+            - name
+          required: false
+          schema:
+            type: array
+            description: 'Fields to return.'
+            example:
+              - id
+              - name
+            items:
+              type: string
+        -
+          in: query
+          name: 'o[column]'
+          description: 'Order by column.'
+          example: name
+          required: false
+          schema:
+            type: string
+            description: 'Order by column.'
+            example: name
+        -
+          in: query
+          name: 'o[direction]'
+          description: 'Order direction (asc/desc).'
+          example: asc
+          required: false
+          schema:
+            type: string
+            description: 'Order direction (asc/desc).'
+            example: asc
+        -
+          in: query
+          name: 'w[status]'
+          description: 'Filter by status.'
+          example: active
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status.'
+            example: active
+        -
+          in: query
+          name: totalCount
+          description: 'Return total count.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Return total count.'
+            example: true
       responses:
         200:
           description: ''
@@ -948,14 +637,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Categorías obtenidas.'
-                  data:
-                    -
-                      id: 1
-                      status: activo
-                      name: 'Camisas lino'
-                      description: 'Camisas de todos tipos de lino'
-                      dateCreation: '2024-01-01 00:00:00'
+                  message: 'Categories retrieved.'
+                  data: []
                 properties:
                   ok:
                     type: boolean
@@ -968,39 +651,15 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Categorías obtenidas.'
+                    example: 'Categories retrieved.'
                   data:
                     type: array
-                    example:
-                      -
-                        id: 1
-                        status: activo
-                        name: 'Camisas lino'
-                        description: 'Camisas de todos tipos de lino'
-                        dateCreation: '2024-01-01 00:00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        status:
-                          type: string
-                          example: activo
-                        name:
-                          type: string
-                          example: 'Camisas lino'
-                        description:
-                          type: string
-                          example: 'Camisas de todos tipos de lino'
-                        dateCreation:
-                          type: string
-                          example: '2024-01-01 00:00:00'
+                    example: []
       tags:
-        - Inventario
+        - Inventory
     post:
-      summary: 'Crear categoría'
-      operationId: crearCategora
+      summary: 'Create category'
+      operationId: createCategory
       description: ''
       parameters: []
       responses:
@@ -1014,13 +673,8 @@ paths:
                   ok: true
                   code: 201
                   status: Created
-                  message: 'Categoría creada.'
-                  data:
-                    id: 1
-                    status: activo
-                    name: 'Camisas lino'
-                    description: 'Camisas de todos tipos de lino'
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Category created.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1033,27 +687,12 @@ paths:
                     example: Created
                   message:
                     type: string
-                    example: 'Categoría creada.'
+                    example: 'Category created.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Camisas lino'
-                      description:
-                        type: string
-                        example: 'Camisas de todos tipos de lino'
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
       tags:
-        - Inventario
+        - Inventory
       requestBody:
         required: true
         content:
@@ -1063,23 +702,26 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Nombre de la categoría.'
-                  example: 'Camisas lino'
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
                 description:
                   type: string
-                  description: 'optional Descripción.'
-                  example: 'Camisas de todos tipos de lino'
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
                   nullable: true
                 status:
                   type: string
-                  description: 'optional Estado. Valores: activo, inactivo.'
-                  example: activo
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
               required:
                 - name
-  '/api/categorias/{id}':
+  '/api/categories/{id}':
     get:
-      summary: 'Ver categoría'
-      operationId: verCategora
+      summary: 'Get category'
+      operationId: getCategory
       description: ''
       parameters: []
       responses:
@@ -1093,13 +735,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Categoría obtenida.'
-                  data:
-                    id: 1
-                    status: activo
-                    name: 'Camisas lino'
-                    description: 'Camisas de todos tipos de lino'
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Category retrieved.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1112,25 +749,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Categoría obtenida.'
+                    example: 'Category retrieved.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Camisas lino'
-                      description:
-                        type: string
-                        example: 'Camisas de todos tipos de lino'
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -1141,7 +763,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Categoría no encontrada.'
+                  message: 'Category not found.'
                   data: null
                 properties:
                   ok:
@@ -1155,16 +777,16 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Categoría no encontrada.'
+                    example: 'Category not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
+        - Inventory
     put:
-      summary: 'Actualizar categoría'
-      operationId: actualizarCategora
+      summary: 'Update category'
+      operationId: updateCategory
       description: ''
       parameters: []
       responses:
@@ -1178,13 +800,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Categoría actualizada.'
-                  data:
-                    id: 1
-                    status: activo
-                    name: 'Camisas lino'
-                    description: 'Camisas de todos tipos de lino'
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Category updated.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1197,25 +814,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Categoría actualizada.'
+                    example: 'Category updated.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      status:
-                        type: string
-                        example: activo
-                      name:
-                        type: string
-                        example: 'Camisas lino'
-                      description:
-                        type: string
-                        example: 'Camisas de todos tipos de lino'
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -1226,7 +828,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Categoría no encontrada.'
+                  message: 'Category not found.'
                   data: null
                 properties:
                   ok:
@@ -1240,13 +842,13 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Categoría no encontrada.'
+                    example: 'Category not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
+        - Inventory
       requestBody:
         required: false
         content:
@@ -1266,13 +868,13 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: activo
+                  example: inactive
                   enum:
-                    - activo
-                    - inactivo
+                    - active
+                    - inactive
     delete:
-      summary: 'Desactivar categoría'
-      operationId: desactivarCategora
+      summary: 'Deactivate category'
+      operationId: deactivateCategory
       description: ''
       parameters: []
       responses:
@@ -1286,7 +888,7 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Categoría desactivada.'
+                  message: 'Category deactivated.'
                   data: null
                 properties:
                   ok:
@@ -1300,7 +902,7 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Categoría desactivada.'
+                    example: 'Category deactivated.'
                   data:
                     type: string
                     example: null
@@ -1315,7 +917,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Categoría no encontrada.'
+                  message: 'Category not found.'
                   data: null
                 properties:
                   ok:
@@ -1329,28 +931,104 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Categoría no encontrada.'
+                    example: 'Category not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
+        - Inventory
     parameters:
       -
         in: path
         name: id
-        description: 'ID de la categoría.'
+        description: 'Category ID.'
         example: 1
         required: true
         schema:
           type: integer
-  /api/inventario:
+  /api/products:
     get:
-      summary: 'Listar productos'
-      operationId: listarProductos
-      description: ''
-      parameters: []
+      summary: 'List products'
+      operationId: listProducts
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters:
+        -
+          in: query
+          name: 'p[page]'
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+        -
+          in: query
+          name: 'p[per_page]'
+          description: 'Items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page.'
+            example: 15
+        -
+          in: query
+          name: 'f[]'
+          description: 'Fields to return.'
+          example:
+            - id
+            - name
+          required: false
+          schema:
+            type: array
+            description: 'Fields to return.'
+            example:
+              - id
+              - name
+            items:
+              type: string
+        -
+          in: query
+          name: 'o[column]'
+          description: 'Order by column.'
+          example: name
+          required: false
+          schema:
+            type: string
+            description: 'Order by column.'
+            example: name
+        -
+          in: query
+          name: 'o[direction]'
+          description: 'Order direction (asc/desc).'
+          example: asc
+          required: false
+          schema:
+            type: string
+            description: 'Order direction (asc/desc).'
+            example: asc
+        -
+          in: query
+          name: 'w[status]'
+          description: 'Filter by field value.'
+          example: active
+          required: false
+          schema:
+            type: string
+            description: 'Filter by field value.'
+            example: active
+        -
+          in: query
+          name: totalCount
+          description: 'Return total count.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Return total count.'
+            example: true
       responses:
         200:
           description: ''
@@ -1362,29 +1040,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Productos obtenidos.'
-                  data:
-                    -
-                      id: 1
-                      idCategory: 1
-                      category: 'Camisas lino'
-                      status: activo
-                      key: '000001'
-                      name: 'Guayabera blanca'
-                      description: 'Guayabera caballero 100% lino'
-                      codebar: '8888888888881'
-                      price: 800
-                      cost: 600
-                      stockControl: true
-                      stock: 20
-                      discount: 0
-                      typeIVA: 1
-                      tipoIva: general
-                      rateIVA: null
-                      quotaIVA: null
-                      ISR: 0
-                      impESP: 0
-                      dateCreation: '2024-01-01 00:00:00'
+                  message: 'Products retrieved.'
+                  data: []
                 properties:
                   ok:
                     type: boolean
@@ -1397,102 +1054,15 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Productos obtenidos.'
+                    example: 'Products retrieved.'
                   data:
                     type: array
-                    example:
-                      -
-                        id: 1
-                        idCategory: 1
-                        category: 'Camisas lino'
-                        status: activo
-                        key: '000001'
-                        name: 'Guayabera blanca'
-                        description: 'Guayabera caballero 100% lino'
-                        codebar: '8888888888881'
-                        price: 800
-                        cost: 600
-                        stockControl: true
-                        stock: 20
-                        discount: 0
-                        typeIVA: 1
-                        tipoIva: general
-                        rateIVA: null
-                        quotaIVA: null
-                        ISR: 0
-                        impESP: 0
-                        dateCreation: '2024-01-01 00:00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        idCategory:
-                          type: integer
-                          example: 1
-                        category:
-                          type: string
-                          example: 'Camisas lino'
-                        status:
-                          type: string
-                          example: activo
-                        key:
-                          type: string
-                          example: '000001'
-                        name:
-                          type: string
-                          example: 'Guayabera blanca'
-                        description:
-                          type: string
-                          example: 'Guayabera caballero 100% lino'
-                        codebar:
-                          type: string
-                          example: '8888888888881'
-                        price:
-                          type: integer
-                          example: 800
-                        cost:
-                          type: integer
-                          example: 600
-                        stockControl:
-                          type: boolean
-                          example: true
-                        stock:
-                          type: integer
-                          example: 20
-                        discount:
-                          type: integer
-                          example: 0
-                        typeIVA:
-                          type: integer
-                          example: 1
-                        tipoIva:
-                          type: string
-                          example: general
-                        rateIVA:
-                          type: string
-                          example: null
-                          nullable: true
-                        quotaIVA:
-                          type: string
-                          example: null
-                          nullable: true
-                        ISR:
-                          type: integer
-                          example: 0
-                        impESP:
-                          type: integer
-                          example: 0
-                        dateCreation:
-                          type: string
-                          example: '2024-01-01 00:00:00'
+                    example: []
       tags:
-        - Inventario
-      security: []
+        - Inventory
     post:
-      summary: 'Crear producto'
-      operationId: crearProducto
+      summary: 'Create product'
+      operationId: createProduct
       description: ''
       parameters: []
       responses:
@@ -1506,28 +1076,8 @@ paths:
                   ok: true
                   code: 201
                   status: Created
-                  message: 'Producto creado.'
-                  data:
-                    id: 1
-                    idCategory: 1
-                    category: 'Camisas lino'
-                    status: activo
-                    key: '000001'
-                    name: 'Guayabera blanca'
-                    description: 'Guayabera caballero 100% lino'
-                    codebar: '8888888888881'
-                    price: 800
-                    cost: 600
-                    stockControl: true
-                    stock: 20
-                    discount: 0
-                    typeIVA: 1
-                    tipoIva: general
-                    rateIVA: null
-                    quotaIVA: null
-                    ISR: 0
-                    impESP: 0
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Product created.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1540,98 +1090,12 @@ paths:
                     example: Created
                   message:
                     type: string
-                    example: 'Producto creado.'
+                    example: 'Product created.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      idCategory:
-                        type: integer
-                        example: 1
-                      category:
-                        type: string
-                        example: 'Camisas lino'
-                      status:
-                        type: string
-                        example: activo
-                      key:
-                        type: string
-                        example: '000001'
-                      name:
-                        type: string
-                        example: 'Guayabera blanca'
-                      description:
-                        type: string
-                        example: 'Guayabera caballero 100% lino'
-                      codebar:
-                        type: string
-                        example: '8888888888881'
-                      price:
-                        type: integer
-                        example: 800
-                      cost:
-                        type: integer
-                        example: 600
-                      stockControl:
-                        type: boolean
-                        example: true
-                      stock:
-                        type: integer
-                        example: 20
-                      discount:
-                        type: integer
-                        example: 0
-                      typeIVA:
-                        type: integer
-                        example: 1
-                      tipoIva:
-                        type: string
-                        example: general
-                      rateIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      quotaIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      ISR:
-                        type: integer
-                        example: 0
-                      impESP:
-                        type: integer
-                        example: 0
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'The clave has already been taken.'
-                  errors:
-                    clave:
-                      - 'The clave has already been taken.'
-                properties:
-                  message:
-                    type: string
-                    example: 'The clave has already been taken.'
-                  errors:
-                    type: object
-                    properties:
-                      clave:
-                        type: array
-                        example:
-                          - 'The clave has already been taken.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
-        - Inventario
+        - Inventory
       requestBody:
         required: true
         content:
@@ -1639,88 +1103,95 @@ paths:
             schema:
               type: object
               properties:
-                category_id:
+                id_category:
                   type: integer
-                  description: 'ID de la categoría.'
+                  description: 'Category ID.'
                   example: 1
-                clave:
+                key:
                   type: string
-                  description: 'Clave interna única del producto.'
+                  description: 'Internal unique key.'
                   example: '000001'
                 name:
                   type: string
-                  description: 'Nombre del producto.'
-                  example: 'Guayabera blanca'
+                  description: 'Must not be greater than 200 characters.'
+                  example: g
                 description:
                   type: string
-                  description: 'optional Descripción.'
-                  example: 'Guayabera caballero 100% lino'
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
                   nullable: true
-                codebar:
+                code_bar:
                   type: string
-                  description: 'optional Código de barras.'
-                  example: '8888888888881'
+                  description: 'Must not be greater than 50 characters.'
+                  example: v
+                  nullable: true
+                size:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: dljnikhwaykcmyuw
                   nullable: true
                 price:
                   type: number
-                  description: 'Precio base (sin IVA).'
-                  example: 800.0
+                  description: 'Must be at least 0.'
+                  example: 67
                 cost:
                   type: number
-                  description: Costo.
-                  example: 600.0
+                  description: 'Must be at least 0.'
+                  example: 61
                 stock_control:
                   type: boolean
-                  description: 'Activar control de stock.'
+                  description: ''
                   example: true
                 stock:
                   type: number
-                  description: 'Stock inicial.'
-                  example: 20.0
+                  description: 'Must be at least 0.'
+                  example: 89
                 discount:
                   type: number
-                  description: 'optional Porcentaje de descuento (0-100).'
-                  example: 0.0
-                type_iva_id:
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 20
+                type_iva:
                   type: integer
-                  description: 'ID del tipo de IVA (1=general, 2=tasa, 3=cuota, 4=no aplica).'
+                  description: 'IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A).'
                   example: 1
                 rate_iva:
                   type: number
-                  description: 'optional Tasa IVA específica. Requerido si type_iva_id=2.'
-                  example: null
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 3
                   nullable: true
                 quota_iva:
                   type: number
-                  description: 'optional Cuota IVA fija por unidad. Requerido si type_iva_id=3.'
-                  example: null
+                  description: 'Must be at least 0.'
+                  example: 22
                   nullable: true
                 isr:
                   type: number
-                  description: 'optional Porcentaje ISR (0-100).'
-                  example: 0.0
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 5
                 imp_esp:
                   type: number
-                  description: 'optional Porcentaje impuesto especial (0-100).'
-                  example: 0.0
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 10
                 status:
                   type: string
-                  description: 'optional Estado. Valores: activo, baja.'
-                  example: activo
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
               required:
-                - category_id
-                - clave
+                - id_category
+                - key
                 - name
                 - price
                 - cost
                 - stock_control
                 - stock
-                - type_iva_id
-      security: []
-  '/api/inventario/{id}':
+                - type_iva
+  '/api/products/{id}':
     get:
-      summary: 'Ver producto'
-      operationId: verProducto
+      summary: 'Get product'
+      operationId: getProduct
       description: ''
       parameters: []
       responses:
@@ -1734,28 +1205,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Producto obtenido.'
-                  data:
-                    id: 1
-                    idCategory: 1
-                    category: 'Camisas lino'
-                    status: activo
-                    key: '000001'
-                    name: 'Guayabera blanca'
-                    description: 'Guayabera caballero 100% lino'
-                    codebar: '8888888888881'
-                    price: 800
-                    cost: 600
-                    stockControl: true
-                    stock: 20
-                    discount: 0
-                    typeIVA: 1
-                    tipoIva: general
-                    rateIVA: null
-                    quotaIVA: null
-                    ISR: 0
-                    impESP: 0
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Product retrieved.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1768,72 +1219,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Producto obtenido.'
+                    example: 'Product retrieved.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      idCategory:
-                        type: integer
-                        example: 1
-                      category:
-                        type: string
-                        example: 'Camisas lino'
-                      status:
-                        type: string
-                        example: activo
-                      key:
-                        type: string
-                        example: '000001'
-                      name:
-                        type: string
-                        example: 'Guayabera blanca'
-                      description:
-                        type: string
-                        example: 'Guayabera caballero 100% lino'
-                      codebar:
-                        type: string
-                        example: '8888888888881'
-                      price:
-                        type: integer
-                        example: 800
-                      cost:
-                        type: integer
-                        example: 600
-                      stockControl:
-                        type: boolean
-                        example: true
-                      stock:
-                        type: integer
-                        example: 20
-                      discount:
-                        type: integer
-                        example: 0
-                      typeIVA:
-                        type: integer
-                        example: 1
-                      tipoIva:
-                        type: string
-                        example: general
-                      rateIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      quotaIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      ISR:
-                        type: integer
-                        example: 0
-                      impESP:
-                        type: integer
-                        example: 0
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -1844,7 +1233,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Producto no encontrado.'
+                  message: 'Product not found.'
                   data: null
                 properties:
                   ok:
@@ -1858,18 +1247,17 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Producto no encontrado.'
+                    example: 'Product not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
-      security: []
+        - Inventory
     put:
-      summary: 'Actualizar producto'
-      operationId: actualizarProducto
-      description: 'Todos los campos son opcionales. Solo enviar los que se quieran modificar.'
+      summary: 'Update product'
+      operationId: updateProduct
+      description: ''
       parameters: []
       responses:
         200:
@@ -1882,28 +1270,8 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Producto actualizado.'
-                  data:
-                    id: 1
-                    idCategory: 1
-                    category: 'Camisas lino'
-                    status: activo
-                    key: '000001'
-                    name: 'Guayabera blanca'
-                    description: 'Guayabera caballero 100% lino'
-                    codebar: '8888888888881'
-                    price: 900
-                    cost: 600
-                    stockControl: true
-                    stock: 20
-                    discount: 0
-                    typeIVA: 1
-                    tipoIva: general
-                    rateIVA: null
-                    quotaIVA: null
-                    ISR: 0
-                    impESP: 0
-                    dateCreation: '2024-01-01 00:00:00'
+                  message: 'Product updated.'
+                  data: {  }
                 properties:
                   ok:
                     type: boolean
@@ -1916,72 +1284,10 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Producto actualizado.'
+                    example: 'Product updated.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      idCategory:
-                        type: integer
-                        example: 1
-                      category:
-                        type: string
-                        example: 'Camisas lino'
-                      status:
-                        type: string
-                        example: activo
-                      key:
-                        type: string
-                        example: '000001'
-                      name:
-                        type: string
-                        example: 'Guayabera blanca'
-                      description:
-                        type: string
-                        example: 'Guayabera caballero 100% lino'
-                      codebar:
-                        type: string
-                        example: '8888888888881'
-                      price:
-                        type: integer
-                        example: 900
-                      cost:
-                        type: integer
-                        example: 600
-                      stockControl:
-                        type: boolean
-                        example: true
-                      stock:
-                        type: integer
-                        example: 20
-                      discount:
-                        type: integer
-                        example: 0
-                      typeIVA:
-                        type: integer
-                        example: 1
-                      tipoIva:
-                        type: string
-                        example: general
-                      rateIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      quotaIVA:
-                        type: string
-                        example: null
-                        nullable: true
-                      ISR:
-                        type: integer
-                        example: 0
-                      impESP:
-                        type: integer
-                        example: 0
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -1992,7 +1298,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Producto no encontrado.'
+                  message: 'Product not found.'
                   data: null
                 properties:
                   ok:
@@ -2006,13 +1312,13 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Producto no encontrado.'
+                    example: 'Product not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
+        - Inventory
       requestBody:
         required: false
         content:
@@ -2020,11 +1326,11 @@ paths:
             schema:
               type: object
               properties:
-                category_id:
+                id_category:
                   type: integer
-                  description: 'The <code>id</code> of an existing record in the categorias table.'
+                  description: 'The <code>id</code> of an existing record in the categories table.'
                   example: 16
-                clave:
+                key:
                   type: string
                   description: 'Must not be greater than 50 characters.'
                   example: 'n'
@@ -2037,65 +1343,74 @@ paths:
                   description: ''
                   example: 'Eius et animi quos velit et.'
                   nullable: true
-                codebar:
+                code_bar:
                   type: string
                   description: 'Must not be greater than 50 characters.'
                   example: v
                   nullable: true
+                size:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: dljnikhwaykcmyuw
+                  nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 42
+                  example: 67
                 cost:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 37
+                  example: 61
                 stock_control:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 stock:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 9
+                  example: 89
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 17
-                type_iva_id:
+                  example: 20
+                type_iva:
                   type: integer
-                  description: 'The <code>id</code> of an existing record in the tipos_iva table.'
-                  example: 16
+                  description: ''
+                  example: 1
+                  enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
                 rate_iva:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 22
+                  example: 3
                   nullable: true
                 quota_iva:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 84
+                  example: 22
                   nullable: true
                 isr:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 16
+                  example: 5
                 imp_esp:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 17
+                  example: 10
                 status:
                   type: string
                   description: ''
-                  example: activo
+                  example: inactive
                   enum:
-                    - activo
-                    - baja
-      security: []
+                    - active
+                    - inactive
     delete:
-      summary: 'Dar de baja producto'
-      operationId: darDeBajaProducto
-      description: 'Cambia el status del producto a `baja`. No elimina el registro.'
+      summary: 'Deactivate product'
+      operationId: deactivateProduct
+      description: 'Sets status to `inactive`. Does not delete the record.'
       parameters: []
       responses:
         200:
@@ -2108,7 +1423,7 @@ paths:
                   ok: true
                   code: 200
                   status: OK
-                  message: 'Producto dado de baja.'
+                  message: 'Product deactivated.'
                   data: null
                 properties:
                   ok:
@@ -2122,7 +1437,7 @@ paths:
                     example: OK
                   message:
                     type: string
-                    example: 'Producto dado de baja.'
+                    example: 'Product deactivated.'
                   data:
                     type: string
                     example: null
@@ -2137,7 +1452,7 @@ paths:
                   ok: false
                   code: 404
                   status: 'Not Found'
-                  message: 'Producto no encontrado.'
+                  message: 'Product not found.'
                   data: null
                 properties:
                   ok:
@@ -2151,28 +1466,27 @@ paths:
                     example: 'Not Found'
                   message:
                     type: string
-                    example: 'Producto no encontrado.'
+                    example: 'Product not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Inventario
-      security: []
+        - Inventory
     parameters:
       -
         in: path
         name: id
-        description: 'ID del producto.'
+        description: 'Product ID.'
         example: 1
         required: true
         schema:
           type: integer
-  /api/usuarios:
+  /api/users:
     get:
-      summary: 'Listar usuarios'
-      operationId: listarUsuarios
-      description: 'Retorna todos los usuarios registrados en el sistema.'
+      summary: 'List users'
+      operationId: listUsers
+      description: ''
       parameters: []
       responses:
         200:
@@ -2182,75 +1496,33 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
-                  message: 'Usuarios obtenidos.'
-                  data:
-                    -
-                      id: 1
-                      nombre: Suriel
-                      primerApellido: Dzul
-                      segundoApellido: Dzul
-                      usuario: suriel.dzul
-                      email: dzulsuriel@gmail.com
-                      tipoUsuario: administrador
-                      status: activo
-                      dateCreation: '2024-01-01 00:00:00'
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Users retrieved.'
+                  data: []
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
                     type: string
-                    example: ok
+                    example: OK
                   message:
                     type: string
-                    example: 'Usuarios obtenidos.'
+                    example: 'Users retrieved.'
                   data:
                     type: array
-                    example:
-                      -
-                        id: 1
-                        nombre: Suriel
-                        primerApellido: Dzul
-                        segundoApellido: Dzul
-                        usuario: suriel.dzul
-                        email: dzulsuriel@gmail.com
-                        tipoUsuario: administrador
-                        status: activo
-                        dateCreation: '2024-01-01 00:00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        nombre:
-                          type: string
-                          example: Suriel
-                        primerApellido:
-                          type: string
-                          example: Dzul
-                        segundoApellido:
-                          type: string
-                          example: Dzul
-                        usuario:
-                          type: string
-                          example: suriel.dzul
-                        email:
-                          type: string
-                          example: dzulsuriel@gmail.com
-                        tipoUsuario:
-                          type: string
-                          example: administrador
-                        status:
-                          type: string
-                          example: activo
-                        dateCreation:
-                          type: string
-                          example: '2024-01-01 00:00:00'
+                    example: []
       tags:
-        - Usuarios
+        - Users
     post:
-      summary: 'Crear usuario'
-      operationId: crearUsuario
-      description: 'Crea un nuevo usuario en el sistema.'
+      summary: 'Create user'
+      operationId: createUser
+      description: ''
       parameters: []
       responses:
         201:
@@ -2260,81 +1532,29 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
-                  message: 'Usuario creado.'
-                  data:
-                    id: 2
-                    nombre: Juan
-                    primerApellido: Pérez
-                    segundoApellido: López
-                    usuario: juan.perez
-                    email: juan@empresa.com
-                    tipoUsuario: administrador
-                    status: activo
-                    dateCreation: '2024-01-01 00:00:00'
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'User created.'
+                  data: {  }
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
                     type: string
-                    example: ok
+                    example: Created
                   message:
                     type: string
-                    example: 'Usuario creado.'
+                    example: 'User created.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 2
-                      nombre:
-                        type: string
-                        example: Juan
-                      primerApellido:
-                        type: string
-                        example: Pérez
-                      segundoApellido:
-                        type: string
-                        example: López
-                      usuario:
-                        type: string
-                        example: juan.perez
-                      email:
-                        type: string
-                        example: juan@empresa.com
-                      tipoUsuario:
-                        type: string
-                        example: administrador
-                      status:
-                        type: string
-                        example: activo
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'The username has already been taken.'
-                  errors:
-                    username:
-                      - 'The username has already been taken.'
-                properties:
-                  message:
-                    type: string
-                    example: 'The username has already been taken.'
-                  errors:
-                    type: object
-                    properties:
-                      username:
-                        type: array
-                        example:
-                          - 'The username has already been taken.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
-        - Usuarios
+        - Users
       requestBody:
         required: true
         content:
@@ -2342,51 +1562,49 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                  description: Nombre.
-                  example: Juan
+                id_user_type:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the user_types table.'
+                  example: 16
                 first_name:
                   type: string
-                  description: 'Primer apellido.'
-                  example: Pérez
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
                 last_name:
                   type: string
-                  description: 'Segundo apellido.'
-                  example: López
-                username:
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                user_name:
                   type: string
-                  description: 'Nombre de usuario único.'
-                  example: juan.perez
+                  description: 'Must not be greater than 100 characters.'
+                  example: z
                 email:
                   type: string
-                  description: 'Correo electrónico único.'
-                  example: juan@empresa.com
+                  description: 'Must be a valid email address.'
+                  example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: 'Contraseña (mínimo 8 caracteres).'
-                  example: secreto123
-                user_type_id:
-                  type: integer
-                  description: 'ID del tipo de usuario.'
-                  example: 1
+                  description: 'Must be at least 8 characters.'
+                  example: 'NvYgxwmi/#iw/kX'
                 status:
                   type: string
-                  description: 'optional Estado inicial. Valores: activo, inactivo.'
-                  example: activo
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
               required:
-                - name
+                - id_user_type
                 - first_name
                 - last_name
-                - username
+                - user_name
                 - email
                 - password
-                - user_type_id
-  '/api/usuarios/{id}':
+  '/api/users/{id}':
     get:
-      summary: 'Ver usuario'
-      operationId: verUsuario
-      description: 'Retorna los datos de un usuario específico.'
+      summary: 'Get user'
+      operationId: getUser
+      description: ''
       parameters: []
       responses:
         200:
@@ -2396,55 +1614,27 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
-                  message: 'Usuario obtenido.'
-                  data:
-                    id: 1
-                    nombre: Suriel
-                    primerApellido: Dzul
-                    segundoApellido: Dzul
-                    usuario: suriel.dzul
-                    email: dzulsuriel@gmail.com
-                    tipoUsuario: administrador
-                    status: activo
-                    dateCreation: '2024-01-01 00:00:00'
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'User retrieved.'
+                  data: {  }
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
                     type: string
-                    example: ok
+                    example: OK
                   message:
                     type: string
-                    example: 'Usuario obtenido.'
+                    example: 'User retrieved.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      nombre:
-                        type: string
-                        example: Suriel
-                      primerApellido:
-                        type: string
-                        example: Dzul
-                      segundoApellido:
-                        type: string
-                        example: Dzul
-                      usuario:
-                        type: string
-                        example: suriel.dzul
-                      email:
-                        type: string
-                        example: dzulsuriel@gmail.com
-                      tipoUsuario:
-                        type: string
-                        example: administrador
-                      status:
-                        type: string
-                        example: activo
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -2452,26 +1642,34 @@ paths:
               schema:
                 type: object
                 example:
-                  result: error
-                  message: 'Usuario no encontrado.'
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'User not found.'
                   data: null
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
                     type: string
-                    example: error
+                    example: 'Not Found'
                   message:
                     type: string
-                    example: 'Usuario no encontrado.'
+                    example: 'User not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Usuarios
+        - Users
     put:
-      summary: 'Actualizar usuario'
-      operationId: actualizarUsuario
-      description: "Actualiza los datos de un usuario. Todos los campos son opcionales excepto los que se quieran cambiar.\nPara cambiar la contraseña, incluir el campo `password`."
+      summary: 'Update user'
+      operationId: updateUser
+      description: ''
       parameters: []
       responses:
         200:
@@ -2481,55 +1679,27 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
-                  message: 'Usuario actualizado.'
-                  data:
-                    id: 1
-                    nombre: Juan
-                    primerApellido: Pérez
-                    segundoApellido: López
-                    usuario: juan.perez2
-                    email: juan2@empresa.com
-                    tipoUsuario: administrador
-                    status: activo
-                    dateCreation: '2024-01-01 00:00:00'
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'User updated.'
+                  data: {  }
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
                     type: string
-                    example: ok
+                    example: OK
                   message:
                     type: string
-                    example: 'Usuario actualizado.'
+                    example: 'User updated.'
                   data:
                     type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      nombre:
-                        type: string
-                        example: Juan
-                      primerApellido:
-                        type: string
-                        example: Pérez
-                      segundoApellido:
-                        type: string
-                        example: López
-                      usuario:
-                        type: string
-                        example: juan.perez2
-                      email:
-                        type: string
-                        example: juan2@empresa.com
-                      tipoUsuario:
-                        type: string
-                        example: administrador
-                      status:
-                        type: string
-                        example: activo
-                      dateCreation:
-                        type: string
-                        example: '2024-01-01 00:00:00'
+                    properties: {  }
         404:
           description: ''
           content:
@@ -2537,22 +1707,30 @@ paths:
               schema:
                 type: object
                 example:
-                  result: error
-                  message: 'Usuario no encontrado.'
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'User not found.'
                   data: null
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
                     type: string
-                    example: error
+                    example: 'Not Found'
                   message:
                     type: string
-                    example: 'Usuario no encontrado.'
+                    example: 'User not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Usuarios
+        - Users
       requestBody:
         required: false
         content:
@@ -2560,43 +1738,42 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                  description: 'optional Nombre.'
-                  example: Juan
+                id_user_type:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the user_types table.'
+                  example: 16
                 first_name:
                   type: string
-                  description: 'optional Primer apellido.'
-                  example: Pérez
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
                 last_name:
                   type: string
-                  description: 'optional Segundo apellido.'
-                  example: López
-                username:
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                user_name:
                   type: string
-                  description: 'optional Nombre de usuario único.'
-                  example: juan.perez2
+                  description: 'Must not be greater than 100 characters.'
+                  example: z
                 email:
                   type: string
-                  description: 'optional Correo electrónico único.'
-                  example: juan2@empresa.com
+                  description: 'Must be a valid email address.'
+                  example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: 'optional Nueva contraseña (mínimo 8 caracteres).'
-                  example: nuevapass123
+                  description: 'Must be at least 8 characters.'
+                  example: 'NvYgxwmi/#iw/kX'
                   nullable: true
-                user_type_id:
-                  type: integer
-                  description: 'optional ID del tipo de usuario.'
-                  example: 1
                 status:
                   type: string
-                  description: 'optional Estado. Valores: activo, inactivo.'
-                  example: activo
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
     delete:
-      summary: 'Desactivar usuario'
-      operationId: desactivarUsuario
-      description: 'Cambia el status del usuario a `inactivo`. No elimina el registro (soft-delete por status).'
+      summary: 'Deactivate user'
+      operationId: deactivateUser
+      description: 'Sets status to `inactive`. Does not delete the record.'
       parameters: []
       responses:
         200:
@@ -2606,16 +1783,24 @@ paths:
               schema:
                 type: object
                 example:
-                  result: ok
-                  message: 'Usuario desactivado.'
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'User deactivated.'
                   data: null
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
                     type: string
-                    example: ok
+                    example: OK
                   message:
                     type: string
-                    example: 'Usuario desactivado.'
+                    example: 'User deactivated.'
                   data:
                     type: string
                     example: null
@@ -2627,27 +1812,35 @@ paths:
               schema:
                 type: object
                 example:
-                  result: error
-                  message: 'Usuario no encontrado.'
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'User not found.'
                   data: null
                 properties:
-                  result:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
                     type: string
-                    example: error
+                    example: 'Not Found'
                   message:
                     type: string
-                    example: 'Usuario no encontrado.'
+                    example: 'User not found.'
                   data:
                     type: string
                     example: null
                     nullable: true
       tags:
-        - Usuarios
+        - Users
     parameters:
       -
         in: path
         name: id
-        description: 'ID del usuario.'
+        description: 'User ID.'
         example: 1
         required: true
         schema:

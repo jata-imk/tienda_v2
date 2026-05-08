@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\DTOs\Auth\LoginDTO;
-use App\Models\Company;
-use App\Models\Sesion;
-use App\Models\Token;
-use App\Models\Usuario;
+use App\Models\CompanyInfo;
+use App\Models\User;
+use App\Models\UserSession;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -15,104 +14,96 @@ class AuthService
 {
     public function login(LoginDTO $dto): array
     {
-        $usuario = Usuario::where('username', $dto->username)->first();
+        $user = User::where('user_name', $dto->userName)->first();
 
-        if (!$usuario || $usuario->status !== 'activo') {
-            return ['result' => 'error', 'message' => 'Usuario no encontrado o inactivo', 'data' => null];
+        if (!$user || $user->status !== 'active') {
+            return ['result' => 'error', 'message' => 'User not found or inactive', 'data' => null];
         }
 
-        if (!Hash::check($dto->password, $usuario->password)) {
-            return ['result' => 'error', 'message' => 'Contraseña incorrecta', 'data' => null];
+        if (!Hash::check($dto->password, $user->password)) {
+            return ['result' => 'error', 'message' => 'Incorrect password', 'data' => null];
         }
 
-        $jwtToken = $this->resolveToken($usuario);
-
-        $company = Company::first();
+        $token   = $this->resolveToken($user);
+        $company = CompanyInfo::first();
 
         return [
             'result'  => 'ok',
-            'message' => 'Inicio de sesión exitoso',
+            'message' => 'Login successful',
             'data'    => [
-                'token'   => $jwtToken,
-                'empresa' => $this->formatCompany($company),
-                'user'    => $this->formatUser($usuario),
+                'token'      => $token,
+                'companyInfo' => $this->formatCompany($company),
+                'user'       => $this->formatUser($user),
             ],
         ];
     }
 
-    private function resolveToken(Usuario $usuario): string
+    public function logout(string $tokenHash): bool
     {
-        // Buscar sesión vigente del usuario
-        $sesion = Sesion::where('user_id', $usuario->id)
-            ->where('status', 'vigente')
-            ->with('token')
-            ->latest('date_start')
+        $session = UserSession::where('token_hash', $tokenHash)
+            ->whereNull('revoked_at')
             ->first();
 
-        if ($sesion) {
-            // Sesión existe — verificar si el token sigue vigente
-            if ($sesion->token->status === 'vigente' && Carbon::now()->lt($sesion->token->date_expiration)) {
-                return $sesion->token->token;
-            }
-
-            // Token caducado — marcar sesión y token como finalizados
-            $sesion->token->update(['status' => 'caducado']);
-            $sesion->update(['status' => 'finalizado', 'date_end' => Carbon::now()]);
+        if (!$session) {
+            return false;
         }
 
-        // Crear nuevo JWT y registrar en BD
-        return $this->createTokenAndSession($usuario);
+        $session->update(['revoked_at' => Carbon::now()]);
+
+        return true;
     }
 
-    private function createTokenAndSession(Usuario $usuario): string
+    private function resolveToken(User $user): string
     {
-        $expiration = Carbon::now()->addHours(24);
+        $activeSession = UserSession::where('id_user', $user->id)
+            ->whereNull('revoked_at')
+            ->where('expires_at', '>', Carbon::now())
+            ->latest()
+            ->first();
 
-        $jwtString = JWTAuth::fromUser($usuario);
+        if ($activeSession) {
+            return $activeSession->token_hash;
+        }
 
-        $token = Token::create([
-            'status'          => 'vigente',
-            'token'           => $jwtString,
-            'date_start'      => Carbon::now(),
-            'date_expiration' => $expiration,
-        ]);
+        return $this->createSession($user);
+    }
 
-        Sesion::create([
-            'user_id'    => $usuario->id,
-            'token_id'   => $token->id,
-            'status'     => 'vigente',
-            'date_start' => Carbon::now(),
+    private function createSession(User $user): string
+    {
+        $jwtString = JWTAuth::fromUser($user);
+
+        UserSession::create([
+            'id_user'    => $user->id,
+            'token_hash' => $jwtString,
+            'expires_at' => Carbon::now()->addHours(24),
         ]);
 
         return $jwtString;
     }
 
-    private function formatUser(Usuario $usuario): array
+    private function formatUser(User $user): array
     {
         return [
-            'nombre'          => $usuario->name,
-            'primerApellido'  => $usuario->first_name,
-            'segundoApellido' => $usuario->last_name,
-            'usuario'         => $usuario->username,
-            'email'           => $usuario->email,
-            'tipoUsuario'     => (string) $usuario->user_type_id,
-            'permisos'        => [],
+            'firstName' => $user->first_name,
+            'lastName'  => $user->last_name,
+            'userName'  => $user->user_name,
+            'email'     => $user->email,
+            'userType'  => $user->id_user_type,
         ];
     }
 
-    private function formatCompany(?Company $company): array
+    private function formatCompany(?CompanyInfo $company): array
     {
         if (!$company) {
             return [];
         }
 
         return [
-            'nombre'      => $company->company_name,
-            'logo'        => $company->img,
-            'modoOscuro'  => false,
-            'configImp'   => [],
-            'fechaUpdate' => $company->date_creation?->toDateTimeString(),
-            'settings'    => ['grids' => []],
+            'name'         => $company->name,
+            'logo'         => $company->logo,
+            'gridSettings' => $company->grid_settings ?? [],
+            'status'       => $company->status,
+            'updatedAt'    => $company->updated_at?->toDateTimeString(),
         ];
     }
 }

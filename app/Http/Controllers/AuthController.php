@@ -2,93 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\Auth\LoginDTO;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Services\AuthService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 /**
- * @group Autenticación
+ * @group Authentication
  *
- * Endpoints para el manejo de sesiones de usuario.
+ * Session management endpoints.
  */
 class AuthController extends Controller
 {
     public function __construct(private AuthService $authService) {}
 
     /**
-     * Inicio de sesión
+     * Login
      *
-     * Valida credenciales, gestiona la sesión y retorna un JWT válido por 24 horas
-     * junto con los datos del usuario y la empresa.
-     *
-     * Si el usuario ya tiene una sesión vigente con token activo, se reutiliza el mismo JWT.
-     * Si el token expiró, se genera uno nuevo y se cierra la sesión anterior.
+     * Validates credentials, manages session, returns a JWT valid for 24 hours.
+     * If the user already has an active session, the same JWT is reused.
      *
      * @unauthenticated
      *
-     * @bodyParam username string required Nombre de usuario. Example: suriel.dzul
-     * @bodyParam password string required Contraseña en texto plano. Example: suriel2024
+     * @bodyParam user_name string required Username. Example: suriel.dzul
+     * @bodyParam password string required Password. Example: suriel2024
      *
-     * @response 200 scenario="Login exitoso" {
-     *   "ok": true,
-     *   "code": 200,
-     *   "status": "OK",
-     *   "message": "Inicio de sesión exitoso",
-     *   "data": {
-     *     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-     *     "empresa": {
-     *       "nombre": "Guayaberas Lopez Silva",
-     *       "logo": null,
-     *       "modoOscuro": false,
-     *       "configImp": [],
-     *       "fechaUpdate": "2024-01-01 00:00:00",
-     *       "settings": { "grids": [] }
-     *     },
-     *     "user": {
-     *       "nombre": "Suriel",
-     *       "primerApellido": "Dzul",
-     *       "segundoApellido": "Dzul",
-     *       "usuario": "suriel.dzul",
-     *       "email": "dzulsuriel@gmail.com",
-     *       "tipoUsuario": "1",
-     *       "permisos": []
-     *     }
-     *   }
-     * }
-     *
-     * @response 401 scenario="Credenciales incorrectas" {
-     *   "ok": false,
-     *   "code": 401,
-     *   "status": "Unauthorized",
-     *   "message": "Contraseña incorrecta",
-     *   "data": null
-     * }
-     *
-     * @response 401 scenario="Usuario inactivo o no existe" {
-     *   "ok": false,
-     *   "code": 401,
-     *   "status": "Unauthorized",
-     *   "message": "Usuario no encontrado o inactivo",
-     *   "data": null
-     * }
-     *
-     * @response 422 scenario="Campos faltantes" {
-     *   "message": "The username field is required.",
-     *   "errors": { "username": ["The username field is required."] }
-     * }
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Login successful","data":{"token":"eyJ...","companyInfo":{},"user":{}}}
+     * @response 401 {"ok":false,"code":401,"status":"Unauthorized","message":"Incorrect password","data":null}
+     * @response 422 {"message":"The user_name field is required.","errors":{}}
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $dto    = $request->toDTO();
-        $result = $this->authService->login($dto);
+        $result = $this->authService->login($request->toDTO());
 
         if ($result['result'] !== 'ok') {
             return ApiResponse::error($result['message'], 401);
         }
 
         return ApiResponse::ok($result['message'], new LoginResource($result['data']));
+    }
+
+    /**
+     * Logout
+     *
+     * Revokes the current session token.
+     *
+     * @authenticated
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Session closed.","data":null}
+     * @response 401 {"ok":false,"code":401,"status":"Unauthorized","message":"No active session found.","data":null}
+     */
+    public function logout(): JsonResponse
+    {
+        $token = JWTAuth::getToken();
+
+        if (!$token || !$this->authService->logout($token->get())) {
+            return ApiResponse::error('No active session found.', 401);
+        }
+
+        return ApiResponse::ok('Session closed.');
     }
 }

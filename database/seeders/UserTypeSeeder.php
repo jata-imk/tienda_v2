@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\TipoUsuario;
+use App\Models\UserType;
 use Illuminate\Database\Seeder;
 
 class UserTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        TipoUsuario::create([
-            'type_user' => 'administrador',
-            'status'    => 'activo',
+        UserType::create([
+            'name'   => 'administrador',
+            'status' => 'active',
         ]);
     }
 }

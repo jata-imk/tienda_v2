@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,14 +11,10 @@ class EsAdministrador
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $usuario = $request->user();
+        $user = $request->user();
 
-        if (!$usuario || $usuario->tipoUsuario?->type_user !== 'administrador') {
-            return response()->json([
-                'result'  => 'error',
-                'message' => 'Acceso restringido a administradores.',
-                'data'    => null,
-            ], 403);
+        if (!$user || $user->userType?->name !== 'administrador') {
+            return ApiResponse::error('Access restricted to administrators.', 403);
         }
 
         return $next($request);

@@ -10,17 +10,17 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "b29704d3-b025-46e9-98d2-b2266d789c5b",
+        "_postman_id": "7ece4399-1817-4cd1-978c-910a04dc1480",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
         {
-            "name": "Autenticaci\u00f3n",
-            "description": "\nEndpoints para el manejo de sesiones de usuario.",
+            "name": "Authentication",
+            "description": "\nSession management endpoints.",
             "item": [
                 {
-                    "name": "Inicio de sesi\u00f3n",
+                    "name": "Login",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -41,9 +41,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"username\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
+                            "raw": "{\"user_name\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
                         },
-                        "description": "Valida credenciales, gestiona la sesi\u00f3n y retorna un JWT v\u00e1lido por 24 horas\njunto con los datos del usuario y la empresa.\n\nSi el usuario ya tiene una sesi\u00f3n vigente con token activo, se reutiliza el mismo JWT.\nSi el token expir\u00f3, se genera uno nuevo y se cierra la sesi\u00f3n anterior.",
+                        "description": "Validates credentials, manages session, returns a JWT valid for 24 hours.\nIf the user already has an active session, the same JWT is reused.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -52,365 +52,57 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Inicio de sesi\u00f3n exitoso\",\n  \"data\": {\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"empresa\": {\n      \"nombre\": \"Guayaberas Lopez Silva\",\n      \"logo\": null,\n      \"modoOscuro\": false,\n      \"configImp\": [],\n      \"fechaUpdate\": \"2024-01-01 00:00:00\",\n      \"settings\": { \"grids\": [] }\n    },\n    \"user\": {\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"1\",\n      \"permisos\": []\n    }\n  }\n}",
-                            "name": "Login exitoso"
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Login successful\",\"data\":{\"token\":\"eyJ...\",\"companyInfo\":{},\"user\":{}}}",
+                            "name": ""
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"ok\": false,\n  \"code\": 401,\n  \"status\": \"Unauthorized\",\n  \"message\": \"Contrase\u00f1a incorrecta\",\n  \"data\": null\n}",
-                            "name": "Credenciales incorrectas"
+                            "body": "{\"ok\":false,\"code\":401,\"status\":\"Unauthorized\",\"message\":\"Incorrect password\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"The user_name field is required.\",\"errors\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Revokes the current session token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Session closed.\",\"data\":null}",
+                            "name": ""
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"ok\": false,\n  \"code\": 401,\n  \"status\": \"Unauthorized\",\n  \"message\": \"Usuario no encontrado o inactivo\",\n  \"data\": null\n}",
-                            "name": "Usuario inactivo o no existe"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"message\": \"The username field is required.\",\n  \"errors\": { \"username\": [\"The username field is required.\"] }\n}",
-                            "name": "Campos faltantes"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Configuraci\u00f3n",
-            "description": "\nCat\u00e1logos y configuraci\u00f3n del sistema. Todos los endpoints requieren JWT y rol administrador.",
-            "item": [
-                {
-                    "name": "Listar tipos de IVA",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-iva",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-iva"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Retorna el cat\u00e1logo completo de tipos de IVA disponibles."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Tipos de IVA obtenidos.\",\n  \"data\": [\n    { \"id\": 1, \"name\": \"general\", \"description\": \"General (base: 16%)\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 2, \"name\": \"tasa_producto\", \"description\": \"Tasa por producto\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 3, \"name\": \"cuota_producto\", \"description\": \"Cuota por producto\", \"dateCreation\": \"2024-01-01 00:00:00\" },\n    { \"id\": 4, \"name\": \"no_aplica\", \"description\": \"No aplica\", \"dateCreation\": \"2024-01-01 00:00:00\" }\n  ]\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Ver configuraci\u00f3n de impuestos base",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/impuestos-config",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/impuestos-config"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Retorna los porcentajes base de IVA, ISR e impuesto especial.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Configuraci\u00f3n de impuestos obtenida.\",\n  \"data\": { \"iva\": 16, \"isr\": 10, \"impEsp\": 0, \"dateCreation\": \"2024-01-01 00:00:00\", \"dateUpdate\": null }\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Actualizar configuraci\u00f3n de impuestos base",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/impuestos-config",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/impuestos-config"
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"iva\":8,\"isr\":10,\"imp_esp\":0}"
-                        },
-                        "description": "Actualiza uno o m\u00e1s porcentajes base. Solo se modifican los campos enviados.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"ok\": true,\n  \"code\": 200,\n  \"status\": \"OK\",\n  \"message\": \"Configuraci\u00f3n de impuestos actualizada.\",\n  \"data\": { \"iva\": 8, \"isr\": 10, \"impEsp\": 0, \"dateCreation\": \"2024-01-01 00:00:00\", \"dateUpdate\": \"2024-01-02 00:00:00\" }\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Listar tipos de moneda",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-moneda",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-moneda"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipos de moneda obtenidos.\",\"data\":[{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Crear tipo de moneda",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-moneda",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-moneda"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"D\u00f3lar Americano\",\"code\":\"USD\",\"symbol\":\"$\",\"status\":\"activo\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Tipo de moneda creado.\",\"data\":{\"id\":2,\"status\":\"activo\",\"name\":\"D\u00f3lar Americano\",\"code\":\"USD\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\"message\":\"The code has already been taken.\",\"errors\":{\"code\":[\"The code has already been taken.\"]}}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Ver tipo de moneda",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-moneda\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del tipo de moneda."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda obtenido.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Actualizar tipo de moneda",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-moneda\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del tipo de moneda."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactivo\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda actualizado.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Pesos Mexicanos\",\"code\":\"MXN\",\"symbol\":\"$\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Desactivar tipo de moneda",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tipos-moneda\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tipos-moneda\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del tipo de moneda."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Tipo de moneda desactivado.\",\"data\":null}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Tipo de moneda no encontrado.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":401,\"status\":\"Unauthorized\",\"message\":\"No active session found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
@@ -418,17 +110,17 @@
             ]
         },
         {
-            "name": "Inventario",
-            "description": "\nGesti\u00f3n del inventario de productos. Todos los endpoints requieren JWT y rol administrador.",
+            "name": "Configuration",
+            "description": "",
             "item": [
                 {
-                    "name": "Listar categor\u00edas",
+                    "name": "List currencies",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/categorias",
+                            "path": "api\/currencies",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/categorias"
+                            "raw": "{{baseUrl}}\/api\/currencies"
                         },
                         "method": "GET",
                         "header": [
@@ -448,19 +140,19 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00edas obtenidas.\",\"data\":[{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Currencies retrieved.\",\"data\":[]}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Crear categor\u00eda",
+                    "name": "Create currency",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/categorias",
+                            "path": "api\/currencies",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/categorias"
+                            "raw": "{{baseUrl}}\/api\/currencies"
                         },
                         "method": "POST",
                         "header": [
@@ -475,7 +167,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"status\":\"activo\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -483,25 +175,25 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Categor\u00eda creada.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Currency created.\",\"data\":{}}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Ver categor\u00eda",
+                    "name": "Get currency",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/categorias\/:id",
+                            "path": "api\/currencies\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "raw": "{{baseUrl}}\/api\/currencies\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID de la categor\u00eda."
+                                    "description": "Currency ID."
                                 }
                             ]
                         },
@@ -523,31 +215,31 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda obtenida.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Currency retrieved.\",\"data\":{}}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Currency not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Actualizar categor\u00eda",
+                    "name": "Update currency",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/categorias\/:id",
+                            "path": "api\/currencies\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "raw": "{{baseUrl}}\/api\/currencies\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID de la categor\u00eda."
+                                    "description": "Currency ID."
                                 }
                             ]
                         },
@@ -564,7 +256,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"activo\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -572,31 +264,31 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda actualizada.\",\"data\":{\"id\":1,\"status\":\"activo\",\"name\":\"Camisas lino\",\"description\":\"Camisas de todos tipos de lino\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Currency updated.\",\"data\":{}}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Currency not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Desactivar categor\u00eda",
+                    "name": "Deactivate currency",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/categorias\/:id",
+                            "path": "api\/currencies\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/categorias\/:id",
+                            "raw": "{{baseUrl}}\/api\/currencies\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID de la categor\u00eda."
+                                    "description": "Currency ID."
                                 }
                             ]
                         },
@@ -618,242 +310,13 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categor\u00eda desactivada.\",\"data\":null}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Currency deactivated.\",\"data\":null}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Categor\u00eda no encontrada.\",\"data\":null}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Listar productos",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/inventario",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/inventario"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Productos obtenidos.\",\"data\":[{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}]}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Crear producto",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/inventario",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/inventario"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"category_id\":1,\"clave\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stock_control\":true,\"stock\":20,\"discount\":0,\"type_iva_id\":1,\"rate_iva\":null,\"quota_iva\":null,\"isr\":0,\"imp_esp\":0,\"status\":\"activo\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Producto creado.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\"message\":\"The clave has already been taken.\",\"errors\":{\"clave\":[\"The clave has already been taken.\"]}}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Ver producto",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/inventario\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del producto."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto obtenido.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":800,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Actualizar producto",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/inventario\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del producto."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"category_id\":16,\"clave\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codebar\":\"v\",\"price\":42,\"cost\":37,\"stock_control\":false,\"stock\":9,\"discount\":17,\"type_iva_id\":16,\"rate_iva\":22,\"quota_iva\":84,\"isr\":16,\"imp_esp\":17,\"status\":\"activo\"}"
-                        },
-                        "description": "Todos los campos son opcionales. Solo enviar los que se quieran modificar.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto actualizado.\",\"data\":{\"id\":1,\"idCategory\":1,\"category\":\"Camisas lino\",\"status\":\"activo\",\"key\":\"000001\",\"name\":\"Guayabera blanca\",\"description\":\"Guayabera caballero 100% lino\",\"codebar\":\"8888888888881\",\"price\":900,\"cost\":600,\"stockControl\":true,\"stock\":20,\"discount\":0,\"typeIVA\":1,\"tipoIva\":\"general\",\"rateIVA\":null,\"quotaIVA\":null,\"ISR\":0,\"impESP\":0,\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Dar de baja producto",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/inventario\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/inventario\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID del producto."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Cambia el status del producto a `baja`. No elimina el registro.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Producto dado de baja.\",\"data\":null}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Producto no encontrado.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Currency not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
@@ -861,17 +324,66 @@
             ]
         },
         {
-            "name": "Usuarios",
-            "description": "\nGesti\u00f3n de usuarios del sistema. Todos los endpoints requieren JWT y rol administrador.",
+            "name": "Inventory",
+            "description": "",
             "item": [
                 {
-                    "name": "Listar usuarios",
+                    "name": "List categories",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/usuarios",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/usuarios"
+                            "path": "api\/categories",
+                            "query": [
+                                {
+                                    "key": "p%5Bpage%5D",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "p%5Bper_page%5D",
+                                    "value": "15",
+                                    "description": "Items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "f[][0]",
+                                    "value": "id",
+                                    "description": "Fields to return.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "f[][1]",
+                                    "value": "name",
+                                    "description": "Fields to return.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "o%5Bcolumn%5D",
+                                    "value": "name",
+                                    "description": "Order by column.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "o%5Bdirection%5D",
+                                    "value": "asc",
+                                    "description": "Order direction (asc\/desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "w%5Bstatus%5D",
+                                    "value": "active",
+                                    "description": "Filter by status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "totalCount",
+                                    "value": "1",
+                                    "description": "Return total count.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/categories?p%5Bpage%5D=1&p%5Bper_page%5D=15&f[][0]=id&f[][1]=name&o%5Bcolumn%5D=name&o%5Bdirection%5D=asc&w%5Bstatus%5D=active&totalCount=1"
                         },
                         "method": "GET",
                         "header": [
@@ -885,25 +397,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "Retorna todos los usuarios registrados en el sistema."
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"result\": \"ok\",\n  \"message\": \"Usuarios obtenidos.\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"nombre\": \"Suriel\",\n      \"primerApellido\": \"Dzul\",\n      \"segundoApellido\": \"Dzul\",\n      \"usuario\": \"suriel.dzul\",\n      \"email\": \"dzulsuriel@gmail.com\",\n      \"tipoUsuario\": \"administrador\",\n      \"status\": \"activo\",\n      \"dateCreation\": \"2024-01-01 00:00:00\"\n    }\n  ]\n}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":[]}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Crear usuario",
+                    "name": "Create category",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/usuarios",
+                            "path": "api\/categories",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/usuarios"
+                            "raw": "{{baseUrl}}\/api\/categories"
                         },
                         "method": "POST",
                         "header": [
@@ -918,39 +430,33 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Juan\",\"first_name\":\"P\u00e9rez\",\"last_name\":\"L\u00f3pez\",\"username\":\"juan.perez\",\"email\":\"juan@empresa.com\",\"password\":\"secreto123\",\"user_type_id\":1,\"status\":\"activo\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
-                        "description": "Crea un nuevo usuario en el sistema."
+                        "description": ""
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\"result\":\"ok\",\"message\":\"Usuario creado.\",\"data\":{\"id\":2,\"nombre\":\"Juan\",\"primerApellido\":\"P\u00e9rez\",\"segundoApellido\":\"L\u00f3pez\",\"usuario\":\"juan.perez\",\"email\":\"juan@empresa.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\"message\":\"The username has already been taken.\",\"errors\":{\"username\":[\"The username has already been taken.\"]}}",
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Category created.\",\"data\":{}}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Ver usuario",
+                    "name": "Get category",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/usuarios\/:id",
+                            "path": "api\/categories\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "raw": "{{baseUrl}}\/api\/categories\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID del usuario."
+                                    "description": "Category ID."
                                 }
                             ]
                         },
@@ -966,37 +472,37 @@
                             }
                         ],
                         "body": null,
-                        "description": "Retorna los datos de un usuario espec\u00edfico."
+                        "description": ""
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"result\":\"ok\",\"message\":\"Usuario obtenido.\",\"data\":{\"id\":1,\"nombre\":\"Suriel\",\"primerApellido\":\"Dzul\",\"segundoApellido\":\"Dzul\",\"usuario\":\"suriel.dzul\",\"email\":\"dzulsuriel@gmail.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Category retrieved.\",\"data\":{}}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Category not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Actualizar usuario",
+                    "name": "Update category",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/usuarios\/:id",
+                            "path": "api\/categories\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "raw": "{{baseUrl}}\/api\/categories\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID del usuario."
+                                    "description": "Category ID."
                                 }
                             ]
                         },
@@ -1013,39 +519,39 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Juan\",\"first_name\":\"P\u00e9rez\",\"last_name\":\"L\u00f3pez\",\"username\":\"juan.perez2\",\"email\":\"juan2@empresa.com\",\"password\":\"nuevapass123\",\"user_type_id\":1,\"status\":\"activo\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
-                        "description": "Actualiza los datos de un usuario. Todos los campos son opcionales excepto los que se quieran cambiar.\nPara cambiar la contrase\u00f1a, incluir el campo `password`."
+                        "description": ""
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"result\":\"ok\",\"message\":\"Usuario actualizado.\",\"data\":{\"id\":1,\"nombre\":\"Juan\",\"primerApellido\":\"P\u00e9rez\",\"segundoApellido\":\"L\u00f3pez\",\"usuario\":\"juan.perez2\",\"email\":\"juan2@empresa.com\",\"tipoUsuario\":\"administrador\",\"status\":\"activo\",\"dateCreation\":\"2024-01-01 00:00:00\"}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Category updated.\",\"data\":{}}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Category not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Desactivar usuario",
+                    "name": "Deactivate category",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/usuarios\/:id",
+                            "path": "api\/categories\/:id",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "raw": "{{baseUrl}}\/api\/categories\/:id",
                             "variable": [
                                 {
                                     "id": "id",
                                     "key": "id",
                                     "value": "1",
-                                    "description": "ID del usuario."
+                                    "description": "Category ID."
                                 }
                             ]
                         },
@@ -1061,19 +567,490 @@
                             }
                         ],
                         "body": null,
-                        "description": "Cambia el status del usuario a `inactivo`. No elimina el registro (soft-delete por status)."
+                        "description": ""
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"result\":\"ok\",\"message\":\"Usuario desactivado.\",\"data\":null}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Category deactivated.\",\"data\":null}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\"result\":\"error\",\"message\":\"Usuario no encontrado.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Category not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List products",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products",
+                            "query": [
+                                {
+                                    "key": "p%5Bpage%5D",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "p%5Bper_page%5D",
+                                    "value": "15",
+                                    "description": "Items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "f[][0]",
+                                    "value": "id",
+                                    "description": "Fields to return.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "f[][1]",
+                                    "value": "name",
+                                    "description": "Fields to return.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "o%5Bcolumn%5D",
+                                    "value": "name",
+                                    "description": "Order by column.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "o%5Bdirection%5D",
+                                    "value": "asc",
+                                    "description": "Order direction (asc\/desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "w%5Bstatus%5D",
+                                    "value": "active",
+                                    "description": "Filter by field value.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "totalCount",
+                                    "value": "1",
+                                    "description": "Return total count.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/products?p%5Bpage%5D=1&p%5Bper_page%5D=15&f[][0]=id&f[][1]=name&o%5Bcolumn%5D=name&o%5Bdirection%5D=asc&w%5Bstatus%5D=active&totalCount=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":[]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create product",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id_category\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"code_bar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stock_control\":true,\"stock\":89,\"discount\":20,\"type_iva\":1,\"rate_iva\":3,\"quota_iva\":22,\"isr\":5,\"imp_esp\":10,\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Product created.\",\"data\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get product",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Product retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update product",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id_category\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"code_bar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stock_control\":true,\"stock\":89,\"discount\":20,\"type_iva\":1,\"rate_iva\":3,\"quota_iva\":22,\"isr\":5,\"imp_esp\":10,\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Product updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate product",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Sets status to `inactive`. Does not delete the record."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Product deactivated.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "description": "",
+            "item": [
+                {
+                    "name": "List users",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Users retrieved.\",\"data\":[]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id_user_type\":16,\"first_name\":\"n\",\"last_name\":\"g\",\"user_name\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"User created.\",\"data\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "User ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"User retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"User not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "User ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id_user_type\":16,\"first_name\":\"n\",\"last_name\":\"g\",\"user_name\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"User updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"User not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "User ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Sets status to `inactive`. Does not delete the record."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"User deactivated.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"User not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
