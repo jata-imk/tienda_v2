@@ -105,10 +105,16 @@ class CategoryController extends Controller
 
         $result = $this->categoryService->index($filters);
 
-        return ApiResponse::ok('Categories retrieved.', is_array($result) && isset($result['items'])
-            ? ['items' => CategoryResource::collection($result['items']), 'total' => $result['total'] ?? null, 'page' => $result['page'] ?? null, 'pages' => $result['pages'] ?? null]
-            : CategoryResource::collection($result)
-        );
+        $items    = is_array($result) && isset($result['items']) ? $result['items'] : $result;
+        $total    = is_array($result) ? ($result['total'] ?? null) : null;
+        $response = ['data' => CategoryResource::collection($items)];
+
+        if ($total !== null) {
+            $response['totalCount'] = $total;
+            $response['summary']    = [$total];
+        }
+
+        return response()->json($response);
     }
 
     private function mapOperator(string $ao): string

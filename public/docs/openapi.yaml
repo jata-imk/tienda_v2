@@ -304,7 +304,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -465,7 +465,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -954,7 +954,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1347,7 +1347,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1536,7 +1536,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 stock:
                   type: number
                   description: 'Must be at least 0.'
@@ -1548,7 +1548,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 3
                   enum:
                     - 1
                     - 2

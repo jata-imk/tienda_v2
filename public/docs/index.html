@@ -705,7 +705,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -725,7 +725,7 @@ let body = {
     "name": "b",
     "code": "ngzmiy",
     "symbol": "vdljni",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -878,10 +878,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-currencies"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1074,7 +1074,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -1094,7 +1094,7 @@ let body = {
     "name": "b",
     "code": "ngzmiy",
     "symbol": "vdljni",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -1277,10 +1277,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2319,7 +2319,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -2338,7 +2338,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -2509,10 +2509,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3209,7 +3209,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"quotaIva\": 22,
     \"isr\": 5,
     \"impEsp\": 10,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -3242,7 +3242,7 @@ let body = {
     "quotaIva": 22,
     "isr": 5,
     "impEsp": 10,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -3561,10 +3561,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3762,10 +3762,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"size\": \"dljnikhwaykcmyuw\",
     \"price\": 67,
     \"cost\": 61,
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"stock\": 89,
     \"discount\": 20,
-    \"typeIva\": 1,
+    \"typeIva\": 3,
     \"rateIva\": 3,
     \"quotaIva\": 22,
     \"isr\": 5,
@@ -3795,10 +3795,10 @@ let body = {
     "size": "dljnikhwaykcmyuw",
     "price": 67,
     "cost": 61,
-    "stockControl": true,
+    "stockControl": false,
     "stock": 89,
     "discount": 20,
-    "typeIva": 1,
+    "typeIva": 3,
     "rateIva": 3,
     "quotaIva": 22,
     "isr": 5,
@@ -4059,7 +4059,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;
@@ -4092,10 +4092,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="1"
+               value="3"
                data-component="body">
     <br>
-<p>Example: <code>1</code></p>
+<p>Example: <code>3</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
