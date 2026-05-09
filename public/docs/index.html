@@ -106,7 +106,10 @@
                     <a href="#inventory">Inventory</a>
                 </li>
                                     <ul id="tocify-subheader-inventory" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="inventory-GETapi-categories">
+                                                    <li class="tocify-item level-2" data-unique="inventory-POSTapi-categories-query">
+                                <a href="#inventory-POSTapi-categories-query">Query categories (POST)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-GETapi-categories">
                                 <a href="#inventory-GETapi-categories">List categories</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="inventory-POSTapi-categories">
@@ -120,6 +123,9 @@
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="inventory-DELETEapi-categories--id-">
                                 <a href="#inventory-DELETEapi-categories--id-">Deactivate category</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-POSTapi-products-query">
+                                <a href="#inventory-POSTapi-products-query">Query products (POST)</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="inventory-GETapi-products">
                                 <a href="#inventory-GETapi-products">List products</a>
@@ -169,7 +175,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: May 8, 2026</li>
+        <li>Last updated: May 9, 2026</li>
     </ul>
 </div>
 
@@ -1449,7 +1455,246 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     
 
-                                <h2 id="inventory-GETapi-categories">List categories</h2>
+                                <h2 id="inventory-POSTapi-categories-query">Query categories (POST)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Same payload formats as <code>POST /products/query</code>.</p>
+
+<span id="example-requests-POSTapi-categories-query">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/categories/query" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"p\": [],
+    \"f\": [
+        \"id\",
+        \"name\"
+    ],
+    \"o\": [],
+    \"w\": \"architecto\",
+    \"totalCount\": true
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/categories/query"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "p": [],
+    "f": [
+        "id",
+        "name"
+    ],
+    "o": [],
+    "w": "architecto",
+    "totalCount": true
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-categories-query">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Categories retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [],
+        &quot;total&quot;: 0,
+        &quot;page&quot;: 1,
+        &quot;pages&quot;: 1
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-categories-query" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-categories-query"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-categories-query"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-categories-query" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-categories-query">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-categories-query" data-method="POST"
+      data-path="api/categories/query"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-categories-query', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-categories-query"
+                    onclick="tryItOut('POSTapi-categories-query');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-categories-query"
+                    onclick="cancelTryOut('POSTapi-categories-query');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-categories-query"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/categories/query</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-categories-query"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-categories-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-categories-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>p</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="p"                data-endpoint="POSTapi-categories-query"
+               value=""
+               data-component="body">
+    <br>
+<p>Pagination. <code>page</code>/<code>per_page</code> (row offset + size) or <code>r</code>/<code>s</code>.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>f</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="f[0]"                data-endpoint="POSTapi-categories-query"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="f[1]"                data-endpoint="POSTapi-categories-query"
+               data-component="body">
+    <br>
+<p>Fields to return.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>o</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o"                data-endpoint="POSTapi-categories-query"
+               value=""
+               data-component="body">
+    <br>
+<p>Order. <code>column</code>+<code>direction</code> or <code>field</code>+<code>type</code>.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>w</code></b>&nbsp;&nbsp;
+<small>object|array</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="w"                data-endpoint="POSTapi-categories-query"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Where filters. Object for simple equality, array for advanced operators. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-categories-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="true"
+                   data-endpoint="POSTapi-categories-query"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-categories-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="false"
+                   data-endpoint="POSTapi-categories-query"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Include total count (default true). Example: <code>true</code></p>
+        </div>
+        </form>
+
+                    <h2 id="inventory-GETapi-categories">List categories</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -2074,7 +2319,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -2093,7 +2338,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -2264,10 +2509,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2437,6 +2682,248 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Category ID. Example: <code>1</code></p>
             </div>
                     </form>
+
+                    <h2 id="inventory-POSTapi-products-query">Query products (POST)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Supports two payload formats. Formato B (standard):
+<code>p.page</code> = row offset (0-indexed), <code>p.per_page</code>, <code>o.column</code>, <code>o.direction</code>, <code>w</code> = object.
+Formato A (compact):
+<code>p.r</code> = row offset, <code>p.s</code> = per_page, <code>o.field</code>, <code>o.type</code>, <code>w</code> = array of <code>{f, ao, v, lo}</code>.</p>
+
+<span id="example-requests-POSTapi-products-query">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/products/query" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"p\": [],
+    \"f\": [
+        \"id\",
+        \"name\"
+    ],
+    \"o\": [],
+    \"w\": \"architecto\",
+    \"totalCount\": true
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/products/query"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "p": [],
+    "f": [
+        "id",
+        "name"
+    ],
+    "o": [],
+    "w": "architecto",
+    "totalCount": true
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-products-query">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Products retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [],
+        &quot;total&quot;: 0,
+        &quot;page&quot;: 1,
+        &quot;pages&quot;: 1
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-products-query" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-products-query"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-products-query"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-products-query" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-products-query">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-products-query" data-method="POST"
+      data-path="api/products/query"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-products-query', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-products-query"
+                    onclick="tryItOut('POSTapi-products-query');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-products-query"
+                    onclick="cancelTryOut('POSTapi-products-query');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-products-query"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/products/query</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-products-query"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-products-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-products-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>p</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="p"                data-endpoint="POSTapi-products-query"
+               value=""
+               data-component="body">
+    <br>
+<p>Pagination. <code>page</code>/<code>per_page</code> or <code>r</code>/<code>s</code>.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>f</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="f[0]"                data-endpoint="POSTapi-products-query"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="f[1]"                data-endpoint="POSTapi-products-query"
+               data-component="body">
+    <br>
+<p>Fields to return.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>o</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o"                data-endpoint="POSTapi-products-query"
+               value=""
+               data-component="body">
+    <br>
+<p>Order. <code>column</code>+<code>direction</code> or <code>field</code>+<code>type</code>.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>w</code></b>&nbsp;&nbsp;
+<small>object|array</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="w"                data-endpoint="POSTapi-products-query"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Where filters. Object for simple equality, array for advanced operators. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-products-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="true"
+                   data-endpoint="POSTapi-products-query"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-products-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="false"
+                   data-endpoint="POSTapi-products-query"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Include total count (default true). Example: <code>true</code></p>
+        </div>
+        </form>
 
                     <h2 id="inventory-GETapi-products">List products</h2>
 
@@ -2714,7 +3201,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"size\": \"dljnikhwaykcmyuw\",
     \"price\": 67,
     \"cost\": 61,
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"stock\": 89,
     \"discount\": 20,
     \"typeIva\": 1,
@@ -2722,7 +3209,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"quotaIva\": 22,
     \"isr\": 5,
     \"impEsp\": 10,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -2747,7 +3234,7 @@ let body = {
     "size": "dljnikhwaykcmyuw",
     "price": 67,
     "cost": 61,
-    "stockControl": true,
+    "stockControl": false,
     "stock": 89,
     "discount": 20,
     "typeIva": 1,
@@ -2755,7 +3242,7 @@ let body = {
     "quotaIva": 22,
     "isr": 5,
     "impEsp": 10,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -2981,7 +3468,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;
@@ -3074,10 +3561,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3275,7 +3762,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"size\": \"dljnikhwaykcmyuw\",
     \"price\": 67,
     \"cost\": 61,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"stock\": 89,
     \"discount\": 20,
     \"typeIva\": 1,
@@ -3283,7 +3770,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"quotaIva\": 22,
     \"isr\": 5,
     \"impEsp\": 10,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -3308,7 +3795,7 @@ let body = {
     "size": "dljnikhwaykcmyuw",
     "price": 67,
     "cost": 61,
-    "stockControl": false,
+    "stockControl": true,
     "stock": 89,
     "discount": 20,
     "typeIva": 1,
@@ -3316,7 +3803,7 @@ let body = {
     "quotaIva": 22,
     "isr": 5,
     "impEsp": 10,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -3572,7 +4059,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;
@@ -3667,10 +4154,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4420,7 +4907,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -4443,7 +4930,7 @@ let body = {
     "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -4662,10 +5149,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-users--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>

@@ -16,7 +16,9 @@ Route::middleware(['auth:api', 'es.administrador'])->group(function () {
     Route::apiResource('users', UserController::class);
 
     // Inventory
+    Route::post('categories/query', [CategoryController::class, 'query']);
     Route::apiResource('categories', CategoryController::class);
+    Route::post('products/query', [ProductController::class, 'query']);
     Route::apiResource('products', ProductController::class);
 
     // Configuration

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "fa47bd5a-a9ae-4563-96f5-841f6df85c92",
+        "_postman_id": "10ee2d9b-feaf-4ce0-a94b-44444ef708db",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -328,6 +328,41 @@
             "description": "",
             "item": [
                 {
+                    "name": "Query categories (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categories\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categories\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"p\":[],\"f\":[\"id\",\"name\"],\"o\":[],\"w\":\"architecto\",\"totalCount\":true}"
+                        },
+                        "description": "Same payload formats as `POST \/products\/query`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":{\"items\":[],\"total\":0,\"page\":1,\"pages\":1}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List categories",
                     "request": {
                         "url": {
@@ -519,7 +554,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -580,6 +615,41 @@
                             "header": [],
                             "code": 404,
                             "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Category not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Query products (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"p\":[],\"f\":[\"id\",\"name\"],\"o\":[],\"w\":\"architecto\",\"totalCount\":true}"
+                        },
+                        "description": "Supports two payload formats. Formato B (standard):\n`p.page` = row offset (0-indexed), `p.per_page`, `o.column`, `o.direction`, `w` = object.\nFormato A (compact):\n`p.r` = row offset, `p.s` = per_page, `o.field`, `o.type`, `w` = array of `{f, ao, v, lo}`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":{\"items\":[],\"total\":0,\"page\":1,\"pages\":1}}",
                             "name": ""
                         }
                     ]
@@ -687,7 +757,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
+                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -776,7 +846,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
+                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -990,7 +1060,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

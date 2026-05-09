@@ -9,6 +9,7 @@ use App\Services\CategoryService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * @group Inventory
@@ -43,6 +44,84 @@ class CategoryController extends Controller
             ? ['items' => CategoryResource::collection($result['items']), 'total' => $result['total'] ?? null, 'page' => $result['page'] ?? null, 'pages' => $result['pages'] ?? null]
             : CategoryResource::collection($result)
         );
+    }
+
+    /**
+     * Query categories (POST)
+     *
+     * Same payload formats as `POST /products/query`.
+     *
+     * @bodyParam p object Pagination. `page`/`per_page` (row offset + size) or `r`/`s`.
+     * @bodyParam f string[] Fields to return. Example: ["id","name"]
+     * @bodyParam o object Order. `column`+`direction` or `field`+`type`.
+     * @bodyParam w object|array Where filters. Object for simple equality, array for advanced operators.
+     * @bodyParam totalCount boolean Include total count (default true). Example: true
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Categories retrieved.","data":{"items":[],"total":0,"page":1,"pages":1}}
+     */
+    public function query(Request $request): JsonResponse
+    {
+        $body    = $request->json()->all();
+        $filters = [];
+
+        if (!empty($body['p'])) {
+            $p       = $body['p'];
+            $perPage = (int) ($p['per_page'] ?? $p['s'] ?? 15);
+            $offset  = (int) ($p['page'] ?? $p['r'] ?? 0);
+            $filters['p'] = [
+                'per_page' => $perPage > 0 ? $perPage : 15,
+                'page'     => $perPage > 0 ? max(1, intdiv($offset, $perPage) + 1) : 1,
+            ];
+        }
+
+        if (isset($body['f']) && is_array($body['f']) && count($body['f']) > 0) {
+            $filters['f'] = array_map(fn($f) => Str::snake($f), $body['f']);
+        }
+
+        if (!empty($body['o'])) {
+            $filters['o'] = [
+                'column'    => $body['o']['column'] ?? $body['o']['field'] ?? 'id',
+                'direction' => $body['o']['direction'] ?? $body['o']['type'] ?? 'asc',
+            ];
+        }
+
+        if (!empty($body['w'])) {
+            $w = $body['w'];
+            if (array_is_list($w)) {
+                $filters['w'] = array_map(fn($cond) => [
+                    'column'   => Str::snake($cond['f'] ?? ''),
+                    'operator' => $this->mapOperator($cond['ao'] ?? '=='),
+                    'value'    => $cond['v'] ?? null,
+                    'logic'    => strtolower($cond['lo'] ?? '&&') === '||' ? 'or' : 'and',
+                ], $w);
+            } else {
+                $filters['w'] = $w;
+            }
+        }
+
+        if (array_key_exists('totalCount', $body)) {
+            $filters['totalCount'] = $body['totalCount'];
+        }
+
+        $result = $this->categoryService->index($filters);
+
+        return ApiResponse::ok('Categories retrieved.', is_array($result) && isset($result['items'])
+            ? ['items' => CategoryResource::collection($result['items']), 'total' => $result['total'] ?? null, 'page' => $result['page'] ?? null, 'pages' => $result['pages'] ?? null]
+            : CategoryResource::collection($result)
+        );
+    }
+
+    private function mapOperator(string $ao): string
+    {
+        return match ($ao) {
+            '==' => '=',
+            '!=' => '!=',
+            '>'  => '>',
+            '>=' => '>=',
+            '<'  => '<',
+            '<=' => '<=',
+            default => '=',
+        };
     }
 
     /**

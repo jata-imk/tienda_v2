@@ -15,8 +15,15 @@ class ProductService
 
         // where filters
         if (!empty($filters['w'])) {
-            foreach ($filters['w'] as $column => $value) {
-                $query->where($column, $value);
+            if (array_is_list($filters['w'])) {
+                foreach ($filters['w'] as $cond) {
+                    $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
+                    $query->$method($cond['column'], $cond['operator'], $cond['value']);
+                }
+            } else {
+                foreach ($filters['w'] as $column => $value) {
+                    $query->where($column, $value);
+                }
             }
         }
 
@@ -32,7 +39,9 @@ class ProductService
             $query->orderBy($column, $direction);
         }
 
-        $totalCount = !empty($filters['totalCount']) && $filters['totalCount'];
+        $totalCount = isset($filters['totalCount'])
+            ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
+            : true;
 
         // pagination
         if (!empty($filters['p'])) {
