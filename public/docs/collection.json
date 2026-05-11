@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "f836183d-9a1d-4df0-8851-9a51a6e08017",
+        "_postman_id": "b7d97a02-6641-463e-824e-9834dff166c4",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -256,7 +256,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -757,7 +757,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
+                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -846,7 +846,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":3,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":2,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1060,7 +1060,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },

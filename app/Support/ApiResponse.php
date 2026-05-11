@@ -23,6 +23,24 @@ class ApiResponse
         return self::ok($message, $data, 201);
     }
 
+    public static function query(string $message, mixed $data, ?int $totalCount = null): JsonResponse
+    {
+        $payload = [
+            'ok'      => true,
+            'code'    => 200,
+            'status'  => Response::$statusTexts[200],
+            'message' => $message,
+            'data'    => $data,
+        ];
+
+        if ($totalCount !== null) {
+            $payload['totalCount'] = $totalCount;
+            $payload['summary']    = [$totalCount];
+        }
+
+        return response()->json($payload);
+    }
+
     public static function error(string $message, int $code, mixed $data = null): JsonResponse
     {
         return response()->json([

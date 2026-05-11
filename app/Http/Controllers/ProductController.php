@@ -40,10 +40,10 @@ class ProductController extends Controller
         $filters = $request->only(['p', 'f', 'o', 'w', 'totalCount']);
         $result  = $this->productService->index($filters);
 
-        return ApiResponse::ok('Products retrieved.', is_array($result) && isset($result['items'])
-            ? ['items' => ProductResource::collection($result['items']), 'total' => $result['total'] ?? null, 'page' => $result['page'] ?? null, 'pages' => $result['pages'] ?? null]
-            : ProductResource::collection($result)
-        );
+        $items = is_array($result) && isset($result['items']) ? $result['items'] : $result;
+        $total = is_array($result) ? ($result['total'] ?? null) : null;
+
+        return ApiResponse::query('Products retrieved.', ProductResource::collection($items), $total);
     }
 
     /**
@@ -113,16 +113,10 @@ class ProductController extends Controller
 
         $result = $this->productService->index($filters);
 
-        $items    = is_array($result) && isset($result['items']) ? $result['items'] : $result;
-        $total    = is_array($result) ? ($result['total'] ?? null) : null;
-        $response = ['data' => ProductResource::collection($items)];
+        $items = is_array($result) && isset($result['items']) ? $result['items'] : $result;
+        $total = is_array($result) ? ($result['total'] ?? null) : null;
 
-        if ($total !== null) {
-            $response['totalCount'] = $total;
-            $response['summary']    = [$total];
-        }
-
-        return response()->json($response);
+        return ApiResponse::query('Products retrieved.', ProductResource::collection($items), $total);
     }
 
     private function mapOperator(string $ao): string
