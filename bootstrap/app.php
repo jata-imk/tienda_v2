@@ -1,8 +1,11 @@
 <?php
 
+use App\Support\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,9 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'es.administrador' => \App\Http\Middleware\EsAdministrador::class,
+            'es.administrador'  => \App\Http\Middleware\EsAdministrador::class,
+            'jwt.authenticate'  => \App\Http\Middleware\JwtAuthenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            return ApiResponse::error('No autenticado.', 401);
+        });
     })->create();

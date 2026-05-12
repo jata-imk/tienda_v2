@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "b7d97a02-6641-463e-824e-9834dff166c4",
+        "_postman_id": "c3a23c66-208f-4f5b-b380-7d7152f56e0f",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -167,7 +167,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -256,7 +256,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -465,7 +465,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -554,7 +554,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -757,7 +757,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"active\"}"
+                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -846,7 +846,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":true,\"stock\":89,\"discount\":20,\"typeIva\":2,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":4,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

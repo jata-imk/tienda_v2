@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['auth:api', 'es.administrador'])->group(function () {
+Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
 
     // Users

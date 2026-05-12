@@ -50,6 +50,12 @@ class AuthService
 
         $session->update(['revoked_at' => Carbon::now()]);
 
+        try {
+            JWTAuth::setToken($tokenHash)->invalidate();
+        } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException) {
+            // Token ya inválido, ignorar
+        }
+
         return true;
     }
 
@@ -62,7 +68,14 @@ class AuthService
             ->first();
 
         if ($activeSession) {
-            return $activeSession->token_hash;
+            try {
+                JWTAuth::setToken($activeSession->token_hash)->checkOrFail();
+
+                return $activeSession->token_hash;
+            } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException) {
+                // JWT expiró aunque la sesión BD siga "activa" (datos viejos pre-fix)
+                $activeSession->update(['revoked_at' => Carbon::now()]);
+            }
         }
 
         return $this->createSession($user);
@@ -75,7 +88,7 @@ class AuthService
         UserSession::create([
             'id_user'    => $user->id,
             'token_hash' => $jwtString,
-            'expires_at' => Carbon::now()->addHours(24),
+            'expires_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
         ]);
 
         return $jwtString;
