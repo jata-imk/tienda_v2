@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -22,5 +23,7 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::apiResource('products', ProductController::class);
 
     // Configuration
+    Route::put('company-info', [CompanyInfoController::class, 'update']);
+    Route::patch('company-info', [CompanyInfoController::class, 'patch']);
     Route::apiResource('currencies', CurrencyController::class);
 });
