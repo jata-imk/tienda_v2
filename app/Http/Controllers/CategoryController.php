@@ -33,7 +33,7 @@ class CategoryController extends Controller
      * @queryParam w[status] string Filter by status. Example: active
      * @queryParam totalCount boolean Return total count. Example: true
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Categories retrieved.","data":[]}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Categories retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
     public function index(Request $request): JsonResponse
     {
@@ -57,7 +57,7 @@ class CategoryController extends Controller
      * @bodyParam w object|array Where filters. Object for simple equality, array for advanced operators.
      * @bodyParam totalCount boolean Include total count (default true). Example: true
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Categories retrieved.","data":{"items":[],"total":0,"page":1,"pages":1}}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Categories retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
     public function query(Request $request): JsonResponse
     {

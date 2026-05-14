@@ -25,18 +25,22 @@ class ApiResponse
 
     public static function query(string $message, mixed $data, ?int $totalCount = null): JsonResponse
     {
+        $responseData = [
+            'items' => $data,
+        ];
+
+        if ($totalCount !== null) {
+            $responseData['totalCount'] = $totalCount;
+            $responseData['summary']    = [$totalCount];
+        }
+
         $payload = [
             'ok'      => true,
             'code'    => 200,
             'status'  => Response::$statusTexts[200],
             'message' => $message,
-            'data'    => $data,
+            'data'    => $responseData,
         ];
-
-        if ($totalCount !== null) {
-            $payload['totalCount'] = $totalCount;
-            $payload['summary']    = [$totalCount];
-        }
 
         return response()->json($payload);
     }

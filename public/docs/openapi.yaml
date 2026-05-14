@@ -564,9 +564,9 @@ paths:
                   message: 'Categories retrieved.'
                   data:
                     items: []
-                    total: 0
-                    page: 1
-                    pages: 1
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -586,15 +586,15 @@ paths:
                       items:
                         type: array
                         example: []
-                      total:
+                      totalCount:
                         type: integer
                         example: 0
-                      page:
-                        type: integer
-                        example: 1
-                      pages:
-                        type: integer
-                        example: 1
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Inventory
       requestBody:
@@ -724,7 +724,11 @@ paths:
                   code: 200
                   status: OK
                   message: 'Categories retrieved.'
-                  data: []
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -739,8 +743,20 @@ paths:
                     type: string
                     example: 'Categories retrieved.'
                   data:
-                    type: array
-                    example: []
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Inventory
     post:
@@ -1053,9 +1069,9 @@ paths:
                   message: 'Products retrieved.'
                   data:
                     items: []
-                    total: 0
-                    page: 1
-                    pages: 1
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -1075,15 +1091,15 @@ paths:
                       items:
                         type: array
                         example: []
-                      total:
+                      totalCount:
                         type: integer
                         example: 0
-                      page:
-                        type: integer
-                        example: 1
-                      pages:
-                        type: integer
-                        example: 1
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Inventory
       requestBody:
@@ -1213,7 +1229,11 @@ paths:
                   code: 200
                   status: OK
                   message: 'Products retrieved.'
-                  data: []
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -1228,8 +1248,20 @@ paths:
                     type: string
                     example: 'Products retrieved.'
                   data:
-                    type: array
-                    example: []
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Inventory
     post:

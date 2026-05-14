@@ -33,7 +33,7 @@ class ProductController extends Controller
      * @queryParam w[status] string Filter by field value. Example: active
      * @queryParam totalCount boolean Return total count. Example: true
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Products retrieved.","data":[]}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Products retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
     public function index(Request $request): JsonResponse
     {
@@ -60,7 +60,7 @@ class ProductController extends Controller
      * @bodyParam w object|array Where filters. Object for simple equality, array for advanced operators.
      * @bodyParam totalCount boolean Include total count (default true). Example: true
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Products retrieved.","data":{"items":[],"total":0,"page":1,"pages":1}}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Products retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
     public function query(Request $request): JsonResponse
     {

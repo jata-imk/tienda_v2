@@ -357,7 +357,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":{\"items\":[],\"total\":0,\"page\":1,\"pages\":1}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
                             "name": ""
                         }
                     ]
@@ -438,7 +438,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":[]}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Categories retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
                             "name": ""
                         }
                     ]
@@ -649,7 +649,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":{\"items\":[],\"total\":0,\"page\":1,\"pages\":1}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
                             "name": ""
                         }
                     ]
@@ -730,7 +730,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":[]}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
                             "name": ""
                         }
                     ]
