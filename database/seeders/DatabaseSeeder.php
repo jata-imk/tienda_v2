@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CurrencySeeder::class,
             CategorySeeder::class,
+            SizeGroupSeeder::class,
+            SizeSeeder::class,
+            ColorSeeder::class,
             ProductSeeder::class,
         ]);
     }

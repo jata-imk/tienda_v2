@@ -209,6 +209,321 @@ paths:
                     nullable: true
       tags:
         - Authentication
+  /api/company-info:
+    put:
+      summary: 'Update company info'
+      operationId: updateCompanyInfo
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Company info updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Company info updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Company info not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Company info not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                rfc:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                legal_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                tax_regime:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                logo:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                street:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                external_number:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                cross_street_one:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                cross_street_two:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: m
+                  nullable: true
+                postal_code:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: i
+                  nullable: true
+                neighborhood:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'y'
+                  nullable: true
+                city:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: v
+                  nullable: true
+                stock_control:
+                  type: boolean
+                  description: ''
+                  example: true
+                quantity_integers:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 1
+                quantity_decimals:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 5
+                grid_settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
+              required:
+                - name
+    patch:
+      summary: 'Partially update company info'
+      operationId: partiallyUpdateCompanyInfo
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Company info updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Company info updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Company info not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Company info not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuration
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                rfc:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                legal_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                tax_regime:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                logo:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                street:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                external_number:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                cross_street_one:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                cross_street_two:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: m
+                  nullable: true
+                postal_code:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: i
+                  nullable: true
+                neighborhood:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'y'
+                  nullable: true
+                city:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: v
+                  nullable: true
+                stock_control:
+                  type: boolean
+                  description: ''
+                  example: true
+                quantity_integers:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 1
+                quantity_decimals:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 5
+                grid_settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
   /api/currencies:
     get:
       summary: 'List currencies'
@@ -304,7 +619,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -970,7 +1285,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1045,6 +1360,1201 @@ paths:
         in: path
         name: id
         description: 'Category ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/size-groups/query:
+    post:
+      summary: 'Query size groups (POST)'
+      operationId: querySizeGroupsPOST
+      description: 'Same payload formats as `POST /products/query`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size groups retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size groups retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+  /api/size-groups:
+    get:
+      summary: 'List size groups'
+      operationId: listSizeGroups
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size groups retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size groups retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+    post:
+      summary: 'Create size group'
+      operationId: createSizeGroup
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Size group created.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Size group created.'
+                  data:
+                    type: object
+                    properties: {  }
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
+              required:
+                - name
+  '/api/size-groups/{id}':
+    get:
+      summary: 'Get size group'
+      operationId: getSizeGroup
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size group retrieved.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size group retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size group not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size group not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    put:
+      summary: 'Update size group'
+      operationId: updateSizeGroup
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size group updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size group updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size group not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size group not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
+    delete:
+      summary: 'Deactivate size group'
+      operationId: deactivateSizeGroup
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size group deactivated.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size group deactivated.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size group not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size group not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Size group ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/sizes/query:
+    post:
+      summary: 'Query sizes (POST)'
+      operationId: querySizesPOST
+      description: 'Same payload formats as `POST /products/query`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Sizes retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Sizes retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+  /api/sizes:
+    get:
+      summary: 'List sizes'
+      operationId: listSizes
+      description: "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.\nFilter by group with `w[id_size_group]`."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Sizes retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Sizes retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+    post:
+      summary: 'Create size'
+      operationId: createSize
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Size created.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Size created.'
+                  data:
+                    type: object
+                    properties: {  }
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idSizeGroup:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the size_groups table.'
+                  example: 16
+                name:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: ngzmiyvdljnikhwa
+                sortOrder:
+                  type: integer
+                  description: 'Must be at least 0.'
+                  example: 50
+                status:
+                  type: string
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
+              required:
+                - idSizeGroup
+                - name
+  '/api/sizes/{id}':
+    get:
+      summary: 'Get size'
+      operationId: getSize
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size retrieved.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    put:
+      summary: 'Update size'
+      operationId: updateSize
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idSizeGroup:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the size_groups table.'
+                  example: 16
+                name:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: ngzmiyvdljnikhwa
+                sortOrder:
+                  type: integer
+                  description: 'Must be at least 0.'
+                  example: 50
+                status:
+                  type: string
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
+    delete:
+      summary: 'Deactivate size'
+      operationId: deactivateSize
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Size deactivated.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Size deactivated.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Size not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Size not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Size ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/colors/query:
+    post:
+      summary: 'Query colors (POST)'
+      operationId: queryColorsPOST
+      description: 'Same payload formats as `POST /products/query`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Colors retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Colors retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+  /api/colors:
+    get:
+      summary: 'List colors'
+      operationId: listColors
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Colors retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Colors retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+    post:
+      summary: 'Create color'
+      operationId: createColor
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Color created.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Color created.'
+                  data:
+                    type: object
+                    properties: {  }
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                hexColor:
+                  type: string
+                  description: 'Must match the regex /^#[0-9A-Fa-f]{6}$/.'
+                  example: '#fEEeDb'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: inactive
+                  enum:
+                    - active
+                    - inactive
+              required:
+                - name
+  '/api/colors/{id}':
+    get:
+      summary: 'Get color'
+      operationId: getColor
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Color retrieved.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Color retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Color not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Color not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    put:
+      summary: 'Update color'
+      operationId: updateColor
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Color updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Color updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Color not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Color not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                hexColor:
+                  type: string
+                  description: 'Must match the regex /^#[0-9A-Fa-f]{6}$/.'
+                  example: '#fEEeDb'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
+    delete:
+      summary: 'Deactivate color'
+      operationId: deactivateColor
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Color deactivated.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Color deactivated.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Color not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Color not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Color ID.'
         example: 1
         required: true
         schema:
@@ -1135,6 +2645,97 @@ paths:
                   type: boolean
                   description: 'Include total count (default true).'
                   example: true
+  '/api/products/{product}/variants':
+    get:
+      summary: 'List product variants'
+      operationId: listProductVariants
+      description: 'Devuelve las variantes (talla x color) de un producto, base para la matriz de captura.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Variants retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Variants retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/products:
     get:
       summary: 'List products'
@@ -1311,6 +2912,11 @@ paths:
                   type: integer
                   description: 'Category ID.'
                   example: 1
+                idSizeGroup:
+                  type: integer
+                  description: 'This field is required when <code>stockControl</code> is <code>true</code>. The <code>id</code> of an existing record in the size_groups table.'
+                  example: 16
+                  nullable: true
                 key:
                   type: string
                   description: 'Internal unique key.'
@@ -1329,31 +2935,22 @@ paths:
                   description: 'Must not be greater than 50 characters.'
                   example: v
                   nullable: true
-                size:
-                  type: string
-                  description: 'Must not be greater than 20 characters.'
-                  example: dljnikhwaykcmyuw
-                  nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 67
+                  example: 42
                 cost:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 61
+                  example: 37
                 stockControl:
                   type: boolean
                   description: ''
                   example: false
-                stock:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 89
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 20
+                  example: 19
                 typeIva:
                   type: integer
                   description: 'IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A).'
@@ -1361,28 +2958,102 @@ paths:
                 rateIva:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 3
+                  example: 17
                   nullable: true
                 quotaIva:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 22
+                  example: 8
                   nullable: true
                 isr:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 5
+                  example: 8
                 impEsp:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 10
+                  example: 14
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
+                variants:
+                  type: array
+                  description: 'This field is required when <code>stockControl</code> is <code>true</code>.'
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      idSize:
+                        type: integer
+                        description: 'The <code>id</code> of an existing record in the sizes table.'
+                        example: 16
+                      idColor:
+                        type: integer
+                        description: 'The <code>id</code> of an existing record in the colors table.'
+                        example: 16
+                      sku:
+                        type: string
+                        description: 'Must not be greater than 80 characters.'
+                        example: 'n'
+                      codeBar:
+                        type: string
+                        description: 'Must not be greater than 50 characters.'
+                        example: g
+                        nullable: true
+                      stock:
+                        type: number
+                        description: 'Must be at least 0.'
+                        example: 12
+                      status:
+                        type: string
+                        description: ''
+                        example: inactive
+                        enum:
+                          - active
+                          - inactive
+                    required:
+                      - idSize
+                      - idColor
+                      - sku
+                      - stock
+                initialMovement:
+                  type: object
+                  description: ''
+                  example: null
+                  properties:
+                    movementType:
+                      type: string
+                      description: 'This field is required when <code>initialMovement</code> is present.'
+                      example: adjustment
+                      enum:
+                        - entry
+                        - sale
+                        - adjustment
+                        - return
+                        - cancel
+                    referenceType:
+                      type: string
+                      description: 'Must not be greater than 50 characters.'
+                      example: w
+                      nullable: true
+                    referenceId:
+                      type: integer
+                      description: ''
+                      example: 16
+                      nullable: true
+                    notes:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    idUser:
+                      type: integer
+                      description: 'This field is required when <code>initialMovement</code> is present. The <code>id</code> of an existing record in the users table.'
+                      example: 16
               required:
                 - idCategory
                 - key
@@ -1390,7 +3061,6 @@ paths:
                 - price
                 - cost
                 - stockControl
-                - stock
                 - typeIva
   '/api/products/{id}':
     get:
@@ -1534,6 +3204,11 @@ paths:
                   type: integer
                   description: 'The <code>id</code> of an existing record in the categories table.'
                   example: 16
+                idSizeGroup:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the size_groups table.'
+                  example: 16
+                  nullable: true
                 key:
                   type: string
                   description: 'Must not be greater than 50 characters.'
@@ -1552,35 +3227,26 @@ paths:
                   description: 'Must not be greater than 50 characters.'
                   example: v
                   nullable: true
-                size:
-                  type: string
-                  description: 'Must not be greater than 20 characters.'
-                  example: dljnikhwaykcmyuw
-                  nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 67
+                  example: 42
                 cost:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 61
+                  example: 37
                 stockControl:
                   type: boolean
                   description: ''
                   example: false
-                stock:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 89
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 20
+                  example: 19
                 typeIva:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -1589,25 +3255,25 @@ paths:
                 rateIva:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 3
+                  example: 17
                   nullable: true
                 quotaIva:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 22
+                  example: 8
                   nullable: true
                 isr:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 5
+                  example: 8
                 impEsp:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
-                  example: 10
+                  example: 14
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1686,6 +3352,115 @@ paths:
         required: true
         schema:
           type: integer
+  /api/inventory/movements:
+    post:
+      summary: 'Register inventory movement'
+      operationId: registerInventoryMovement
+      description: "Registra una entrada/salida/ajuste sobre una variante y actualiza su existencia.\nTipos que incrementan: `entry`, `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Movement registered.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Movement registered.'
+                  data:
+                    type: object
+                    properties: {  }
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 422
+                  status: 'Unprocessable Entity'
+                  message: 'La existencia no puede quedar negativa.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: 'Unprocessable Entity'
+                  message:
+                    type: string
+                    example: 'La existencia no puede quedar negativa.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idProductVariant:
+                  type: integer
+                  description: 'Variant ID.'
+                  example: 1
+                movementType:
+                  type: string
+                  description: entry|sale|adjustment|return|cancel.
+                  example: entry
+                quantity:
+                  type: number
+                  description: 'Cantidad movida (magnitud positiva).'
+                  example: 5.0
+                referenceType:
+                  type: string
+                  description: 'Origen del movimiento.'
+                  example: manual_adjustment
+                  nullable: true
+                referenceId:
+                  type: integer
+                  description: 'Documento origen, si aplica.'
+                  example: null
+                  nullable: true
+                notes:
+                  type: string
+                  description: Comentario.
+                  example: 'Entrada manual de mercancia'
+                  nullable: true
+                idUser:
+                  type: integer
+                  description: 'Usuario que genera el movimiento.'
+                  example: 1
+              required:
+                - idProductVariant
+                - movementType
+                - quantity
+                - idUser
   /api/users:
     get:
       summary: 'List users'
@@ -1793,7 +3568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1970,7 +3745,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

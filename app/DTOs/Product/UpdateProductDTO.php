@@ -6,15 +6,14 @@ readonly class UpdateProductDTO
 {
     public function __construct(
         public ?int    $categoryId,
+        public ?int    $sizeGroupId,
         public ?string $key,
         public ?string $name,
         public ?string $description,
         public ?string $codeBar,
-        public ?string $size,
         public ?float  $price,
         public ?float  $cost,
         public ?bool   $stockControl,
-        public ?float  $stock,
         public ?float  $discount,
         public ?int    $typeIva,
         public ?float  $rateIva,

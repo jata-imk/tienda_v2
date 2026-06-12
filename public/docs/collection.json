@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "c3a23c66-208f-4f5b-b380-7d7152f56e0f",
+        "_postman_id": "e5d889d2-7e22-4065-a9da-6862de60fd74",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -114,6 +114,88 @@
             "description": "",
             "item": [
                 {
+                    "name": "Update company info",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/company-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/company-info"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"architecto\",\"street\":\"n\",\"external_number\":\"g\",\"cross_street_one\":\"z\",\"cross_street_two\":\"m\",\"postal_code\":\"i\",\"neighborhood\":\"y\",\"city\":\"v\",\"stock_control\":true,\"quantity_integers\":1,\"quantity_decimals\":5,\"status\":\"active\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Company info updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Company info not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Partially update company info",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/company-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/company-info"
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"architecto\",\"street\":\"n\",\"external_number\":\"g\",\"cross_street_one\":\"z\",\"cross_street_two\":\"m\",\"postal_code\":\"i\",\"neighborhood\":\"y\",\"city\":\"v\",\"stock_control\":true,\"quantity_integers\":1,\"quantity_decimals\":5,\"status\":\"active\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Company info updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Company info not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List currencies",
                     "request": {
                         "url": {
@@ -167,7 +249,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -554,7 +636,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -620,6 +702,726 @@
                     ]
                 },
                 {
+                    "name": "Query size groups (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Same payload formats as `POST \/products\/query`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size groups retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List size groups",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size groups retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create size group",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Size group created.\",\"data\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get size group",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size group ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size group retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size group not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update size group",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size group ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size group updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size group not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate size group",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/size-groups\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/size-groups\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size group ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size group deactivated.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size group not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Query sizes (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Same payload formats as `POST \/products\/query`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Sizes retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List sizes",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.\nFilter by group with `w[id_size_group]`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Sizes retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create size",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Size created.\",\"data\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get size",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update size",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate size",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/sizes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/sizes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Size ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Size deactivated.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Size not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Query colors (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Same payload formats as `POST \/products\/query`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Colors retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List colors",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Colors retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create color",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Color created.\",\"data\":{}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get color",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Color ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Color retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Color not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update color",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Color ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Color updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Color not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate color",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/colors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/colors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Color ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Color deactivated.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Color not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Query products (POST)",
                     "request": {
                         "url": {
@@ -650,6 +1452,52 @@
                             "header": [],
                             "code": 200,
                             "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Products retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List product variants",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:product\/variants",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:product\/variants",
+                            "variable": [
+                                {
+                                    "id": "product",
+                                    "key": "product",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Devuelve las variantes (talla x color) de un producto, base para la matriz de captura."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Variants retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
                             "name": ""
                         }
                     ]
@@ -757,7 +1605,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":1,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":1,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":1,\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"adjustment\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"inactive\"}]}"
                         },
                         "description": ""
                     },
@@ -846,7 +1694,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"size\":\"dljnikhwaykcmyuw\",\"price\":67,\"cost\":61,\"stockControl\":false,\"stock\":89,\"discount\":20,\"typeIva\":4,\"rateIva\":3,\"quotaIva\":22,\"isr\":5,\"impEsp\":10,\"status\":\"inactive\"}"
+                            "raw": "{\"idCategory\":16,\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -907,6 +1755,47 @@
                             "header": [],
                             "code": 404,
                             "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Register inventory movement",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/inventory\/movements",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/inventory\/movements"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idProductVariant\":1,\"movementType\":\"entry\",\"quantity\":5,\"referenceType\":\"manual_adjustment\",\"referenceId\":null,\"notes\":\"Entrada manual de mercancia\",\"idUser\":1}"
+                        },
+                        "description": "Registra una entrada\/salida\/ajuste sobre una variante y actualiza su existencia.\nTipos que incrementan: `entry`, `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Movement registered.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"ok\":false,\"code\":422,\"status\":\"Unprocessable Entity\",\"message\":\"La existencia no puede quedar negativa.\",\"data\":null}",
                             "name": ""
                         }
                     ]
@@ -971,7 +1860,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1060,7 +1949,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

@@ -11,15 +11,14 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_category')->constrained('categories');
+            $table->foreignId('id_size_group')->nullable()->constrained('size_groups');
             $table->string('key')->unique();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('code_bar')->nullable();
-            $table->string('size')->nullable();
             $table->decimal('price', 10, 2);
             $table->decimal('cost', 10, 2);
             $table->boolean('stock_control')->default(false);
-            $table->decimal('stock', 10, 3)->default(0);
             $table->decimal('discount', 5, 2)->default(0);
             $table->tinyInteger('type_iva')->default(1);
             $table->decimal('rate_iva', 5, 2)->nullable();
