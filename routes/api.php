@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyInfoController;
@@ -17,6 +18,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
+
+    // Catalogs
+    Route::get('catalogs', [CatalogController::class, 'index']);
 
     // Users
     Route::apiResource('users', UserController::class);

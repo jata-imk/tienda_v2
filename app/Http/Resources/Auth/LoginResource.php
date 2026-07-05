@@ -13,6 +13,7 @@ class LoginResource extends JsonResource
             'token'       => $this->resource['token'],
             'companyInfo' => $this->resource['companyInfo'],
             'user'        => $this->resource['user'],
+            'catalogs'    => $this->resource['catalogs'],
         ];
     }
 }

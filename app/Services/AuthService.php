@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Auth\LoginDTO;
 use App\Models\CompanyInfo;
+use App\Services\CatalogService;
 use App\Models\User;
 use App\Models\UserSession;
 use Carbon\Carbon;
@@ -12,6 +13,8 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
+    public function __construct(private CatalogService $catalogService) {}
+
     public function login(LoginDTO $dto): array
     {
         $user = User::where('user_name', $dto->userName)->first();
@@ -31,9 +34,10 @@ class AuthService
             'result'  => 'ok',
             'message' => 'Login successful',
             'data'    => [
-                'token'      => $token,
+                'token'       => $token,
                 'companyInfo' => $this->formatCompany($company),
-                'user'       => $this->formatUser($user),
+                'user'        => $this->formatUser($user),
+                'catalogs'    => $this->catalogService->all(),
             ],
         ];
     }
