@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Size\CreateSizeRequest;
 use App\Http\Requests\Size\UpdateSizeRequest;
 use App\Http\Resources\Size\SizeResource;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  */
 class SizeController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private SizeService $sizeService) {}
 
     /**
@@ -75,12 +78,7 @@ class SizeController extends Controller
         if (!empty($body['w'])) {
             $w = $body['w'];
             if (array_is_list($w)) {
-                $filters['w'] = array_map(fn($cond) => [
-                    'column'   => Str::snake($cond['f'] ?? ''),
-                    'operator' => $this->mapOperator($cond['ao'] ?? '=='),
-                    'value'    => $cond['v'] ?? null,
-                    'logic'    => strtolower($cond['lo'] ?? '&&') === '||' ? 'or' : 'and',
-                ], $w);
+                $filters['w'] = $this->translateGridFilters($w);
             } else {
                 $filters['w'] = $w;
             }
@@ -96,19 +94,6 @@ class SizeController extends Controller
         $total = is_array($result) ? ($result['total'] ?? null) : null;
 
         return ApiResponse::query('Sizes retrieved.', SizeResource::collection($items), $total);
-    }
-
-    private function mapOperator(string $ao): string
-    {
-        return match ($ao) {
-            '==' => '=',
-            '!=' => '!=',
-            '>'  => '>',
-            '>=' => '>=',
-            '<'  => '<',
-            '<=' => '<=',
-            default => '=',
-        };
     }
 
     /**

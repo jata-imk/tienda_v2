@@ -98,6 +98,45 @@ class ProductCategoriesTest extends TestCase
         $this->assertFalse($keys->contains('SERV-001'), 'SERV-001 solo pertenece a la categoria 2');
     }
 
+    public function test_query_translates_devextreme_text_operators_to_like(): void
+    {
+        // El filterRow de DevExtreme manda `contains`; antes caia en `=` y no devolvia nada.
+        $response = $this->withoutMiddleware()->postJson('/api/products/query', [
+            'w'          => [['f' => 'name', 'ao' => 'contains', 'v' => 'lino', 'lo' => '&&']],
+            'totalCount' => true,
+        ]);
+
+        $response->assertOk();
+
+        $keys = collect($response->json('data.items'))->pluck('key');
+
+        $this->assertTrue($keys->contains('CAM-001'), 'Camisa lino caballero debe entrar con contains');
+        $this->assertFalse($keys->contains('SERV-001'));
+    }
+
+    public function test_query_supports_startswith_and_between(): void
+    {
+        $startsWith = $this->withoutMiddleware()->postJson('/api/products/query', [
+            'w'          => [['f' => 'key', 'ao' => 'startswith', 'v' => 'CAM', 'lo' => '&&']],
+            'totalCount' => true,
+        ]);
+
+        $startsWith->assertOk();
+        $this->assertSame(1, $startsWith->json('data.totalCount'));
+
+        $between = $this->withoutMiddleware()->postJson('/api/products/query', [
+            'w'          => [['f' => 'price', 'ao' => 'between', 'v' => [100, 500], 'lo' => '&&']],
+            'totalCount' => true,
+        ]);
+
+        $between->assertOk();
+
+        $keys = collect($between->json('data.items'))->pluck('key');
+
+        $this->assertTrue($keys->contains('SERV-001'), 'SERV-001 cuesta 150, entra en el rango');
+        $this->assertFalse($keys->contains('CAM-001'), 'CAM-001 cuesta 800, queda fuera');
+    }
+
     public function test_query_still_accepts_the_id_category_filter_key(): void
     {
         $response = $this->withoutMiddleware()->postJson('/api/products/query', [

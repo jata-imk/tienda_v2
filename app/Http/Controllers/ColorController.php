@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Color\CreateColorRequest;
 use App\Http\Requests\Color\UpdateColorRequest;
 use App\Http\Resources\Color\ColorResource;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  */
 class ColorController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private ColorService $colorService) {}
 
     /**
@@ -74,12 +77,7 @@ class ColorController extends Controller
         if (!empty($body['w'])) {
             $w = $body['w'];
             if (array_is_list($w)) {
-                $filters['w'] = array_map(fn($cond) => [
-                    'column'   => Str::snake($cond['f'] ?? ''),
-                    'operator' => $this->mapOperator($cond['ao'] ?? '=='),
-                    'value'    => $cond['v'] ?? null,
-                    'logic'    => strtolower($cond['lo'] ?? '&&') === '||' ? 'or' : 'and',
-                ], $w);
+                $filters['w'] = $this->translateGridFilters($w);
             } else {
                 $filters['w'] = $w;
             }
@@ -95,19 +93,6 @@ class ColorController extends Controller
         $total = is_array($result) ? ($result['total'] ?? null) : null;
 
         return ApiResponse::query('Colors retrieved.', ColorResource::collection($items), $total);
-    }
-
-    private function mapOperator(string $ao): string
-    {
-        return match ($ao) {
-            '==' => '=',
-            '!=' => '!=',
-            '>'  => '>',
-            '>=' => '>=',
-            '<'  => '<',
-            '<=' => '<=',
-            default => '=',
-        };
     }
 
     /**

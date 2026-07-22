@@ -11,6 +11,25 @@ Las respuestas usan el formato estándar `ApiResponse` (`{ ok, code, status, mes
 Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, `f[]`,
 `o[column]`, `o[direction]`, `w[column]`, `totalCount` (igual que `products`).
 
+### Operadores de `POST /{recurso}/query`
+
+El `w` en formato array (`{f, ao, v, lo}`) es el que manda el `filterRow` de DevExtreme.
+`TranslatesGridFilters` traduce estos operadores:
+
+| `ao` | SQL resultante |
+|---|---|
+| `==` (default) | `= valor` |
+| `!=` / `<>` | `!= valor` |
+| `>`, `>=`, `<`, `<=` | comparación directa |
+| `contains` | `LIKE '%valor%'` |
+| `notcontains` | `NOT LIKE '%valor%'` |
+| `startswith` | `LIKE 'valor%'` |
+| `endswith` | `LIKE '%valor'` |
+| `between` (`v: [a, b]`) | se parte en `>= a` y `<= b` |
+
+Los `%` y `_` dentro del texto se escapan, así que no actúan como comodines.
+Cualquier `ao` desconocido cae en `=`.
+
 ---
 
 ## Modelo de datos

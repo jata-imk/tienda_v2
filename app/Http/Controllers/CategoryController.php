@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Category\CreateCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\Category\CategoryResource;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  */
 class CategoryController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private CategoryService $categoryService) {}
 
     /**
@@ -88,12 +91,7 @@ class CategoryController extends Controller
         if (!empty($body['w'])) {
             $w = $body['w'];
             if (array_is_list($w)) {
-                $filters['w'] = array_map(fn($cond) => [
-                    'column'   => Str::snake($cond['f'] ?? ''),
-                    'operator' => $this->mapOperator($cond['ao'] ?? '=='),
-                    'value'    => $cond['v'] ?? null,
-                    'logic'    => strtolower($cond['lo'] ?? '&&') === '||' ? 'or' : 'and',
-                ], $w);
+                $filters['w'] = $this->translateGridFilters($w);
             } else {
                 $filters['w'] = $w;
             }
@@ -109,19 +107,6 @@ class CategoryController extends Controller
         $total = is_array($result) ? ($result['total'] ?? null) : null;
 
         return ApiResponse::query('Categories retrieved.', CategoryResource::collection($items), $total);
-    }
-
-    private function mapOperator(string $ao): string
-    {
-        return match ($ao) {
-            '==' => '=',
-            '!=' => '!=',
-            '>'  => '>',
-            '>=' => '>=',
-            '<'  => '<',
-            '<=' => '<=',
-            default => '=',
-        };
     }
 
     /**
