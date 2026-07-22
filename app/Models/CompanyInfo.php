@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Illuminate\Database\Eloquent\Model;
 
 class CompanyInfo extends Model
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'company_info';
 
     protected $fillable = [

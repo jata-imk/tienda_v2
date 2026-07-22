@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\CreateProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Http\Requests\Product\UploadProductImageRequest;
 use App\Http\Resources\Product\ProductResource;
 use App\Services\ProductService;
 use App\Support\ApiResponse;
@@ -154,7 +155,7 @@ class ProductController extends Controller
     /**
      * Create product
      *
-     * @bodyParam idCategory integer required Category ID. Example: 1
+     * @bodyParam categories integer[] required Category IDs. Example: [1,2]
      * @bodyParam key string required Internal unique key. Example: 000001
      * @bodyParam typeIva integer required IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A). Example: 1
      *
@@ -182,6 +183,49 @@ class ProductController extends Controller
         }
 
         return ApiResponse::ok('Product updated.', new ProductResource($product));
+    }
+
+    /**
+     * Upload product image
+     *
+     * Multipart request with an `image` file field. Stores the file on the
+     * `public` disk, generates a 200px thumbnail and replaces any previous image.
+     *
+     * @urlParam id integer required Product ID. Example: 1
+     *
+     * @bodyParam image file required Image file (jpeg, png, webp; max 4MB).
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Product image updated.","data":{}}
+     * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Product not found.","data":null}
+     */
+    public function uploadImage(UploadProductImageRequest $request, int $id): JsonResponse
+    {
+        $product = $this->productService->setImage($id, $request->file('image'));
+
+        if (!$product) {
+            return ApiResponse::error('Product not found.', 404);
+        }
+
+        return ApiResponse::ok('Product image updated.', new ProductResource($product));
+    }
+
+    /**
+     * Delete product image
+     *
+     * @urlParam id integer required Product ID. Example: 1
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Product image deleted.","data":{}}
+     * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Product not found.","data":null}
+     */
+    public function deleteImage(int $id): JsonResponse
+    {
+        $product = $this->productService->clearImage($id);
+
+        if (!$product) {
+            return ApiResponse::error('Product not found.', 404);
+        }
+
+        return ApiResponse::ok('Product image deleted.', new ProductResource($product));
     }
 
     /**

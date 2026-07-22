@@ -17,6 +17,9 @@ tags:
     name: Configuration
     description: ''
   -
+    name: Dashboard
+    description: ''
+  -
     name: Inventory
     description: ''
   -
@@ -310,6 +313,229 @@ paths:
       tags:
         - Catalogs
   /api/company-info:
+    get:
+      summary: 'Get company info'
+      operationId: getCompanyInfo
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Company info retrieved.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Company info retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Company info not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Company info not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuration
+    post:
+      summary: 'Create company info'
+      operationId: createCompanyInfo
+      description: "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Company info created.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Company info created.'
+                  data:
+                    type: object
+                    properties: {  }
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Company info already exists.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Company info already exists.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                rfc:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                legal_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                tax_regime:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                logo:
+                  type: string
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  example: m
+                  nullable: true
+                street:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: i
+                  nullable: true
+                external_number:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'y'
+                  nullable: true
+                cross_street_one:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: v
+                  nullable: true
+                cross_street_two:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: d
+                  nullable: true
+                postal_code:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: l
+                  nullable: true
+                neighborhood:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: j
+                  nullable: true
+                city:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: true
+                stock_control:
+                  type: boolean
+                  description: ''
+                  example: true
+                quantity_integers:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 5
+                quantity_decimals:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 255.'
+                  example: 8
+                grid_settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  enum:
+                    - active
+                    - inactive
+              required:
+                - name
     put:
       summary: 'Update company info'
       operationId: updateCompanyInfo
@@ -403,56 +629,56 @@ paths:
                   nullable: true
                 logo:
                   type: string
-                  description: ''
-                  example: architecto
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  example: m
                   nullable: true
                 street:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: i
                   nullable: true
                 external_number:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: g
+                  example: 'y'
                   nullable: true
                 cross_street_one:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: z
+                  example: v
                   nullable: true
                 cross_street_two:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: m
+                  example: d
                   nullable: true
                 postal_code:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: i
+                  example: l
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'y'
+                  example: j
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: 'n'
                   nullable: true
                 stock_control:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantity_integers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 1
+                  example: 5
                 quantity_decimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 5
+                  example: 8
                 grid_settings:
                   type: object
                   description: ''
@@ -462,7 +688,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -561,43 +787,43 @@ paths:
                   nullable: true
                 logo:
                   type: string
-                  description: ''
-                  example: architecto
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  example: m
                   nullable: true
                 street:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: i
                   nullable: true
                 external_number:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: g
+                  example: 'y'
                   nullable: true
                 cross_street_one:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: z
+                  example: v
                   nullable: true
                 cross_street_two:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: m
+                  example: d
                   nullable: true
                 postal_code:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: i
+                  example: l
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'y'
+                  example: j
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: 'n'
                   nullable: true
                 stock_control:
                   type: boolean
@@ -606,11 +832,11 @@ paths:
                 quantity_integers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 1
+                  example: 5
                 quantity_decimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 5
+                  example: 8
                 grid_settings:
                   type: object
                   description: ''
@@ -719,7 +945,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -959,6 +1185,146 @@ paths:
         required: true
         schema:
           type: integer
+  /api/dashboard:
+    get:
+      summary: 'Dashboard metrics'
+      operationId: dashboardMetrics
+      description: "Returns best-selling products, stock ranking (lowest/highest) and\ninventory KPIs in a single payload."
+      parameters:
+        -
+          in: query
+          name: limit
+          description: 'Rows per ranking (1-50, default 5).'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'Rows per ranking (1-50, default 5).'
+            example: 5
+        -
+          in: query
+          name: dateFrom
+          description: 'date Start of the sales range.'
+          example: '2026-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Start of the sales range.'
+            example: '2026-01-01'
+        -
+          in: query
+          name: dateTo
+          description: 'date End of the sales range.'
+          example: '2026-07-21'
+          required: false
+          schema:
+            type: string
+            description: 'date End of the sales range.'
+            example: '2026-07-21'
+        -
+          in: query
+          name: lowStockThreshold
+          description: 'Stock level considered low (default 5).'
+          example: 5.0
+          required: false
+          schema:
+            type: number
+            description: 'Stock level considered low (default 5).'
+            example: 5.0
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Dashboard retrieved.'
+                  data:
+                    topProducts: []
+                    lowestStock: []
+                    highestStock: []
+                    summary:
+                      totalProducts: 0
+                      activeProducts: 0
+                      totalVariants: 0
+                      totalStock: 0
+                      inventoryValue: 0
+                      lowStockCount: 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Dashboard retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      topProducts:
+                        type: array
+                        example: []
+                      lowestStock:
+                        type: array
+                        example: []
+                      highestStock:
+                        type: array
+                        example: []
+                      summary:
+                        type: object
+                        properties:
+                          totalProducts:
+                            type: integer
+                            example: 0
+                          activeProducts:
+                            type: integer
+                            example: 0
+                          totalVariants:
+                            type: integer
+                            example: 0
+                          totalStock:
+                            type: integer
+                            example: 0
+                          inventoryValue:
+                            type: integer
+                            example: 0
+                          lowStockCount:
+                            type: integer
+                            example: 0
+      tags:
+        - Dashboard
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 50.'
+                  example: 1
+                dateFrom:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-07-21T20:32:35'
+                dateTo:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
+                  example: '2052-08-13'
+                lowStockThreshold:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 39
   /api/categories/query:
     post:
       summary: 'Query categories (POST)'
@@ -1385,7 +1751,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1781,7 +2147,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2024,7 +2390,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2184,7 +2550,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2424,7 +2790,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2836,6 +3202,167 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/products/{product}/image':
+    post:
+      summary: 'Upload product image'
+      operationId: uploadProductImage
+      description: "Multipart request with an `image` file field. Stores the file on the\n`public` disk, generates a 200px thumbnail and replaces any previous image."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Product image updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Product image updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: 'Image file (jpeg, png, webp; max 4MB).'
+              required:
+                - image
+    delete:
+      summary: 'Delete product image'
+      operationId: deleteProductImage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Product image deleted.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Product image deleted.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'The product.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/products:
     get:
       summary: 'List products'
@@ -3008,10 +3535,14 @@ paths:
             schema:
               type: object
               properties:
-                idCategory:
-                  type: integer
-                  description: 'Category ID.'
-                  example: 1
+                categories:
+                  type: array
+                  description: 'Category IDs.'
+                  example:
+                    - 1
+                    - 2
+                  items:
+                    type: integer
                 idSizeGroup:
                   type: integer
                   description: 'This field is required when <code>stockControl</code> is <code>true</code>. The <code>id</code> of an existing record in the size_groups table.'
@@ -3076,7 +3607,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3155,7 +3686,7 @@ paths:
                       description: 'This field is required when <code>initialMovement</code> is present. The <code>id</code> of an existing record in the users table.'
                       example: 16
               required:
-                - idCategory
+                - categories
                 - key
                 - name
                 - price
@@ -3300,10 +3831,13 @@ paths:
             schema:
               type: object
               properties:
-                idCategory:
-                  type: integer
+                categories:
+                  type: array
                   description: 'The <code>id</code> of an existing record in the categories table.'
-                  example: 16
+                  example:
+                    - 16
+                  items:
+                    type: integer
                 idSizeGroup:
                   type: integer
                   description: 'The <code>id</code> of an existing record in the size_groups table.'
@@ -3338,7 +3872,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -3346,7 +3880,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -3373,7 +3907,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3668,7 +4202,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3845,7 +4379,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "22ecebfa-a2e3-4972-b088-fe78e90072e3",
+        "_postman_id": "dffee1fc-6d19-4f91-8c5a-261e57edec3a",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -152,6 +152,85 @@
             "description": "",
             "item": [
                 {
+                    "name": "Get company info",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/company-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/company-info"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Company info retrieved.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Company info not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create company info",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/company-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/company-info"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"external_number\":\"y\",\"cross_street_one\":\"v\",\"cross_street_two\":\"d\",\"postal_code\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stock_control\":true,\"quantity_integers\":5,\"quantity_decimals\":8,\"status\":\"active\"}"
+                        },
+                        "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Company info created.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\"ok\":false,\"code\":409,\"status\":\"Conflict\",\"message\":\"Company info already exists.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Update company info",
                     "request": {
                         "url": {
@@ -173,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"architecto\",\"street\":\"n\",\"external_number\":\"g\",\"cross_street_one\":\"z\",\"cross_street_two\":\"m\",\"postal_code\":\"i\",\"neighborhood\":\"y\",\"city\":\"v\",\"stock_control\":true,\"quantity_integers\":1,\"quantity_decimals\":5,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"external_number\":\"y\",\"cross_street_one\":\"v\",\"cross_street_two\":\"d\",\"postal_code\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stock_control\":false,\"quantity_integers\":5,\"quantity_decimals\":8,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -214,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"architecto\",\"street\":\"n\",\"external_number\":\"g\",\"cross_street_one\":\"z\",\"cross_street_two\":\"m\",\"postal_code\":\"i\",\"neighborhood\":\"y\",\"city\":\"v\",\"stock_control\":false,\"quantity_integers\":1,\"quantity_decimals\":5,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legal_name\":\"g\",\"tax_regime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"external_number\":\"y\",\"cross_street_one\":\"v\",\"cross_street_two\":\"d\",\"postal_code\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stock_control\":false,\"quantity_integers\":5,\"quantity_decimals\":8,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -287,7 +366,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -437,6 +516,72 @@
                             "header": [],
                             "code": 404,
                             "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Currency not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "description": "",
+            "item": [
+                {
+                    "name": "Dashboard metrics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/dashboard",
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "5",
+                                    "description": "Rows per ranking (1-50, default 5).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "dateFrom",
+                                    "value": "2026-01-01",
+                                    "description": "date Start of the sales range.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "dateTo",
+                                    "value": "2026-07-21",
+                                    "description": "date End of the sales range.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "lowStockThreshold",
+                                    "value": "5",
+                                    "description": "Stock level considered low (default 5).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/dashboard?limit=5&dateFrom=2026-01-01&dateTo=2026-07-21&lowStockThreshold=5"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-07-21T20:32:35\",\"dateTo\":\"2052-08-13\",\"lowStockThreshold\":39}"
+                        },
+                        "description": "Returns best-selling products, stock ranking (lowest\/highest) and\ninventory KPIs in a single payload."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Dashboard retrieved.\",\"data\":{\"topProducts\":[],\"lowestStock\":[],\"highestStock\":[],\"summary\":{\"totalProducts\":0,\"activeProducts\":0,\"totalVariants\":0,\"totalStock\":0,\"inventoryValue\":0,\"lowStockCount\":0}}}",
                             "name": ""
                         }
                     ]
@@ -674,7 +819,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -914,7 +1059,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1065,7 +1210,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1154,7 +1299,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1305,7 +1450,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1541,6 +1686,119 @@
                     ]
                 },
                 {
+                    "name": "Upload product image",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:product\/image",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:product\/image",
+                            "variable": [
+                                {
+                                    "id": "product",
+                                    "key": "product",
+                                    "value": "architecto",
+                                    "description": "The product."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "image",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Multipart request with an `image` file field. Stores the file on the\n`public` disk, generates a 200px thumbnail and replaces any previous image."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Product image updated.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete product image",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:product\/image",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:product\/image",
+                            "variable": [
+                                {
+                                    "id": "product",
+                                    "key": "product",
+                                    "value": "architecto",
+                                    "description": "The product."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Product ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Product image deleted.\",\"data\":{}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Product not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List products",
                     "request": {
                         "url": {
@@ -1643,7 +1901,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":1,\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": ""
                     },
@@ -1732,7 +1990,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCategory\":16,\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":4,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1898,7 +2156,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1987,7 +2245,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

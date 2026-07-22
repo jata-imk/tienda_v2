@@ -14,7 +14,6 @@ class ProductSeeder extends Seeder
         // Producto con control de existencias: variantes talla x color.
         // Tallas (grupo Adultos): 34=id 2, 36=id 3, 38=id 4. Colores: Blanco=1, Azul marino=2.
         $product = Product::create([
-            'id_category'   => 1,
             'id_size_group' => 1,
             'key'           => 'CAM-001',
             'name'          => 'Camisa lino caballero',
@@ -31,6 +30,8 @@ class ProductSeeder extends Seeder
             'imp_esp'       => 0.00,
             'status'        => 'active',
         ]);
+
+        $product->categories()->sync([1, 2]);
 
         $variants = [
             ['id_size' => 2, 'id_color' => 1, 'sku' => 'CAM-001-34-BLA', 'stock' => 3],
@@ -68,8 +69,7 @@ class ProductSeeder extends Seeder
         }
 
         // Producto sin control de existencias: no requiere grupo de tallas ni variantes.
-        Product::create([
-            'id_category'   => 1,
+        $service = Product::create([
             'id_size_group' => null,
             'key'           => 'SERV-001',
             'name'          => 'Ajuste de prenda',
@@ -86,5 +86,7 @@ class ProductSeeder extends Seeder
             'imp_esp'       => 0.00,
             'status'        => 'active',
         ]);
+
+        $service->categories()->sync([2]);
     }
 }

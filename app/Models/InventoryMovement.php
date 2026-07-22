@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Illuminate\Database\Eloquent\Model;
 
 class InventoryMovement extends Model
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'inventory_movements';
 
     public const UPDATED_AT = null;

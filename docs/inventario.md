@@ -19,6 +19,7 @@ Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, 
 |---|---|
 | `products` | Producto base (datos comerciales y fiscales). Una fila por producto. |
 | `categories` | Clasificación de productos. |
+| `category_product` | Pivote producto ↔ categoría (un producto puede tener varias). |
 | `size_groups` | Grupos de tallas (Adultos, Niños). Catálogo. |
 | `sizes` | Tallas por grupo (con `sort_order`). Catálogo. |
 | `colors` | Colores reutilizables (`hex_color`). Catálogo. |
@@ -72,12 +73,14 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products/{id}/variants` | Variantes del producto (matriz) |
 | `POST` | `/api/products` | Crear producto + variantes + movimientos iniciales |
 | `PUT` | `/api/products/{id}` | Actualizar datos base del producto |
+| `POST` | `/api/products/{id}/image` | Subir/reemplazar imagen (multipart) |
+| `DELETE` | `/api/products/{id}/image` | Borrar imagen y thumbnail |
 | `DELETE` | `/api/products/{id}` | Desactivar (status → inactive) |
 
 ### Campos del producto base
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|
-| `idCategory` | int | sí | FK → categories |
+| `categories` | int[] | sí | **Array** de FKs → categories (ej. `[1, 2]`) |
 | `idSizeGroup` | int | cond. | FK → size_groups. Requerido si `stockControl=true` |
 | `key` | string | sí | Clave interna única |
 | `name` | string | sí | Nombre |
@@ -120,10 +123,51 @@ No se permite repetir la combinación `idSize + idColor` dentro del payload.
 \* Requeridos sólo si se envía `initialMovement`. El backend crea **un movimiento por cada
 variante con `stock > 0`** (`previous_stock=0`, `new_stock=stock`) dentro de una transacción.
 
+### Categorías del producto — entrada vs salida
+
+El campo se llama `categories` en ambos sentidos. La **entrada** (`POST`/`PUT`) es un array de
+ids; la **salida** trae el catálogo ya resuelto:
+
+```jsonc
+// Request
+{ "categories": [1, 2] }
+
+// Response
+{ "categories": [ { "id": 1, "desc": "Camisas lino" }, { "id": 2, "desc": "Caballero" } ] }
+```
+
+La entrada también acepta los objetos completos (`[{ "id": 1 }, { "id": 2 }]`), por si el
+`dxTagBox` manda el registro entero en vez del `valueExpr`.
+
+En `PUT`, enviar `categories` **reemplaza** el conjunto completo (`sync`); omitirlo lo deja intacto.
+Para filtrar se usa `w[categories]` (también se acepta `w[id_category]`) — el backend lo resuelve
+contra la pivote, no contra una columna de `products`.
+
+### Imagen del producto
+
+`POST /api/products/{id}/image` es **multipart/form-data** con un campo `image`
+(jpeg/jpg/png/webp, máx. 4 MB). Compatible directo con `dxFileUploader` de DevExtreme:
+
+```ts
+uploadUrl: `${API}/products/${id}/image`, name: 'image'
+```
+
+El backend guarda el archivo en el disco `public` (`storage/app/public/products/{id}/`),
+genera un thumbnail de 200 px (lado mayor) en `.../thumbs/` y reemplaza cualquier imagen previa.
+La respuesta trae URLs absolutas:
+
+```json
+{ "image": "http://127.0.0.1:8000/storage/products/1/uuid.png",
+  "imageThumb": "http://127.0.0.1:8000/storage/products/1/thumbs/uuid.png" }
+```
+
+En DB solo se guardan los paths relativos (`image`, `image_thumb`); la URL se arma con `APP_URL`.
+**Requiere `php artisan storage:link` una vez por entorno.**
+
 ### Ejemplo de alta
 ```json
 {
-  "idCategory": 1,
+  "categories": [1, 2],
   "idSizeGroup": 1,
   "key": "CAM-001",
   "name": "Camisa lino caballero",

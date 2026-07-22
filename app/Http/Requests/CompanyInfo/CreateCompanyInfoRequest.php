@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\CompanyInfo;
 
-use App\DTOs\CompanyInfo\UpdateCompanyInfoDTO;
+use App\DTOs\CompanyInfo\CreateCompanyInfoDTO;
 use App\Http\Requests\CompanyInfo\Concerns\NormalizesCompanyInfoInput;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCompanyInfoRequest extends FormRequest
+class CreateCompanyInfoRequest extends FormRequest
 {
     use NormalizesCompanyInfoInput;
 
@@ -38,8 +38,8 @@ class UpdateCompanyInfoRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): UpdateCompanyInfoDTO
+    public function toDTO(): CreateCompanyInfoDTO
     {
-        return new UpdateCompanyInfoDTO($this->validated());
+        return new CreateCompanyInfoDTO($this->validated());
     }
 }

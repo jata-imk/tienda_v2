@@ -4,8 +4,11 @@ namespace App\DTOs\Product;
 
 readonly class UpdateProductDTO
 {
+    /**
+     * @param int[]|null $categoryIds null = no se modifican las categorias.
+     */
     public function __construct(
-        public ?int    $categoryId,
+        public ?array  $categoryIds,
         public ?int    $sizeGroupId,
         public ?string $key,
         public ?string $name,

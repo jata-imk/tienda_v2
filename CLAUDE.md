@@ -16,6 +16,7 @@ php artisan serve              # Levantar servidor local (puerto 8000)
 php artisan migrate --seed     # Correr migraciones + seeders
 php artisan migrate:fresh --seed  # Resetear BD y resembrar
 php artisan scribe:generate    # Regenerar docs públicas y Postman collection
+php artisan storage:link       # Requerido una vez: expone las imágenes de productos en /storage
 ```
 
 ## Variables de entorno clave
@@ -31,7 +32,8 @@ php artisan scribe:generate    # Regenerar docs públicas y Postman collection
 
 - [Autenticación](docs/auth.md)
 - [Usuarios](docs/usuarios.md)
-- [Inventario](docs/inventario.md) — Categorías, productos
+- [Inventario](docs/inventario.md) — Categorías, productos, imágenes
+- [Dashboard](docs/dashboard.md) — Métricas de ventas e inventario
 - [Configuración](docs/config.md) — Tipos IVA, impuestos base, tipos de moneda
 - [Base de datos](docs/database.md)
 

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'users';
 
     protected $fillable = [

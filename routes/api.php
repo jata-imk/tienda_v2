@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryMovementController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
@@ -21,6 +22,9 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
 
     // Catalogs
     Route::get('catalogs', [CatalogController::class, 'index']);
+
+    // Dashboard
+    Route::get('dashboard', [DashboardController::class, 'index']);
 
     // Users
     Route::apiResource('users', UserController::class);
@@ -40,11 +44,15 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
 
     Route::post('products/query', [ProductController::class, 'query']);
     Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
+    Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
+    Route::delete('products/{product}/image', [ProductController::class, 'deleteImage']);
     Route::apiResource('products', ProductController::class);
 
     Route::post('inventory/movements', [InventoryMovementController::class, 'store']);
 
     // Configuration
+    Route::get('company-info', [CompanyInfoController::class, 'show']);
+    Route::post('company-info', [CompanyInfoController::class, 'store']);
     Route::put('company-info', [CompanyInfoController::class, 'update']);
     Route::patch('company-info', [CompanyInfoController::class, 'patch']);
     Route::apiResource('currencies', CurrencyController::class);

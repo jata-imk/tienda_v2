@@ -5,12 +5,15 @@ namespace App\Http\Requests\Product;
 use App\DTOs\Product\CreateProductDTO;
 use App\DTOs\Product\InitialMovementDTO;
 use App\DTOs\Product\VariantInputDTO;
+use App\Http\Requests\Product\Concerns\NormalizesCategoriesInput;
 use App\Models\Size;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateProductRequest extends FormRequest
 {
+    use NormalizesCategoriesInput;
+
     public function authorize(): bool
     {
         return true;
@@ -19,7 +22,8 @@ class CreateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'idCategory'   => 'required|integer|exists:categories,id',
+            'categories'   => 'required|array|min:1',
+            'categories.*' => 'integer|distinct|exists:categories,id',
             'idSizeGroup'  => 'required_if:stockControl,true|nullable|integer|exists:size_groups,id',
             'key'          => 'required|string|max:50|unique:products,key',
             'name'         => 'required|string|max:200',
@@ -121,7 +125,7 @@ class CreateProductRequest extends FormRequest
         }
 
         return new CreateProductDTO(
-            categoryId:      (int) $this->input('idCategory'),
+            categoryIds:     array_map('intval', $this->input('categories', [])),
             sizeGroupId:     $this->filled('idSizeGroup') ? (int) $this->input('idSizeGroup') : null,
             key:             $this->input('key'),
             name:            $this->input('name'),

@@ -14,5 +14,11 @@ class CategorySeeder extends Seeder
             'description' => 'Camisas de todos tipos de lino',
             'status'      => 'active',
         ]);
+
+        Category::create([
+            'name'        => 'Caballero',
+            'description' => 'Prendas para caballero',
+            'status'      => 'active',
+        ]);
     }
 }

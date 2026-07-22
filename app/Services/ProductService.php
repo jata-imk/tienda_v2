@@ -8,33 +8,65 @@ use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
-    private const VARIANT_RELATIONS = ['category', 'sizeGroup', 'variants.size', 'variants.color'];
+    private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color'];
+
+    /**
+     * Nombres con los que el frontend puede filtrar por categoria. Ninguno es
+     * columna de `products`: todos se resuelven contra la pivote.
+     */
+    private const CATEGORY_FILTER_KEYS = ['categories', 'id_category', 'category'];
+
+    public function __construct(private ImageService $imageService) {}
 
     public function index(array $filters = []): array|Collection
     {
         $query = Product::with(self::VARIANT_RELATIONS);
 
-        // where filters
+        // where filters — `categories` ya no es columna: se resuelve por la pivote
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 foreach ($filters['w'] as $cond) {
                     $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
+
+                    if (in_array($cond['column'], self::CATEGORY_FILTER_KEYS, true)) {
+                        $method = $method === 'orWhere' ? 'orWhereHas' : 'whereHas';
+                        $query->$method('categories', fn($q) => $q->where(
+                            'categories.id',
+                            $cond['operator'],
+                            $cond['value'],
+                        ));
+
+                        continue;
+                    }
+
                     $query->$method($cond['column'], $cond['operator'], $cond['value']);
                 }
             } else {
                 foreach ($filters['w'] as $column => $value) {
+                    if (in_array($column, self::CATEGORY_FILTER_KEYS, true)) {
+                        $query->whereHas('categories', fn($q) => $q->whereIn('categories.id', (array) $value));
+
+                        continue;
+                    }
+
                     $query->where($column, $value);
                 }
             }
         }
 
-        // field selection
+        // field selection — `categories` se descarta: no existe como columna
         if (!empty($filters['f'])) {
-            $query->select($filters['f']);
+            $fields = array_values(array_diff($filters['f'], self::CATEGORY_FILTER_KEYS));
+
+            if ($fields !== []) {
+                // `id` es obligatorio para poder cargar la relacion categories.
+                $query->select(array_values(array_unique(array_merge(['id'], $fields))));
+            }
         }
 
         // ordering
@@ -80,7 +112,6 @@ class ProductService
     {
         return DB::transaction(function () use ($dto) {
             $product = Product::create([
-                'id_category'   => $dto->categoryId,
                 'id_size_group' => $dto->sizeGroupId,
                 'key'           => $dto->key,
                 'name'          => $dto->name,
@@ -97,6 +128,8 @@ class ProductService
                 'imp_esp'       => $dto->impEsp,
                 'status'        => $dto->status,
             ]);
+
+            $product->categories()->sync($dto->categoryIds);
 
             foreach ($dto->variants as $variantInput) {
                 $variant = ProductVariant::create([
@@ -138,7 +171,6 @@ class ProductService
         }
 
         $fields = array_filter([
-            'id_category'   => $dto->categoryId,
             'id_size_group' => $dto->sizeGroupId,
             'key'           => $dto->key,
             'name'          => $dto->name,
@@ -156,7 +188,54 @@ class ProductService
             'status'        => $dto->status,
         ], fn($v) => $v !== null);
 
-        $product->update($fields);
+        DB::transaction(function () use ($product, $fields, $dto) {
+            if ($fields !== []) {
+                $product->update($fields);
+            }
+
+            if ($dto->categoryIds !== null) {
+                $product->categories()->sync($dto->categoryIds);
+            }
+        });
+
+        return $product->fresh(self::VARIANT_RELATIONS);
+    }
+
+    /**
+     * Reemplaza la imagen del producto: sube la nueva y borra la anterior.
+     */
+    public function setImage(int $id, UploadedFile $file): ?Product
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return null;
+        }
+
+        $previous = [$product->image, $product->image_thumb];
+        $stored   = $this->imageService->store($file, "products/{$product->id}");
+
+        $product->update([
+            'image'       => $stored['path'],
+            'image_thumb' => $stored['thumb'],
+        ]);
+
+        $this->imageService->delete(...$previous);
+
+        return $product->fresh(self::VARIANT_RELATIONS);
+    }
+
+    public function clearImage(int $id): ?Product
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return null;
+        }
+
+        $this->imageService->delete($product->image, $product->image_thumb);
+
+        $product->update(['image' => null, 'image_thumb' => null]);
 
         return $product->fresh(self::VARIANT_RELATIONS);
     }

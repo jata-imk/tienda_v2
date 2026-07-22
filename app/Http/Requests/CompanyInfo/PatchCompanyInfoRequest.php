@@ -3,10 +3,13 @@
 namespace App\Http\Requests\CompanyInfo;
 
 use App\DTOs\CompanyInfo\UpdateCompanyInfoDTO;
+use App\Http\Requests\CompanyInfo\Concerns\NormalizesCompanyInfoInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PatchCompanyInfoRequest extends FormRequest
 {
+    use NormalizesCompanyInfoInput;
+
     public function authorize(): bool
     {
         return true;
@@ -19,7 +22,7 @@ class PatchCompanyInfoRequest extends FormRequest
             'rfc'               => 'sometimes|nullable|string|max:255',
             'legal_name'        => 'sometimes|nullable|string|max:255',
             'tax_regime'        => 'sometimes|nullable|string|max:255',
-            'logo'              => 'sometimes|nullable|string',
+            'logo'              => array_merge(['sometimes'], self::LOGO_RULES),
             'street'            => 'sometimes|nullable|string|max:255',
             'external_number'   => 'sometimes|nullable|string|max:255',
             'cross_street_one'  => 'sometimes|nullable|string|max:255',

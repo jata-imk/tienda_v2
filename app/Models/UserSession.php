@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class UserSession extends Model
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'user_sessions';
 
     protected $fillable = ['id_user', 'token_hash', 'expires_at', 'revoked_at'];

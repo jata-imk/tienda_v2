@@ -5,10 +5,11 @@ namespace App\DTOs\Product;
 readonly class CreateProductDTO
 {
     /**
+     * @param int[]             $categoryIds
      * @param VariantInputDTO[] $variants
      */
     public function __construct(
-        public int                  $categoryId,
+        public array                $categoryIds,
         public ?int                 $sizeGroupId,
         public string               $key,
         public string               $name,

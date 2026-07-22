@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'product_variants';
 
     protected $fillable = [

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\NullsUpdatedAtOnCreate;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use NullsUpdatedAtOnCreate;
+
     protected $table = 'products';
 
     protected $fillable = [
-        'id_category', 'id_size_group', 'key', 'name', 'description', 'code_bar',
+        'id_size_group', 'key', 'name', 'description', 'code_bar',
+        'image', 'image_thumb',
         'price', 'cost', 'stock_control', 'discount',
         'type_iva', 'rate_iva', 'quota_iva', 'isr', 'imp_esp', 'status',
     ];
@@ -25,9 +29,9 @@ class Product extends Model
         'imp_esp'       => 'decimal:2',
     ];
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class, 'id_category');
+        return $this->belongsToMany(Category::class, 'category_product', 'id_product', 'id_category');
     }
 
     public function sizeGroup()

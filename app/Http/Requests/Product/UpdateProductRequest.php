@@ -3,10 +3,13 @@
 namespace App\Http\Requests\Product;
 
 use App\DTOs\Product\UpdateProductDTO;
+use App\Http\Requests\Product\Concerns\NormalizesCategoriesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
 {
+    use NormalizesCategoriesInput;
+
     public function authorize(): bool
     {
         return true;
@@ -17,7 +20,8 @@ class UpdateProductRequest extends FormRequest
         $id = $this->route('product');
 
         return [
-            'idCategory'   => 'sometimes|integer|exists:categories,id',
+            'categories'   => 'sometimes|array|min:1',
+            'categories.*' => 'integer|distinct|exists:categories,id',
             'idSizeGroup'  => 'sometimes|nullable|integer|exists:size_groups,id',
             'key'          => "sometimes|string|max:50|unique:products,key,{$id}",
             'name'         => 'sometimes|string|max:200',
@@ -39,7 +43,7 @@ class UpdateProductRequest extends FormRequest
     public function toDTO(): UpdateProductDTO
     {
         return new UpdateProductDTO(
-            categoryId:   $this->filled('idCategory') ? (int) $this->input('idCategory') : null,
+            categoryIds:  $this->filled('categories') ? array_map('intval', $this->input('categories')) : null,
             sizeGroupId:  $this->filled('idSizeGroup') ? (int) $this->input('idSizeGroup') : null,
             key:          $this->input('key'),
             name:         $this->input('name'),

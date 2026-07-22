@@ -86,3 +86,35 @@ Actualiza uno o más porcentajes. Solo los campos enviados se modifican.
 | `status` | string | no | activo / inactivo (default: activo) |
 
 Registro default (seeder): `{ name: 'Pesos Mexicanos', code: 'MXN', symbol: '$' }`
+
+---
+
+## /api/company-info — Datos de la empresa
+
+Tabla de **un solo registro**.
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/company-info` | Ver el registro (404 si no existe) |
+| `POST` | `/api/company-info` | Alta (409 si ya existe uno) |
+| `PUT` | `/api/company-info` | Reemplazo completo (`name` requerido) |
+| `PATCH` | `/api/company-info` | Actualización parcial |
+
+**Campos:** `name` (req.), `rfc`, `legalName`, `taxRegime`, `logo`, `street`, `externalNumber`,
+`crossStreetOne`, `crossStreetTwo`, `postalCode`, `neighborhood`, `city`, `stockControl`,
+`quantityIntegers`, `quantityDecimals`, `gridSettings` (objeto), `status`.
+
+Se aceptan las llaves en **camelCase o snake_case** (`legalName` = `legal_name`); la respuesta
+siempre es camelCase.
+
+### Logo
+
+`logo` es una cadena **base64**, con o sin prefijo data-URI
+(`data:image/png;base64,...`). Máximo ~2.8 MB de texto ≈ 2 MB de imagen. La columna es
+`LONGTEXT`: antes era `TEXT` (64 KB) y truncaba los logos.
+
+A diferencia de la imagen de producto, aquí no se guarda archivo en disco — es una sola imagen.
+
+```json
+{ "name": "Mi Tienda SA", "logo": "data:image/png;base64,iVBORw0KGgo...", "stockControl": true }
+```
