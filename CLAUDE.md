@@ -67,3 +67,15 @@ app/
 Patrón: **FormRequest → DTO → Service → Model → Resource**
 
 Todas las respuestas usan `ApiResponse::ok()`, `::created()` o `::error()`.
+
+## Convención de nombres
+
+- **API (entrada y salida): camelCase.** Todos los endpoints reciben y devuelven las llaves
+  en camelCase (`legalName`, `stockControl`, `idCategory`). No se aceptan llaves en
+  snake_case en la entrada: se ignoran.
+- **Base de datos: snake_case.** Las columnas son snake_case (`legal_name`, `stock_control`,
+  `id_category`).
+- La conversión camelCase → snake_case ocurre en el `FormRequest` (`toDTO()`), no en el
+  Service ni en el Model. Ejemplo: `NormalizesCompanyInfoInput::validatedSnake()` reindexa las
+  llaves validadas con `Str::snake()` antes de armar el DTO.
+- La salida se arma en el `Resource`, que mapea columnas snake_case → llaves camelCase.
