@@ -2,25 +2,14 @@
 
 namespace App\Http\Requests\CompanyInfo\Concerns;
 
+use Illuminate\Support\Str;
+
 /**
- * Los campos de `company_info` se validan en snake_case, pero el resto de la
- * API habla camelCase. Se aceptan ambas formas normalizando antes de validar.
+ * `company-info` habla camelCase en la entrada (como el resto de la API); las
+ * columnas de la tabla son snake_case. La conversion se hace despues de validar.
  */
 trait NormalizesCompanyInfoInput
 {
-    private const CAMEL_TO_SNAKE = [
-        'legalName'        => 'legal_name',
-        'taxRegime'        => 'tax_regime',
-        'externalNumber'   => 'external_number',
-        'crossStreetOne'   => 'cross_street_one',
-        'crossStreetTwo'   => 'cross_street_two',
-        'postalCode'       => 'postal_code',
-        'stockControl'     => 'stock_control',
-        'quantityIntegers' => 'quantity_integers',
-        'quantityDecimals' => 'quantity_decimals',
-        'gridSettings'     => 'grid_settings',
-    ];
-
     /**
      * Logo en base64, con o sin prefijo data-URI. ~2.8 MB de texto ≈ 2 MB de
      * imagen; la columna es LONGTEXT.
@@ -32,18 +21,20 @@ trait NormalizesCompanyInfoInput
         'regex:/^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/',
     ];
 
-    protected function prepareForValidation(): void
+    /**
+     * Datos validados con las llaves reindexadas a snake_case, listas para el
+     * modelo (`legalName` → `legal_name`, `crossStreetOne` → `cross_street_one`).
+     *
+     * @return array<string, mixed>
+     */
+    protected function validatedSnake(): array
     {
-        $replacements = [];
+        $fields = [];
 
-        foreach (self::CAMEL_TO_SNAKE as $camel => $snake) {
-            if ($this->has($camel) && !$this->has($snake)) {
-                $replacements[$snake] = $this->input($camel);
-            }
+        foreach ($this->validated() as $key => $value) {
+            $fields[Str::snake($key)] = $value;
         }
 
-        if ($replacements !== []) {
-            $this->merge($replacements);
-        }
+        return $fields;
     }
 }

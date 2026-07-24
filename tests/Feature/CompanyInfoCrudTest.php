@@ -52,7 +52,7 @@ class CompanyInfoCrudTest extends TestCase
             ->assertStatus(409);
     }
 
-    public function test_patch_accepts_camel_case_keys(): void
+    public function test_patch_updates_camel_case_keys(): void
     {
         CompanyInfo::create(['name' => 'Tienda demo', 'legal_name' => 'SA de CV', 'status' => 'active']);
 
@@ -60,6 +60,19 @@ class CompanyInfoCrudTest extends TestCase
             ->patchJson('/api/company-info', ['legalName' => 'Nueva razon social'])
             ->assertOk()
             ->assertJsonPath('data.legalName', 'Nueva razon social');
+    }
+
+    public function test_patch_ignores_snake_case_keys(): void
+    {
+        CompanyInfo::create(['name' => 'Tienda demo', 'legal_name' => 'Original', 'status' => 'active']);
+
+        // El contrato es camelCase: una llave snake_case no valida ni modifica nada.
+        $this->withoutMiddleware()
+            ->patchJson('/api/company-info', ['legal_name' => 'No debe aplicarse'])
+            ->assertOk()
+            ->assertJsonPath('data.legalName', 'Original');
+
+        $this->assertSame('Original', CompanyInfo::first()->legal_name);
     }
 
     public function test_logo_that_is_not_base64_is_rejected(): void

@@ -104,8 +104,8 @@ Tabla de **un solo registro**.
 `crossStreetOne`, `crossStreetTwo`, `postalCode`, `neighborhood`, `city`, `stockControl`,
 `quantityIntegers`, `quantityDecimals`, `gridSettings` (objeto), `status`.
 
-Se aceptan las llaves en **camelCase o snake_case** (`legalName` = `legal_name`); la respuesta
-siempre es camelCase.
+Entrada y salida en **camelCase** (igual que el resto de la API); las columnas de la tabla
+son snake_case. Las llaves en snake_case se ignoran.
 
 ### Logo
 

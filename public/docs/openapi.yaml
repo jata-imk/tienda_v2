@@ -459,12 +459,12 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                legal_name:
+                legalName:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
-                tax_regime:
+                taxRegime:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: z
@@ -479,22 +479,22 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
-                external_number:
+                externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
-                cross_street_one:
+                crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
-                cross_street_two:
+                crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
-                postal_code:
+                postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: l
@@ -509,19 +509,19 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                stock_control:
+                stockControl:
                   type: boolean
                   description: ''
-                  example: false
-                quantity_integers:
+                  example: true
+                quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
-                quantity_decimals:
+                quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
-                grid_settings:
+                gridSettings:
                   type: object
                   description: ''
                   example: null
@@ -530,7 +530,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -617,12 +617,12 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                legal_name:
+                legalName:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
-                tax_regime:
+                taxRegime:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: z
@@ -637,22 +637,22 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
-                external_number:
+                externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
-                cross_street_one:
+                crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
-                cross_street_two:
+                crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
-                postal_code:
+                postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: l
@@ -667,19 +667,19 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                stock_control:
+                stockControl:
                   type: boolean
                   description: ''
-                  example: false
-                quantity_integers:
+                  example: true
+                quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
-                quantity_decimals:
+                quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
-                grid_settings:
+                gridSettings:
                   type: object
                   description: ''
                   example: null
@@ -688,7 +688,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -775,12 +775,12 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                legal_name:
+                legalName:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
-                tax_regime:
+                taxRegime:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: z
@@ -795,22 +795,22 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
-                external_number:
+                externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
-                cross_street_one:
+                crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
-                cross_street_two:
+                crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
-                postal_code:
+                postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: l
@@ -825,19 +825,19 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
-                stock_control:
+                stockControl:
                   type: boolean
                   description: ''
-                  example: false
-                quantity_integers:
+                  example: true
+                quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
-                quantity_decimals:
+                quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
-                grid_settings:
+                gridSettings:
                   type: object
                   description: ''
                   example: null
@@ -846,7 +846,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -945,7 +945,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1316,11 +1316,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-07-21T21:07:39'
+                  example: '2026-07-23T22:35:35'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-08-13'
+                  example: '2052-08-15'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -2550,7 +2550,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2946,7 +2946,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4379,7 +4379,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive

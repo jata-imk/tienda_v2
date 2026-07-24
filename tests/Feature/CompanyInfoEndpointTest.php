@@ -34,14 +34,14 @@ class CompanyInfoEndpointTest extends TestCase
         );
 
         $response = $this->withoutMiddleware()->putJson('/api/company-info', [
-            'name'              => 'Updated Company',
-            'rfc'               => 'XAXX010101000',
-            'legal_name'        => 'Updated Company SA',
-            'stock_control'     => false,
-            'quantity_integers' => 8,
-            'quantity_decimals' => 2,
-            'grid_settings'     => ['columns' => ['name', 'price']],
-            'status'            => 'inactive',
+            'name'             => 'Updated Company',
+            'rfc'              => 'XAXX010101000',
+            'legalName'        => 'Updated Company SA',
+            'stockControl'     => false,
+            'quantityIntegers' => 8,
+            'quantityDecimals' => 2,
+            'gridSettings'     => ['columns' => ['name', 'price']],
+            'status'           => 'inactive',
         ]);
 
         $response
@@ -73,8 +73,8 @@ class CompanyInfoEndpointTest extends TestCase
         );
 
         $response = $this->withoutMiddleware()->patchJson('/api/company-info', [
-            'legal_name'    => null,
-            'stock_control' => false,
+            'legalName'    => null,
+            'stockControl' => false,
         ]);
 
         $response
@@ -103,17 +103,17 @@ class CompanyInfoEndpointTest extends TestCase
         $this->app->instance(CompanyInfoService::class, Mockery::mock(CompanyInfoService::class));
 
         $response = $this->withoutMiddleware()->patchJson('/api/company-info', [
-            'status'            => 'archived',
-            'quantity_integers' => 256,
-            'grid_settings'     => 'invalid',
+            'status'           => 'archived',
+            'quantityIntegers' => 256,
+            'gridSettings'     => 'invalid',
         ]);
 
         $response
             ->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'status',
-                'quantity_integers',
-                'grid_settings',
+                'quantityIntegers',
+                'gridSettings',
             ]);
     }
 

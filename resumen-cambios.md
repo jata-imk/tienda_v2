@@ -392,7 +392,7 @@ export type CurrencyListResponse = ApiResponse<Currency[]>;
 | Categorías múltiples por producto | El campo se llama `categories` en entrada y salida: request `categories: [1,2]` (array de ids), response `categories: [{id, desc}]`. Desaparecen `idCategory` y `category`. Filtro: `w[categories]` (o `w[id_category]`). |
 | Imagen de producto | `POST /api/products/{id}/image` (multipart, campo `image`) y `DELETE` para borrarla. La respuesta trae `image` e `imageThumb` como URLs absolutas. |
 | `updatedAt` | Es `null` al dar de alta cualquier registro; solo se llena al modificar. |
-| `company-info` | Nuevos `GET` y `POST /api/company-info` (409 si ya existe). `logo` en base64 (columna `LONGTEXT`). Acepta llaves camelCase o snake_case. |
+| `company-info` | Nuevos `GET` y `POST /api/company-info` (409 si ya existe). `logo` en base64 (columna `LONGTEXT`). Entrada y salida en camelCase (igual que el resto). |
 | Dashboard | Nuevo `GET /api/dashboard` (ver tipos arriba). |
 
 ---
