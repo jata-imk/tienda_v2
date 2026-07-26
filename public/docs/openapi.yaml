@@ -452,61 +452,61 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: b
                 rfc:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 stockControl:
@@ -515,11 +515,11 @@ paths:
                   example: true
                 quantityIntegers:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
                 gridSettings:
                   type: object
@@ -610,74 +610,74 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: b
                 rfc:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
                 gridSettings:
                   type: object
@@ -688,7 +688,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -768,61 +768,61 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: b
                 rfc:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 255 characters.'
                   example: 'n'
                   nullable: true
                 stockControl:
@@ -831,11 +831,11 @@ paths:
                   example: false
                 quantityIntegers:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 255.'
                   example: 8
                 gridSettings:
                   type: object
@@ -932,15 +932,15 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: b
                 code:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 10 characters.'
                   example: ngzmiy
                 symbol:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 10 characters.'
                   example: vdljni
                 status:
                   type: string
@@ -1093,15 +1093,15 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: b
                 code:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 10 characters.'
                   example: ngzmiy
                 symbol:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 10 characters.'
                   example: vdljni
                 status:
                   type: string
@@ -1311,19 +1311,19 @@ paths:
               properties:
                 limit:
                   type: integer
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 1. Must not be greater than 50.'
                   example: 1
                 dateFrom:
                   type: string
-                  description: validation.date.
-                  example: '2026-07-25T20:59:02'
+                  description: 'Must be a valid date.'
+                  example: '2026-07-26T10:12:35'
                 dateTo:
                   type: string
-                  description: 'validation.date validation.after_or_equal.'
-                  example: '2052-08-17'
+                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
+                  example: '2052-08-18'
                 lowStockThreshold:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 39
   /api/categories/query:
     post:
@@ -1585,7 +1585,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 150 characters.'
                   example: b
                 description:
                   type: string
@@ -1741,7 +1741,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 150 characters.'
                   example: b
                 description:
                   type: string
@@ -1981,7 +1981,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 150 characters.'
                   example: b
                 description:
                   type: string
@@ -2137,7 +2137,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 150 characters.'
                   example: b
                 description:
                   type: string
@@ -2147,7 +2147,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2381,16 +2381,16 @@ paths:
                   example: 16
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 20 characters.'
                   example: ngzmiyvdljnikhwa
                 sortOrder:
                   type: integer
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 50
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2541,11 +2541,11 @@ paths:
                   example: 16
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 20 characters.'
                   example: ngzmiyvdljnikhwa
                 sortOrder:
                   type: integer
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 50
                 status:
                   type: string
@@ -2780,7 +2780,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: b
                 hexColor:
                   type: string
@@ -2936,7 +2936,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: b
                 hexColor:
                   type: string
@@ -3841,7 +3841,7 @@ paths:
                   example: '000001'
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 200 characters.'
                   example: g
                 description:
                   type: string
@@ -3850,16 +3850,16 @@ paths:
                   nullable: true
                 codeBar:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 50 characters.'
                   example: v
                   nullable: true
                 price:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 42
                 cost:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 37
                 stockControl:
                   type: boolean
@@ -3867,7 +3867,7 @@ paths:
                   example: false
                 discount:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 19
                 typeIva:
                   type: integer
@@ -3875,21 +3875,21 @@ paths:
                   example: 1
                 rateIva:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 17
                   nullable: true
                 quotaIva:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 8
                   nullable: true
                 isr:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 8
                 impEsp:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 14
                 status:
                   type: string
@@ -3915,16 +3915,16 @@ paths:
                         example: 16
                       sku:
                         type: string
-                        description: validation.max.
+                        description: 'Must not be greater than 80 characters.'
                         example: 'n'
                       codeBar:
                         type: string
-                        description: validation.max.
+                        description: 'Must not be greater than 50 characters.'
                         example: g
                         nullable: true
                       stock:
                         type: number
-                        description: validation.min.
+                        description: 'Must be at least 0.'
                         example: 12
                       status:
                         type: string
@@ -3946,7 +3946,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: return
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -3955,7 +3955,7 @@ paths:
                         - cancel
                     referenceType:
                       type: string
-                      description: validation.max.
+                      description: 'Must not be greater than 50 characters.'
                       example: w
                       nullable: true
                     referenceId:
@@ -4132,11 +4132,11 @@ paths:
                   nullable: true
                 key:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 50 characters.'
                   example: 'n'
                 name:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 200 characters.'
                   example: g
                 description:
                   type: string
@@ -4145,29 +4145,29 @@ paths:
                   nullable: true
                 codeBar:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 50 characters.'
                   example: v
                   nullable: true
                 price:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 42
                 cost:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 37
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 19
                 typeIva:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -4175,26 +4175,26 @@ paths:
                     - 4
                 rateIva:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 17
                   nullable: true
                 quotaIva:
                   type: number
-                  description: validation.min.
+                  description: 'Must be at least 0.'
                   example: 8
                   nullable: true
                 isr:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 8
                 impEsp:
                   type: number
-                  description: 'validation.min validation.max.'
+                  description: 'Must be at least 0. Must not be greater than 100.'
                   example: 14
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4468,23 +4468,23 @@ paths:
                   example: 16
                 firstName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: 'n'
                 lastName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: g
                 userName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: z
                 email:
                   type: string
-                  description: validation.email.
+                  description: 'Must be a valid email address.'
                   example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: validation.min.
+                  description: 'Must be at least 8 characters.'
                   example: 'NvYgxwmi/#iw/kX'
                 status:
                   type: string
@@ -4644,23 +4644,23 @@ paths:
                   example: 16
                 firstName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: 'n'
                 lastName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: g
                 userName:
                   type: string
-                  description: validation.max.
+                  description: 'Must not be greater than 100 characters.'
                   example: z
                 email:
                   type: string
-                  description: validation.email.
+                  description: 'Must be a valid email address.'
                   example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: validation.min.
+                  description: 'Must be at least 8 characters.'
                   example: 'NvYgxwmi/#iw/kX'
                   nullable: true
                 status:

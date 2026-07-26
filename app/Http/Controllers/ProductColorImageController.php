@@ -32,17 +32,13 @@ class ProductColorImageController extends Controller
      */
     public function index(int $product, int $color): JsonResponse
     {
-        $productModel = Product::find($product);
+        $resolved = $this->resolveProductColor($product, $color);
 
-        if (!$productModel) {
-            return ApiResponse::error('Product not found.', 404);
+        if ($resolved instanceof JsonResponse) {
+            return $resolved;
         }
 
-        $colorModel = Color::find($color);
-
-        if (!$colorModel) {
-            return ApiResponse::error('Color not found.', 404);
-        }
+        [$productModel, $colorModel] = $resolved;
 
         $images = $this->productImageService->listImages($productModel, $colorModel);
 
@@ -65,17 +61,13 @@ class ProductColorImageController extends Controller
      */
     public function store(StoreProductColorImagesRequest $request, int $product, int $color): JsonResponse
     {
-        $productModel = Product::find($product);
+        $resolved = $this->resolveProductColor($product, $color);
 
-        if (!$productModel) {
-            return ApiResponse::error('Product not found.', 404);
+        if ($resolved instanceof JsonResponse) {
+            return $resolved;
         }
 
-        $colorModel = Color::find($color);
-
-        if (!$colorModel) {
-            return ApiResponse::error('Color not found.', 404);
-        }
+        [$productModel, $colorModel] = $resolved;
 
         $images = $this->productImageService->addImages($productModel, $colorModel, $request->file('images'));
 
@@ -94,6 +86,33 @@ class ProductColorImageController extends Controller
      */
     public function destroy(int $product, int $color, int $image): JsonResponse
     {
+        $resolved = $this->resolveProductColor($product, $color);
+
+        if ($resolved instanceof JsonResponse) {
+            return $resolved;
+        }
+
+        [$productModel, $colorModel] = $resolved;
+
+        $imageModel = $this->productImageService->findImage($productModel, $colorModel, $image);
+
+        if (!$imageModel) {
+            return ApiResponse::error('Image not found.', 404);
+        }
+
+        $this->productImageService->deleteImage($imageModel);
+
+        return ApiResponse::ok('Image deleted.');
+    }
+
+    /**
+     * Resuelve producto y color validando que el color pertenezca a alguna
+     * variante del producto. Devuelve [Product, Color] o un JsonResponse 404.
+     *
+     * @return array{0: Product, 1: Color}|JsonResponse
+     */
+    private function resolveProductColor(int $product, int $color): array|JsonResponse
+    {
         $productModel = Product::find($product);
 
         if (!$productModel) {
@@ -106,14 +125,11 @@ class ProductColorImageController extends Controller
             return ApiResponse::error('Color not found.', 404);
         }
 
-        $imageModel = $this->productImageService->findImage($productModel, $colorModel, $image);
-
-        if (!$imageModel) {
-            return ApiResponse::error('Image not found.', 404);
+        // El color debe ser uno de los que el producto ofrece via sus variantes.
+        if (!$productModel->variants()->where('id_color', $colorModel->id)->exists()) {
+            return ApiResponse::error('Color not found for this product.', 404);
         }
 
-        $this->productImageService->deleteImage($imageModel);
-
-        return ApiResponse::ok('Image deleted.');
+        return [$productModel, $colorModel];
     }
 }

@@ -14,7 +14,7 @@ class StoreProductColorImagesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'images'   => 'required|array|min:1',
+            'images'   => 'required|array|min:1|max:20',
             'images.*' => 'required|image|mimes:jpeg,jpg,png,webp|max:4096',
         ];
     }

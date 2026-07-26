@@ -122,4 +122,36 @@ class ProductColorImageTest extends TestCase
             ])
             ->assertNotFound();
     }
+
+    public function test_store_rejects_a_color_not_offered_by_the_product(): void
+    {
+        // El color 3 (Beige) existe pero el producto 1 no lo ofrece en sus variantes.
+        $this->withoutMiddleware()
+            ->post('/api/products/1/colors/3/images', [
+                'images' => [UploadedFile::fake()->image('beige.png', 300, 300)],
+            ])
+            ->assertNotFound();
+
+        $this->assertCount(0, ProductImage::where('id_product', 1)->where('id_color', 3)->get());
+    }
+
+    public function test_store_rejects_more_than_the_allowed_number_of_images(): void
+    {
+        $files = [];
+
+        for ($i = 0; $i < 21; $i++) {
+            $files[] = UploadedFile::fake()->image("img-{$i}.png", 100, 100);
+        }
+
+        $this->withoutMiddleware()
+            ->post(
+                '/api/products/1/colors/1/images',
+                ['images' => $files],
+                ['Accept' => 'application/json'],
+            )
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['images']);
+
+        $this->assertCount(0, ProductImage::where('id_product', 1)->where('id_color', 1)->get());
+    }
 }
