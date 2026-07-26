@@ -530,7 +530,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -688,7 +688,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -828,7 +828,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -1106,7 +1106,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1316,11 +1316,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-07-23T22:35:35'
+                  example: '2026-07-26T10:12:35'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-08-15'
+                  example: '2052-08-18'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1595,7 +1595,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1991,7 +1991,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2147,7 +2147,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2390,7 +2390,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3363,6 +3363,293 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/products/{product}/colors/{color}/images':
+    get:
+      summary: 'List product color images'
+      operationId: listProductColorImages
+      description: 'Devuelve las imagenes cargadas para un color especifico del producto.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Images retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Images retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    post:
+      summary: 'Upload product color images'
+      operationId: uploadProductColorImages
+      description: "Multipart request con un campo `images[]` (uno o varios archivos). Cada\nimagen se agrega a la galeria del color; no reemplaza las existentes."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Images uploaded.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Images uploaded.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: 'Archivos de imagen (jpeg, png, webp; max 4MB c/u).'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - images
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: color
+        description: 'Color ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/products/{product}/colors/{color}/images/{image}':
+    delete:
+      summary: 'Delete a product color image'
+      operationId: deleteAProductColorImage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Image deleted.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Image deleted.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: color
+        description: 'Color ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image
+        description: 'Product image ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/products:
     get:
       summary: 'List products'
@@ -3577,7 +3864,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -3607,7 +3894,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3642,7 +3929,7 @@ paths:
                       status:
                         type: string
                         description: ''
-                        example: inactive
+                        example: active
                         enum:
                           - active
                           - inactive
@@ -4202,7 +4489,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

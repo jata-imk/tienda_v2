@@ -43,6 +43,7 @@ Cualquier `ao` desconocido cae en `=`.
 | `sizes` | Tallas por grupo (con `sort_order`). Catálogo. |
 | `colors` | Colores reutilizables (`hex_color`). Catálogo. |
 | `product_variants` | Existencia real por `producto + talla + color`. Único `id_product+id_size+id_color`. |
+| `product_images` | Galería de imágenes por `producto + color` (varias filas por combinación). |
 | `inventory_movements` | Historial de cada entrada/venta/ajuste/devolución/cancelación. |
 
 `products` ya **no** guarda `size` ni `stock`: la existencia vive en `product_variants.stock`
@@ -92,8 +93,11 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products/{id}/variants` | Variantes del producto (matriz) |
 | `POST` | `/api/products` | Crear producto + variantes + movimientos iniciales |
 | `PUT` | `/api/products/{id}` | Actualizar datos base del producto |
-| `POST` | `/api/products/{id}/image` | Subir/reemplazar imagen (multipart) |
-| `DELETE` | `/api/products/{id}/image` | Borrar imagen y thumbnail |
+| `POST` | `/api/products/{id}/image` | Subir/reemplazar imagen de portada (multipart) |
+| `DELETE` | `/api/products/{id}/image` | Borrar imagen de portada y thumbnail |
+| `GET` | `/api/products/{id}/colors/{colorId}/images` | Listar imágenes de un color |
+| `POST` | `/api/products/{id}/colors/{colorId}/images` | Agregar una o varias imágenes a un color (multipart) |
+| `DELETE` | `/api/products/{id}/colors/{colorId}/images/{imageId}` | Borrar una imagen puntual del color |
 | `DELETE` | `/api/products/{id}` | Desactivar (status → inactive) |
 
 ### Campos del producto base
@@ -182,6 +186,36 @@ La respuesta trae URLs absolutas:
 
 En DB solo se guardan los paths relativos (`image`, `image_thumb`); la URL se arma con `APP_URL`.
 **Requiere `php artisan storage:link` una vez por entorno.**
+
+### Imágenes por color
+
+Además de la imagen de portada del producto, cada **color** puede tener su propia
+galería de imágenes (por ejemplo, varias fotos de la variante roja). Es independiente
+de la talla: todas las tallas de un mismo color comparten la misma galería.
+
+`POST /api/products/{id}/colors/{colorId}/images` es **multipart/form-data** con un
+campo `images[]` (uno o varios archivos, jpeg/jpg/png/webp, máx. 4 MB c/u):
+
+```ts
+uploadUrl: `${API}/products/${id}/colors/${colorId}/images`, name: 'images[]', uploadMode: 'useForm'
+```
+
+A diferencia de la imagen de portada, esta carga **no reemplaza** nada: cada archivo
+enviado se agrega como una fila nueva. Para quitar una imagen puntual se usa
+`DELETE /api/products/{id}/colors/{colorId}/images/{imageId}`.
+
+```json
+{
+  "items": [
+    { "id": 1, "idProduct": 1, "idColor": 1,
+      "image": "http://127.0.0.1:8000/storage/products/1/colors/1/uuid.png",
+      "imageThumb": "http://127.0.0.1:8000/storage/products/1/colors/1/thumbs/uuid.png" }
+  ]
+}
+```
+
+`GET /api/products/{id}` incluye estas imágenes en el arreglo plano `colorImages`
+(sin agrupar); el frontend agrupa por `idColor` si lo necesita.
 
 ### Ejemplo de alta
 ```json
