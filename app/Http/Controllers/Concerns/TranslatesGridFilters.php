@@ -64,6 +64,9 @@ trait TranslatesGridFilters
             'notcontains' => ['not like', '%' . $this->escapeLike($value) . '%'],
             'startswith'  => ['like', $this->escapeLike($value) . '%'],
             'endswith'    => ['like', '%' . $this->escapeLike($value)],
+            // `anyof` viaja como una lista de ids; el Service lo resuelve con
+            // `whereIn` (no es un operador SQL, por eso el sentinel `in`).
+            'anyof'       => ['in', array_values((array) $value)],
             default       => ['=', $value],
         };
     }

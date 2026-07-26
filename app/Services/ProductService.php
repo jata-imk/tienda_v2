@@ -33,9 +33,37 @@ class ProductService
                 foreach ($filters['w'] as $cond) {
                     $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
 
+                    // Campo virtual `search`: OR agrupado sobre columnas y relaciones.
+                    if ($cond['column'] === 'search') {
+                        if ($this->searchTermIsEmpty($cond['value'])) {
+                            continue;
+                        }
+
+                        $this->applySearchGroup($query, $method, $cond['operator'], $cond['value']);
+
+                        continue;
+                    }
+
                     if (in_array($cond['column'], self::CATEGORY_FILTER_KEYS, true)) {
-                        $method = $method === 'orWhere' ? 'orWhereHas' : 'whereHas';
-                        $query->$method('categories', fn($q) => $q->where(
+                        $relMethod = $method === 'orWhere' ? 'orWhereHas' : 'whereHas';
+
+                        // `anyof` llega como operador `in` + lista de ids -> whereIn.
+                        if (($cond['operator'] ?? null) === 'in') {
+                            $ids = array_values(array_filter(
+                                (array) $cond['value'],
+                                fn($v) => $v !== null && $v !== '',
+                            ));
+
+                            if ($ids === []) {
+                                continue;
+                            }
+
+                            $query->$relMethod('categories', fn($q) => $q->whereIn('categories.id', $ids));
+
+                            continue;
+                        }
+
+                        $query->$relMethod('categories', fn($q) => $q->where(
                             'categories.id',
                             $cond['operator'],
                             $cond['value'],
@@ -101,6 +129,38 @@ class ProductService
         }
 
         return $items;
+    }
+
+    /**
+     * Búsqueda general: un grupo `(col LIKE x OR ... OR relacion LIKE x)` que
+     * se AND-ea con el resto de filtros. El paréntesis lo genera el closure, y
+     * así `status = active` nunca se pierde por la precedencia de OR.
+     */
+    private function applySearchGroup($query, string $method, string $operator, mixed $value): void
+    {
+        // ESCAPE explícito para que `\%`, `\_`, `\\` (que agrega escapeLike) se
+        // interpreten igual en MariaDB y en sqlite (los tests corren en sqlite,
+        // que no asume `\` como carácter de escape por defecto).
+        $sql  = strtoupper($operator) . ' ? ESCAPE ?';
+        $bind = [$value, '\\'];
+
+        $query->$method(function ($q) use ($sql, $bind) {
+            $q->whereRaw("products.name $sql", $bind)
+                ->orWhereRaw("products.key $sql", $bind)
+                ->orWhereRaw("products.description $sql", $bind)
+                ->orWhereRaw("products.code_bar $sql", $bind)
+                ->orWhereHas('categories', fn($c) => $c->whereRaw("categories.name $sql", $bind))
+                ->orWhereHas('sizeGroup', fn($s) => $s->whereRaw("size_groups.name $sql", $bind));
+        });
+    }
+
+    /**
+     * El valor ya viene con comodines LIKE (`%term%`); la búsqueda se ignora si
+     * el término real es vacío o sólo espacios.
+     */
+    private function searchTermIsEmpty(mixed $value): bool
+    {
+        return trim(trim((string) $value, '%')) === '';
     }
 
     public function show(int $id): ?Product

@@ -19,6 +19,24 @@ class CategoryService
             if (array_is_list($filters['w'])) {
                 foreach ($filters['w'] as $cond) {
                     $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
+
+                    // Campo virtual `search`: OR agrupado sobre name/description.
+                    if ($cond['column'] === 'search') {
+                        if (trim(trim((string) $cond['value'], '%')) === '') {
+                            continue;
+                        }
+
+                        $sql  = strtoupper($cond['operator']) . ' ? ESCAPE ?';
+                        $bind = [$cond['value'], '\\'];
+
+                        $query->$method(function ($q) use ($sql, $bind) {
+                            $q->whereRaw("name $sql", $bind)
+                                ->orWhereRaw("description $sql", $bind);
+                        });
+
+                        continue;
+                    }
+
                     $query->$method($cond['column'], $cond['operator'], $cond['value']);
                 }
             } else {

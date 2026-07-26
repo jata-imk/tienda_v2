@@ -530,7 +530,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -670,7 +670,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -688,7 +688,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -803,27 +803,27 @@ paths:
                 crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: vdljnikhwaykcmyuw
                   nullable: true
                 crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: d
+                  example: p
                   nullable: true
                 postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: l
+                  example: w
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: j
+                  example: l
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: v
                   nullable: true
                 stockControl:
                   type: boolean
@@ -832,11 +832,11 @@ paths:
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 5
+                  example: 3
                 quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 8
+                  example: 13
                 gridSettings:
                   type: object
                   description: ''
@@ -846,7 +846,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -945,7 +945,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1106,7 +1106,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1316,7 +1316,7 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-07-26T10:12:35'
+                  example: '2026-07-26T12:09:00'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
@@ -1595,7 +1595,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1751,7 +1751,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1991,7 +1991,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2147,7 +2147,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2790,7 +2790,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3864,7 +3864,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -3894,7 +3894,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3929,7 +3929,7 @@ paths:
                       status:
                         type: string
                         description: ''
-                        example: active
+                        example: inactive
                         enum:
                           - active
                           - inactive
@@ -3946,7 +3946,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: adjustment
+                      example: entry
                       enum:
                         - entry
                         - sale
@@ -4167,7 +4167,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -4194,7 +4194,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4489,7 +4489,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
