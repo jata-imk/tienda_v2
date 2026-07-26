@@ -452,61 +452,61 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: b
                 rfc:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 stockControl:
@@ -515,11 +515,11 @@ paths:
                   example: true
                 quantityIntegers:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 8
                 gridSettings:
                   type: object
@@ -530,7 +530,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -610,74 +610,74 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: b
                 rfc:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 8
                 gridSettings:
                   type: object
@@ -768,74 +768,74 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: b
                 rfc:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 legalName:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: g
                   nullable: true
                 taxRegime:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: z
                   nullable: true
                 logo:
                   type: string
-                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
+                  description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. validation.max.'
                   example: m
                   nullable: true
                 street:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: i
                   nullable: true
                 externalNumber:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'y'
                   nullable: true
                 crossStreetOne:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: d
                   nullable: true
                 postalCode:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: l
                   nullable: true
                 neighborhood:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: j
                   nullable: true
                 city:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
+                  description: validation.max.
                   example: 'n'
                   nullable: true
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 5
                 quantityDecimals:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 255.'
+                  description: 'validation.min validation.max.'
                   example: 8
                 gridSettings:
                   type: object
@@ -932,15 +932,15 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: b
                 code:
                   type: string
-                  description: 'Must not be greater than 10 characters.'
+                  description: validation.max.
                   example: ngzmiy
                 symbol:
                   type: string
-                  description: 'Must not be greater than 10 characters.'
+                  description: validation.max.
                   example: vdljni
                 status:
                   type: string
@@ -1093,20 +1093,20 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: b
                 code:
                   type: string
-                  description: 'Must not be greater than 10 characters.'
+                  description: validation.max.
                   example: ngzmiy
                 symbol:
                   type: string
-                  description: 'Must not be greater than 10 characters.'
+                  description: validation.max.
                   example: vdljni
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1311,19 +1311,19 @@ paths:
               properties:
                 limit:
                   type: integer
-                  description: 'Must be at least 1. Must not be greater than 50.'
+                  description: 'validation.min validation.max.'
                   example: 1
                 dateFrom:
                   type: string
-                  description: 'Must be a valid date.'
-                  example: '2026-07-23T22:35:35'
+                  description: validation.date.
+                  example: '2026-07-25T20:59:02'
                 dateTo:
                   type: string
-                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-08-15'
+                  description: 'validation.date validation.after_or_equal.'
+                  example: '2052-08-17'
                 lowStockThreshold:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 39
   /api/categories/query:
     post:
@@ -1585,7 +1585,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 150 characters.'
+                  description: validation.max.
                   example: b
                 description:
                   type: string
@@ -1595,7 +1595,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1741,7 +1741,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 150 characters.'
+                  description: validation.max.
                   example: b
                 description:
                   type: string
@@ -1981,7 +1981,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 150 characters.'
+                  description: validation.max.
                   example: b
                 description:
                   type: string
@@ -1991,7 +1991,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2137,7 +2137,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 150 characters.'
+                  description: validation.max.
                   example: b
                 description:
                   type: string
@@ -2381,11 +2381,11 @@ paths:
                   example: 16
                 name:
                   type: string
-                  description: 'Must not be greater than 20 characters.'
+                  description: validation.max.
                   example: ngzmiyvdljnikhwa
                 sortOrder:
                   type: integer
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 50
                 status:
                   type: string
@@ -2541,11 +2541,11 @@ paths:
                   example: 16
                 name:
                   type: string
-                  description: 'Must not be greater than 20 characters.'
+                  description: validation.max.
                   example: ngzmiyvdljnikhwa
                 sortOrder:
                   type: integer
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 50
                 status:
                   type: string
@@ -2780,7 +2780,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: b
                 hexColor:
                   type: string
@@ -2936,7 +2936,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: b
                 hexColor:
                   type: string
@@ -3363,6 +3363,293 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/products/{product}/colors/{color}/images':
+    get:
+      summary: 'List product color images'
+      operationId: listProductColorImages
+      description: 'Devuelve las imagenes cargadas para un color especifico del producto.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Images retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Images retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    post:
+      summary: 'Upload product color images'
+      operationId: uploadProductColorImages
+      description: "Multipart request con un campo `images[]` (uno o varios archivos). Cada\nimagen se agrega a la galeria del color; no reemplaza las existentes."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Images uploaded.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Images uploaded.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: 'Archivos de imagen (jpeg, png, webp; max 4MB c/u).'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - images
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: color
+        description: 'Color ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/products/{product}/colors/{color}/images/{image}':
+    delete:
+      summary: 'Delete a product color image'
+      operationId: deleteAProductColorImage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Image deleted.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Image deleted.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: color
+        description: 'Color ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image
+        description: 'Product image ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/products:
     get:
       summary: 'List products'
@@ -3554,7 +3841,7 @@ paths:
                   example: '000001'
                 name:
                   type: string
-                  description: 'Must not be greater than 200 characters.'
+                  description: validation.max.
                   example: g
                 description:
                   type: string
@@ -3563,24 +3850,24 @@ paths:
                   nullable: true
                 codeBar:
                   type: string
-                  description: 'Must not be greater than 50 characters.'
+                  description: validation.max.
                   example: v
                   nullable: true
                 price:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 42
                 cost:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 37
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 19
                 typeIva:
                   type: integer
@@ -3588,26 +3875,26 @@ paths:
                   example: 1
                 rateIva:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 17
                   nullable: true
                 quotaIva:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 8
                   nullable: true
                 isr:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 8
                 impEsp:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 14
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3628,21 +3915,21 @@ paths:
                         example: 16
                       sku:
                         type: string
-                        description: 'Must not be greater than 80 characters.'
+                        description: validation.max.
                         example: 'n'
                       codeBar:
                         type: string
-                        description: 'Must not be greater than 50 characters.'
+                        description: validation.max.
                         example: g
                         nullable: true
                       stock:
                         type: number
-                        description: 'Must be at least 0.'
+                        description: validation.min.
                         example: 12
                       status:
                         type: string
                         description: ''
-                        example: inactive
+                        example: active
                         enum:
                           - active
                           - inactive
@@ -3659,7 +3946,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: adjustment
+                      example: return
                       enum:
                         - entry
                         - sale
@@ -3668,7 +3955,7 @@ paths:
                         - cancel
                     referenceType:
                       type: string
-                      description: 'Must not be greater than 50 characters.'
+                      description: validation.max.
                       example: w
                       nullable: true
                     referenceId:
@@ -3845,11 +4132,11 @@ paths:
                   nullable: true
                 key:
                   type: string
-                  description: 'Must not be greater than 50 characters.'
+                  description: validation.max.
                   example: 'n'
                 name:
                   type: string
-                  description: 'Must not be greater than 200 characters.'
+                  description: validation.max.
                   example: g
                 description:
                   type: string
@@ -3858,29 +4145,29 @@ paths:
                   nullable: true
                 codeBar:
                   type: string
-                  description: 'Must not be greater than 50 characters.'
+                  description: validation.max.
                   example: v
                   nullable: true
                 price:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 42
                 cost:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 37
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 19
                 typeIva:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -3888,26 +4175,26 @@ paths:
                     - 4
                 rateIva:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 17
                   nullable: true
                 quotaIva:
                   type: number
-                  description: 'Must be at least 0.'
+                  description: validation.min.
                   example: 8
                   nullable: true
                 isr:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 8
                 impEsp:
                   type: number
-                  description: 'Must be at least 0. Must not be greater than 100.'
+                  description: 'validation.min validation.max.'
                   example: 14
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4181,28 +4468,28 @@ paths:
                   example: 16
                 firstName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: 'n'
                 lastName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: g
                 userName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: z
                 email:
                   type: string
-                  description: 'Must be a valid email address.'
+                  description: validation.email.
                   example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: 'Must be at least 8 characters.'
+                  description: validation.min.
                   example: 'NvYgxwmi/#iw/kX'
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4357,23 +4644,23 @@ paths:
                   example: 16
                 firstName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: 'n'
                 lastName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: g
                 userName:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
+                  description: validation.max.
                   example: z
                 email:
                   type: string
-                  description: 'Must be a valid email address.'
+                  description: validation.email.
                   example: rempel.chadrick@example.org
                 password:
                   type: string
-                  description: 'Must be at least 8 characters.'
+                  description: validation.min.
                   example: 'NvYgxwmi/#iw/kX'
                   nullable: true
                 status:

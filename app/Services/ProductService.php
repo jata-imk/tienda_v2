@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
-    private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color'];
+    private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color', 'colorImages'];
 
     /**
      * Nombres con los que el frontend puede filtrar por categoria. Ninguno es

@@ -44,6 +44,11 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class, 'id_product');
     }
 
+    public function colorImages()
+    {
+        return $this->hasMany(ProductImage::class, 'id_product');
+    }
+
     /**
      * Existencia total: suma del stock de las variantes activas.
      */

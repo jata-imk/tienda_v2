@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryMovementController;
+use App\Http\Controllers\ProductColorImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\SizeController;
@@ -46,6 +47,9 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
     Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
     Route::delete('products/{product}/image', [ProductController::class, 'deleteImage']);
+    Route::get('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'index']);
+    Route::post('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'store']);
+    Route::delete('products/{product}/colors/{color}/images/{image}', [ProductColorImageController::class, 'destroy']);
     Route::apiResource('products', ProductController::class);
 
     Route::post('inventory/movements', [InventoryMovementController::class, 'store']);

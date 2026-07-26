@@ -38,6 +38,7 @@ class ProductResource extends JsonResource
             'impEsp'       => (float) $this->imp_esp,
             'status'       => $this->status,
             'variants'     => ProductVariantResource::collection($this->whenLoaded('variants')),
+            'colorImages'  => ProductImageResource::collection($this->whenLoaded('colorImages')),
             'createdAt'    => $this->created_at?->toDateTimeString(),
             'updatedAt'    => $this->updated_at?->toDateTimeString(),
         ];
