@@ -512,7 +512,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -530,7 +530,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -670,7 +670,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -803,27 +803,27 @@ paths:
                 crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: vdljnikhwaykcmyuw
+                  example: v
                   nullable: true
                 crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: p
+                  example: d
                   nullable: true
                 postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: w
+                  example: l
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: l
+                  example: j
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: 'n'
                   nullable: true
                 stockControl:
                   type: boolean
@@ -832,11 +832,11 @@ paths:
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 3
+                  example: 5
                 quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 13
+                  example: 8
                 gridSettings:
                   type: object
                   description: ''
@@ -945,7 +945,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1316,11 +1316,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-07-26T12:09:00'
+                  example: '2026-08-16T14:23:50'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-08-18'
+                  example: '2052-09-08'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1751,7 +1751,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1991,7 +1991,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2147,7 +2147,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2790,7 +2790,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3864,7 +3864,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -3929,7 +3929,7 @@ paths:
                       status:
                         type: string
                         description: ''
-                        example: inactive
+                        example: active
                         enum:
                           - active
                           - inactive
@@ -3946,7 +3946,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: entry
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -4167,7 +4167,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -4275,9 +4275,9 @@ paths:
           type: integer
   /api/inventory/movements:
     post:
-      summary: 'Register inventory movement'
-      operationId: registerInventoryMovement
-      description: "Registra una entrada/salida/ajuste sobre una variante y actualiza su existencia.\nTipos que incrementan: `entry`, `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
+      summary: 'Register inventory movements'
+      operationId: registerInventoryMovements
+      description: "Registra uno o varios movimientos sobre variantes de un mismo producto y\nactualiza su existencia de forma atomica: si cualquier elemento de\n`movements` falla, no se aplica ninguno. Tipos que incrementan: `entry`,\n`return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
       parameters: []
       responses:
         201:
@@ -4290,8 +4290,22 @@ paths:
                   ok: true
                   code: 201
                   status: Created
-                  message: 'Movement registered.'
-                  data: {  }
+                  message: 'Ajustes de inventario registrados correctamente.'
+                  data:
+                    movements:
+                      -
+                        id: 501
+                        idProductVariant: 101
+                        movementType: adjustment
+                        quantity: 2
+                        previousStock: 8
+                        newStock: 6
+                        referenceType: manual_adjustment
+                        referenceId: null
+                        notes: 'Ajuste por conteo físico'
+                        idUser: 1
+                        createdAt: '2026-08-12 21:45:00'
+                    totalStock: 13
                 properties:
                   ok:
                     type: boolean
@@ -4304,10 +4318,65 @@ paths:
                     example: Created
                   message:
                     type: string
-                    example: 'Movement registered.'
+                    example: 'Ajustes de inventario registrados correctamente.'
                   data:
                     type: object
-                    properties: {  }
+                    properties:
+                      movements:
+                        type: array
+                        example:
+                          -
+                            id: 501
+                            idProductVariant: 101
+                            movementType: adjustment
+                            quantity: 2
+                            previousStock: 8
+                            newStock: 6
+                            referenceType: manual_adjustment
+                            referenceId: null
+                            notes: 'Ajuste por conteo físico'
+                            idUser: 1
+                            createdAt: '2026-08-12 21:45:00'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 501
+                            idProductVariant:
+                              type: integer
+                              example: 101
+                            movementType:
+                              type: string
+                              example: adjustment
+                            quantity:
+                              type: integer
+                              example: 2
+                            previousStock:
+                              type: integer
+                              example: 8
+                            newStock:
+                              type: integer
+                              example: 6
+                            referenceType:
+                              type: string
+                              example: manual_adjustment
+                            referenceId:
+                              type: string
+                              example: null
+                              nullable: true
+                            notes:
+                              type: string
+                              example: 'Ajuste por conteo físico'
+                            idUser:
+                              type: integer
+                              example: 1
+                            createdAt:
+                              type: string
+                              example: '2026-08-12 21:45:00'
+                      totalStock:
+                        type: integer
+                        example: 13
         422:
           description: ''
           content:
@@ -4318,8 +4387,11 @@ paths:
                   ok: false
                   code: 422
                   status: 'Unprocessable Entity'
-                  message: 'La existencia no puede quedar negativa.'
-                  data: null
+                  message: 'La variante Negro / M no tiene existencia suficiente.'
+                  data:
+                    idProductVariant: 101
+                    currentStock: 1
+                    requestedQuantity: 2
                 properties:
                   ok:
                     type: boolean
@@ -4332,11 +4404,19 @@ paths:
                     example: 'Unprocessable Entity'
                   message:
                     type: string
-                    example: 'La existencia no puede quedar negativa.'
+                    example: 'La variante Negro / M no tiene existencia suficiente.'
                   data:
-                    type: string
-                    example: null
-                    nullable: true
+                    type: object
+                    properties:
+                      idProductVariant:
+                        type: integer
+                        example: 101
+                      currentStock:
+                        type: integer
+                        example: 1
+                      requestedQuantity:
+                        type: integer
+                        example: 2
       tags:
         - Inventory
       requestBody:
@@ -4346,21 +4426,17 @@ paths:
             schema:
               type: object
               properties:
-                idProductVariant:
+                idProduct:
                   type: integer
-                  description: 'Variant ID.'
+                  description: 'Producto al que pertenecen todas las variantes.'
+                  example: 25
+                idUser:
+                  type: integer
+                  description: 'Usuario que genera los movimientos (debe ser el de la sesión).'
                   example: 1
-                movementType:
-                  type: string
-                  description: entry|sale|adjustment|return|cancel.
-                  example: entry
-                quantity:
-                  type: number
-                  description: 'Cantidad movida (magnitud positiva).'
-                  example: 5.0
                 referenceType:
                   type: string
-                  description: 'Origen del movimiento.'
+                  description: 'Origen de los movimientos.'
                   example: manual_adjustment
                   nullable: true
                 referenceId:
@@ -4370,18 +4446,20 @@ paths:
                   nullable: true
                 notes:
                   type: string
-                  description: Comentario.
-                  example: 'Entrada manual de mercancia'
+                  description: 'Comentario general, aplicado a cada movimiento.'
+                  example: 'Ajuste por conteo físico'
                   nullable: true
-                idUser:
-                  type: integer
-                  description: 'Usuario que genera el movimiento.'
-                  example: 1
+                movements:
+                  type: array
+                  description: 'Uno o más movimientos de inventario.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
               required:
-                - idProductVariant
-                - movementType
-                - quantity
+                - idProduct
                 - idUser
+                - movements
   /api/users:
     get:
       summary: 'List users'
@@ -4666,7 +4744,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

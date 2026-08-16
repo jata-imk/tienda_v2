@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\InventoryDomainException;
 use App\Http\Requests\InventoryMovement\CreateMovementRequest;
 use App\Http\Resources\InventoryMovement\InventoryMovementResource;
 use App\Services\InventoryMovementService;
@@ -19,30 +20,43 @@ class InventoryMovementController extends Controller
     public function __construct(private InventoryMovementService $movementService) {}
 
     /**
-     * Register inventory movement
+     * Register inventory movements
      *
-     * Registra una entrada/salida/ajuste sobre una variante y actualiza su existencia.
-     * Tipos que incrementan: `entry`, `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`.
+     * Registra uno o varios movimientos sobre variantes de un mismo producto y
+     * actualiza su existencia de forma atomica: si cualquier elemento de
+     * `movements` falla, no se aplica ninguno. Tipos que incrementan: `entry`,
+     * `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`.
      *
-     * @bodyParam idProductVariant integer required Variant ID. Example: 1
-     * @bodyParam movementType string required entry|sale|adjustment|return|cancel. Example: entry
-     * @bodyParam quantity number required Cantidad movida (magnitud positiva). Example: 5
-     * @bodyParam referenceType string Origen del movimiento. Example: manual_adjustment
+     * @bodyParam idProduct integer required Producto al que pertenecen todas las variantes. Example: 25
+     * @bodyParam idUser integer required Usuario que genera los movimientos (debe ser el de la sesión). Example: 1
+     * @bodyParam referenceType string Origen de los movimientos. Example: manual_adjustment
      * @bodyParam referenceId integer Documento origen, si aplica. Example: null
-     * @bodyParam notes string Comentario. Example: Entrada manual de mercancia
-     * @bodyParam idUser integer required Usuario que genera el movimiento. Example: 1
+     * @bodyParam notes string Comentario general, aplicado a cada movimiento. Example: Ajuste por conteo físico
+     * @bodyParam movements array required Uno o más movimientos de inventario.
+     * @bodyParam movements[].idProductVariant integer required Variante a actualizar. Example: 101
+     * @bodyParam movements[].movementType string required entry|sale|adjustment|return|cancel. Example: adjustment
+     * @bodyParam movements[].quantity number required Cantidad movida (magnitud positiva). Example: 2
      *
-     * @response 201 {"ok":true,"code":201,"status":"Created","message":"Movement registered.","data":{}}
-     * @response 422 {"ok":false,"code":422,"status":"Unprocessable Entity","message":"La existencia no puede quedar negativa.","data":null}
+     * @response 201 {"ok":true,"code":201,"status":"Created","message":"Ajustes de inventario registrados correctamente.","data":{"movements":[{"id":501,"idProductVariant":101,"movementType":"adjustment","quantity":2,"previousStock":8,"newStock":6,"referenceType":"manual_adjustment","referenceId":null,"notes":"Ajuste por conteo físico","idUser":1,"createdAt":"2026-08-12 21:45:00"}],"totalStock":13}}
+     * @response 422 {"ok":false,"code":422,"status":"Unprocessable Entity","message":"La variante Negro / M no tiene existencia suficiente.","data":{"idProductVariant":101,"currentStock":1,"requestedQuantity":2}}
      */
     public function store(CreateMovementRequest $request): JsonResponse
     {
         try {
-            $movement = $this->movementService->register($request->toDTO());
+            $result = $this->movementService->register($request->toDTO());
         } catch (DomainException $e) {
-            return ApiResponse::error($e->getMessage(), 422);
+            $context = $e instanceof InventoryDomainException ? $e->context : null;
+
+            return ApiResponse::error($e->getMessage(), 422, $context);
         }
 
-        return ApiResponse::created('Movement registered.', new InventoryMovementResource($movement));
+        $message = count($result['movements']) === 1
+            ? 'Ajuste de inventario registrado correctamente.'
+            : 'Ajustes de inventario registrados correctamente.';
+
+        return ApiResponse::created($message, [
+            'movements'  => InventoryMovementResource::collection(collect($result['movements'])),
+            'totalStock' => $result['totalStock'],
+        ]);
     }
 }

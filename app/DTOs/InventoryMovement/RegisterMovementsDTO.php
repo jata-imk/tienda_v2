@@ -2,15 +2,17 @@
 
 namespace App\DTOs\InventoryMovement;
 
-readonly class CreateMovementDTO
+readonly class RegisterMovementsDTO
 {
+    /**
+     * @param MovementLineDTO[] $lines
+     */
     public function __construct(
-        public int     $productVariantId,
-        public string  $movementType,
-        public float   $quantity,
+        public int     $productId,
+        public int     $userId,
         public ?string $referenceType,
         public ?int    $referenceId,
         public ?string $notes,
-        public int     $userId,
+        public array   $lines,
     ) {}
 }

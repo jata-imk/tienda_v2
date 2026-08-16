@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "9f357416-7804-4a17-b95f-541c963a23d4",
+        "_postman_id": "be73113d-f78b-4d48-ae33-95662359b4fb",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -211,7 +211,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"active\"}"
                         },
                         "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
                     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"vdljnikhwaykcmyuw\",\"crossStreetTwo\":\"p\",\"postalCode\":\"w\",\"neighborhood\":\"l\",\"city\":\"v\",\"stockControl\":false,\"quantityIntegers\":3,\"quantityDecimals\":13,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -366,7 +366,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -573,7 +573,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-07-26T12:09:00\",\"dateTo\":\"2052-08-18\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-08-16T14:23:50\",\"dateTo\":\"2052-09-08\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest) and\ninventory KPIs in a single payload."
                     },
@@ -819,7 +819,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -970,7 +970,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1059,7 +1059,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1450,7 +1450,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2072,7 +2072,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"inactive\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"adjustment\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": ""
                     },
@@ -2161,7 +2161,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":2,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2227,7 +2227,7 @@
                     ]
                 },
                 {
-                    "name": "Register inventory movement",
+                    "name": "Register inventory movements",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -2248,21 +2248,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idProductVariant\":1,\"movementType\":\"entry\",\"quantity\":5,\"referenceType\":\"manual_adjustment\",\"referenceId\":null,\"notes\":\"Entrada manual de mercancia\",\"idUser\":1}"
+                            "raw": "{\"idProduct\":25,\"idUser\":1,\"referenceType\":\"manual_adjustment\",\"referenceId\":null,\"notes\":\"Ajuste por conteo f\u00edsico\",\"movements\":[\"architecto\"]}"
                         },
-                        "description": "Registra una entrada\/salida\/ajuste sobre una variante y actualiza su existencia.\nTipos que incrementan: `entry`, `return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
+                        "description": "Registra uno o varios movimientos sobre variantes de un mismo producto y\nactualiza su existencia de forma atomica: si cualquier elemento de\n`movements` falla, no se aplica ninguno. Tipos que incrementan: `entry`,\n`return`, `cancel`. Tipos que disminuyen: `sale`, `adjustment`."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Movement registered.\",\"data\":{}}",
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Ajustes de inventario registrados correctamente.\",\"data\":{\"movements\":[{\"id\":501,\"idProductVariant\":101,\"movementType\":\"adjustment\",\"quantity\":2,\"previousStock\":8,\"newStock\":6,\"referenceType\":\"manual_adjustment\",\"referenceId\":null,\"notes\":\"Ajuste por conteo f\u00edsico\",\"idUser\":1,\"createdAt\":\"2026-08-12 21:45:00\"}],\"totalStock\":13}}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{\"ok\":false,\"code\":422,\"status\":\"Unprocessable Entity\",\"message\":\"La existencia no puede quedar negativa.\",\"data\":null}",
+                            "body": "{\"ok\":false,\"code\":422,\"status\":\"Unprocessable Entity\",\"message\":\"La variante Negro \/ M no tiene existencia suficiente.\",\"data\":{\"idProductVariant\":101,\"currentStock\":1,\"requestedQuantity\":2}}",
                             "name": ""
                         }
                     ]
@@ -2416,7 +2416,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

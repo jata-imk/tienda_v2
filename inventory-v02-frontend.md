@@ -320,35 +320,55 @@ No requiere `idSizeGroup` ni variantes. Envía:
 
 ## 6. Ajuste de existencias — `POST /api/inventory/movements`
 
-Registra una entrada/salida/ajuste sobre **una variante** y actualiza su `stock` de forma atómica,
-dejando registro en el historial.
+Registra **uno o varios** movimientos sobre variantes de un mismo producto y actualiza su
+`stock` en una sola operación atómica: si cualquier elemento del lote falla, no se aplica
+ninguno. Reemplaza el formato anterior de un solo movimiento por payload — **no hay
+compatibilidad hacia atrás**, `movements` siempre es arreglo (de 1 a 200 elementos).
 
 | Campo | Tipo | Req. | Notas |
 |---|---|---|---|
-| `idProductVariant` | int | sí | Variante afectada |
-| `movementType` | string | sí | `entry` / `sale` / `adjustment` / `return` / `cancel` |
-| `quantity` | number | sí | **Magnitud positiva** del movimiento |
+| `idProduct` | int | sí | Producto al que pertenecen todas las variantes |
+| `idUser` | int | sí | Usuario. **Debe ser el de la sesión activa** (se valida contra el JWT) |
 | `referenceType` | string | no | Ej. `manual_adjustment`, `sales_note` |
 | `referenceId` | int | no | Documento origen |
-| `notes` | string | no | |
-| `idUser` | int | sí | Usuario |
+| `notes` | string | no | Comentario general, se aplica a cada movimiento |
+| `movements[].idProductVariant` | int | sí | Variante afectada. No se repite dentro del lote |
+| `movements[].movementType` | string | sí | `entry` / `sale` / `adjustment` / `return` / `cancel` |
+| `movements[].quantity` | number | sí | **Magnitud positiva** del movimiento |
 
 **Regla de signo:** `entry`, `return`, `cancel` **suman** stock; `sale`, `adjustment` **restan**.
-La `quantity` siempre se envía positiva. Si el resultado quedara negativo, responde `422` (con envelope).
+Si el resultado de cualquier variante quedara negativo, responde `422` (con envelope) y **no se
+aplica nada del lote**. Todas las variantes deben pertenecer a `idProduct` y este debe tener
+`stockControl=true`.
 
 Request (verificado):
 ```json
-{ "idProductVariant": 6, "movementType": "entry", "quantity": 5,
-  "referenceType": "manual_adjustment", "notes": "Entrada manual", "idUser": 1 }
+{ "idProduct": 25, "idUser": 1, "referenceType": "manual_adjustment",
+  "notes": "Ajuste por conteo físico",
+  "movements": [
+    { "idProductVariant": 101, "movementType": "adjustment", "quantity": 2 },
+    { "idProductVariant": 102, "movementType": "entry", "quantity": 3 }
+  ] }
 ```
 
-Respuesta `201` (verificada):
+Respuesta `201` (verificada) — `data.movements` siempre es arreglo, incluso con un solo
+movimiento, y trae `data.totalStock` (suma de variantes **activas** del producto):
 ```json
-{ "ok": true, "code": 201, "status": "Created", "message": "Movement registered.",
-  "data": { "id": 6, "idProductVariant": 6, "movementType": "entry", "quantity": 5,
-            "previousStock": 4, "newStock": 9, "referenceType": "manual_adjustment",
-            "referenceId": null, "notes": "Entrada manual", "idUser": 1,
-            "createdAt": "2026-06-12 11:40:00" } }
+{ "ok": true, "code": 201, "status": "Created",
+  "message": "Ajustes de inventario registrados correctamente.",
+  "data": {
+    "movements": [
+      { "id": 501, "idProductVariant": 101, "movementType": "adjustment", "quantity": 2,
+        "previousStock": 8, "newStock": 6, "referenceType": "manual_adjustment",
+        "referenceId": null, "notes": "Ajuste por conteo físico", "idUser": 1,
+        "createdAt": "2026-08-12 21:45:00" },
+      { "id": 502, "idProductVariant": 102, "movementType": "entry", "quantity": 3,
+        "previousStock": 4, "newStock": 7, "referenceType": "manual_adjustment",
+        "referenceId": null, "notes": "Ajuste por conteo físico", "idUser": 1,
+        "createdAt": "2026-08-12 21:45:00" }
+    ],
+    "totalStock": 13
+  } }
 ```
 
 ---

@@ -101,6 +101,7 @@ class AuthService
     private function formatUser(User $user): array
     {
         return [
+            'id'        => $user->id,
             'firstName' => $user->first_name,
             'lastName'  => $user->last_name,
             'userName'  => $user->user_name,

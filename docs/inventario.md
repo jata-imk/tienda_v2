@@ -250,29 +250,95 @@ Si `stockControl` es `false`, no se exige `idSizeGroup` ni `variants` (enviar `v
 
 ## `/api/inventory/movements` — Ajuste de existencias
 
-`POST` registra un movimiento sobre una variante y actualiza su `stock` de forma atómica.
+`POST` registra uno o varios movimientos sobre variantes de **un mismo producto** y actualiza
+su `stock` en una sola operación atómica: si cualquier elemento de `movements` falla, no se
+aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo físico completo.
+
+### Campos generales
 
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|
-| `idProductVariant` | int | sí | FK → product_variants |
-| `movementType` | string | sí | entry / sale / adjustment / return / cancel |
-| `quantity` | number | sí | Magnitud positiva del movimiento |
+| `idProduct` | int | sí | Producto al que pertenecen todas las variantes. |
+| `idUser` | int | sí | Usuario que genera los movimientos. **Debe coincidir con el usuario de la sesión** (se valida contra el JWT); si no coincide, `422`. |
 | `referenceType` | string | no | Origen (ej. `manual_adjustment`, `sales_note`) |
 | `referenceId` | int | no | Documento origen |
-| `notes` | string | no | Comentario |
-| `idUser` | int | sí | Usuario |
+| `notes` | string/null | no | Comentario general, se aplica a cada movimiento generado |
+| `movements` | array | sí | Uno o más movimientos (1 a 200 por petición) |
+
+### Campos de cada movimiento (`movements[]`)
+
+| Campo | Tipo | Req. | Descripción |
+|---|---|---|---|
+| `idProductVariant` | int | sí | FK → product_variants. No debe repetirse dentro del arreglo. |
+| `movementType` | string | sí | entry / sale / adjustment / return / cancel |
+| `quantity` | number | sí | Magnitud positiva del movimiento |
 
 **Efecto sobre el stock:** `entry`, `return`, `cancel` **incrementan**; `sale`, `adjustment`
-**disminuyen**. Si el resultado quedara negativo, responde `422`.
+**disminuyen**. Si el resultado de cualquier variante quedara negativo, responde `422` y no se
+aplica ningún movimiento del lote.
+
+**Validaciones adicionales:** todas las variantes deben existir y pertenecer a `idProduct`; el
+producto debe tener `stockControl=true`. Se permiten movimientos sobre variantes con
+`status=inactive` (su stock se actualiza igual), pero **no cuentan** en el `totalStock` de la
+respuesta, que solo suma variantes activas.
+
+### Respuesta
+
+`data.movements` es siempre un arreglo, incluso al enviar un solo movimiento. Incluye también
+`data.totalStock`, la existencia total vigente del producto tras aplicar el lote.
+
+```json
+// Request
+{
+  "idProduct": 25,
+  "idUser": 1,
+  "referenceType": "manual_adjustment",
+  "notes": "Ajuste por conteo físico",
+  "movements": [
+    { "idProductVariant": 101, "movementType": "adjustment", "quantity": 2 },
+    { "idProductVariant": 102, "movementType": "entry", "quantity": 3 }
+  ]
+}
+```
+
+```json
+// Response 201
+{
+  "ok": true,
+  "code": 201,
+  "status": "Created",
+  "message": "Ajustes de inventario registrados correctamente.",
+  "data": {
+    "movements": [
+      {
+        "id": 501, "idProductVariant": 101, "movementType": "adjustment",
+        "quantity": 2, "previousStock": 8, "newStock": 6,
+        "referenceType": "manual_adjustment", "referenceId": null,
+        "notes": "Ajuste por conteo físico", "idUser": 1,
+        "createdAt": "2026-08-12 21:45:00"
+      },
+      {
+        "id": 502, "idProductVariant": 102, "movementType": "entry",
+        "quantity": 3, "previousStock": 4, "newStock": 7,
+        "referenceType": "manual_adjustment", "referenceId": null,
+        "notes": "Ajuste por conteo físico", "idUser": 1,
+        "createdAt": "2026-08-12 21:45:00"
+      }
+    ],
+    "totalStock": 13
+  }
+}
+```
+
+Error de existencia insuficiente (`422`), no se aplica nada del lote:
 
 ```json
 {
-  "idProductVariant": 6,
-  "movementType": "entry",
-  "quantity": 5,
-  "referenceType": "manual_adjustment",
-  "notes": "Entrada manual de mercancia",
-  "idUser": 1
+  "ok": false,
+  "code": 422,
+  "status": "Unprocessable Entity",
+  "message": "La variante Negro / M no tiene existencia suficiente.",
+  "data": { "idProductVariant": 101, "currentStock": 1, "requestedQuantity": 2 }
 }
 ```
 
