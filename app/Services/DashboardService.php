@@ -6,6 +6,7 @@ use App\DTOs\Dashboard\DashboardFiltersDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -15,13 +16,22 @@ use Illuminate\Support\Facades\DB;
  */
 class DashboardService
 {
+    /**
+     * PDO no tiene PARAM_FLOAT: un umbral float viaja como texto y SQLite
+     * considera cualquier texto mayor que cualquier numero, asi que
+     * `stock <= ?` daria siempre verdadero. El CAST fuerza la comparacion
+     * numerica y funciona igual en MariaDB.
+     */
+    private const NUMERIC_PARAM = 'CAST(? AS DECIMAL(10,3))';
+
     public function summary(DashboardFiltersDTO $filters): array
     {
         return [
-            'topProducts'  => $this->topProducts($filters),
-            'lowestStock'  => $this->stockRanking($filters->limit, 'asc'),
-            'highestStock' => $this->stockRanking($filters->limit, 'desc'),
-            'summary'      => $this->totals($filters->lowStockThreshold),
+            'topProducts'         => $this->topProducts($filters),
+            'lowestStock'         => $this->stockRanking($filters->limit, 'asc'),
+            'highestStock'        => $this->stockRanking($filters->limit, 'desc'),
+            'criticalStockBySize' => $this->criticalStockBySize($filters->lowStockThreshold),
+            'summary'             => $this->totals($filters->lowStockThreshold),
         ];
     }
 
@@ -93,6 +103,46 @@ class DashboardService
             ->all();
     }
 
+    /**
+     * Combinaciones producto-talla con existencia critica. A diferencia de
+     * `lowestStock` (ranking agregado por producto) esta es la lista completa
+     * de combinaciones bajo el umbral: no se corta con `limit`.
+     *
+     * Los colores de una misma talla se suman en una sola fila. Solo entran
+     * productos con control de existencias, igual que `lowStockCount`; los
+     * servicios no tienen variantes, asi que el join interno los descarta.
+     */
+    private function criticalStockBySize(float $lowStockThreshold): array
+    {
+        return Product::query()
+            ->join('product_variants', function ($join) {
+                $join->on('product_variants.id_product', '=', 'products.id')
+                    ->where('product_variants.status', 'active');
+            })
+            ->join('sizes', 'sizes.id', '=', 'product_variants.id_size')
+            ->where('products.status', 'active')
+            ->where('products.stock_control', true)
+            ->groupBy('products.id', 'products.key', 'products.name', 'sizes.id', 'sizes.name', 'sizes.sort_order')
+            ->select([
+                'products.key',
+                'products.name as product_name',
+                'sizes.name as size_name',
+                DB::raw('SUM(product_variants.stock) as stock'),
+            ])
+            ->havingRaw('SUM(product_variants.stock) <= ' . self::NUMERIC_PARAM, [$lowStockThreshold])
+            ->orderByRaw('SUM(product_variants.stock) asc')
+            ->orderBy('products.name')
+            ->orderBy('sizes.sort_order')
+            ->get()
+            ->map(fn($row) => [
+                'product' => $row->product_name,
+                'key'     => $row->key,
+                'size'    => $row->size_name,
+                'stock'   => (float) $row->stock,
+            ])
+            ->all();
+    }
+
     private function totals(float $lowStockThreshold): array
     {
         $products = Product::query()
@@ -107,30 +157,46 @@ class DashboardService
             ->selectRaw('COALESCE(SUM(product_variants.stock * products.cost), 0) as value')
             ->first();
 
-        $lowStockCount = DB::query()
-            ->fromSub(
-                Product::query()
-                    ->leftJoin('product_variants', function ($join) {
-                        $join->on('product_variants.id_product', '=', 'products.id')
-                            ->where('product_variants.status', 'active');
-                    })
-                    ->where('products.status', 'active')
-                    ->where('products.stock_control', true)
-                    ->groupBy('products.id')
-                    ->select('products.id')
-                    ->selectRaw('COALESCE(SUM(product_variants.stock), 0) as stock'),
-                'stock_by_product',
-            )
-            ->where('stock', '<=', $lowStockThreshold)
-            ->count();
-
         return [
-            'totalProducts'  => (int) $products->total,
-            'activeProducts' => (int) $products->active,
-            'totalVariants'  => (int) $variants->total,
-            'totalStock'     => (float) $variants->stock,
-            'inventoryValue' => round((float) $variants->value, 2),
-            'lowStockCount'  => $lowStockCount,
+            'totalProducts'   => (int) $products->total,
+            'activeProducts'  => (int) $products->active,
+            'totalVariants'   => (int) $variants->total,
+            'totalStock'      => (float) $variants->stock,
+            'inventoryValue'  => round((float) $variants->value, 2),
+            'lowStockCount'   => $this->countProductsWithStockUpTo($lowStockThreshold),
+            'outOfStockCount' => $this->countProductsWithStockUpTo(0),
         ];
+    }
+
+    /**
+     * Productos activos con control de existencias cuya existencia total no
+     * supera el limite dado. Es un conteo global: no depende de `limit` ni de
+     * los rankings, por eso el frontend no debe inferirlo de `lowestStock`.
+     */
+    private function countProductsWithStockUpTo(float $limit): int
+    {
+        return DB::query()
+            ->fromSub($this->stockByProduct(), 'stock_by_product')
+            ->whereRaw('stock <= ' . self::NUMERIC_PARAM, [$limit])
+            ->count();
+    }
+
+    /**
+     * Subconsulta: existencia total (variantes activas) por producto activo
+     * con control de existencias.
+     */
+    private function stockByProduct(): QueryBuilder
+    {
+        return Product::query()
+            ->leftJoin('product_variants', function ($join) {
+                $join->on('product_variants.id_product', '=', 'products.id')
+                    ->where('product_variants.status', 'active');
+            })
+            ->where('products.status', 'active')
+            ->where('products.stock_control', true)
+            ->groupBy('products.id')
+            ->select('products.id')
+            ->selectRaw('COALESCE(SUM(product_variants.stock), 0) as stock')
+            ->toBase();
     }
 }
