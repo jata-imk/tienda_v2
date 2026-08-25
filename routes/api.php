@@ -25,6 +25,7 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::get('catalogs', [CatalogController::class, 'index']);
 
     // Dashboard
+    Route::post('dashboard/query', [DashboardController::class, 'query']);
     Route::get('dashboard', [DashboardController::class, 'index']);
 
     // Users

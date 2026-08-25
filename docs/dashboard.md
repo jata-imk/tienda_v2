@@ -8,7 +8,35 @@ Requiere:
 
 ---
 
-## GET /api/dashboard
+## POST /api/dashboard/query
+
+Recibe los filtros en un body JSON:
+
+| Campo | Tipo | Default | Descripción |
+|---|---|---|---|
+| `limit` | int (1-50) | 5 | Registros por ranking |
+| `dateFrom` | date | — | Inicio inclusivo del rango de ventas |
+| `dateTo` | date | — | Fin inclusivo del rango de ventas (≥ `dateFrom`) |
+| `lowStockThreshold` | number | 5 | Existencia considerada baja |
+
+```http
+POST /api/dashboard/query
+Content-Type: application/json
+Authorization: Bearer <JWT>
+```
+
+```json
+{
+  "limit": 5,
+  "dateFrom": "2026-07-22",
+  "dateTo": "2026-08-20",
+  "lowStockThreshold": 5
+}
+```
+
+## GET /api/dashboard (compatibilidad)
+
+El endpoint original se conserva. Recibe los mismos filtros como query parameters:
 
 | Query param | Tipo | Default | Descripción |
 |---|---|---|---|

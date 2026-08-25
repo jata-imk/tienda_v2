@@ -24,14 +24,14 @@ class DashboardEndpointTest extends TestCase
 
         InventoryMovement::create([
             'id_product_variant' => $variant->id,
-            'movement_type'      => 'sale',
-            'quantity'           => 2,
-            'previous_stock'     => 3,
-            'new_stock'          => 1,
-            'reference_type'     => 'test',
-            'reference_id'       => null,
-            'notes'              => null,
-            'id_user'            => 1,
+            'movement_type' => 'sale',
+            'quantity' => 2,
+            'previous_stock' => 3,
+            'new_stock' => 1,
+            'reference_type' => 'test',
+            'reference_id' => null,
+            'notes' => null,
+            'id_user' => 1,
         ]);
 
         $response = $this->withoutMiddleware()->getJson('/api/dashboard?limit=3&lowStockThreshold=10');
@@ -57,11 +57,62 @@ class DashboardEndpointTest extends TestCase
 
         $this->assertSame(2, $response->json('data.summary.totalProducts'));
 
-        $lowest  = $response->json('data.lowestStock');
+        $lowest = $response->json('data.lowestStock');
         $highest = $response->json('data.highestStock');
 
         $this->assertLessThanOrEqual($lowest[count($lowest) - 1]['stock'], $lowest[0]['stock']);
         $this->assertGreaterThanOrEqual($highest[count($highest) - 1]['stock'], $highest[0]['stock']);
+    }
+
+    public function test_post_query_reads_filters_from_the_json_body(): void
+    {
+        $variant = ProductVariant::where('sku', 'CAM-001-34-BLA')->firstOrFail();
+
+        InventoryMovement::create([
+            'id_product_variant' => $variant->id,
+            'movement_type' => 'sale',
+            'quantity' => 2,
+            'previous_stock' => 3,
+            'new_stock' => 1,
+            'reference_type' => 'test',
+            'reference_id' => null,
+            'notes' => null,
+            'id_user' => 1,
+        ]);
+
+        $filters = [
+            'limit' => 1,
+            'dateFrom' => '2000-01-01',
+            'dateTo' => '2000-01-31',
+            'lowStockThreshold' => 0,
+        ];
+
+        $getData = $this->withoutMiddleware()
+            ->getJson('/api/dashboard?'.http_build_query($filters))
+            ->assertOk()
+            ->json('data');
+
+        $this->withoutMiddleware()
+            ->postJson('/api/dashboard/query', $filters)
+            ->assertOk()
+            ->assertJsonPath('data', $getData)
+            ->assertJsonCount(0, 'data.topProducts')
+            ->assertJsonCount(1, 'data.lowestStock')
+            ->assertJsonCount(1, 'data.highestStock')
+            ->assertJsonCount(0, 'data.criticalStockBySize');
+    }
+
+    public function test_post_query_validates_the_json_body(): void
+    {
+        $this->withoutMiddleware()
+            ->postJson('/api/dashboard/query', [
+                'limit' => 999,
+                'dateFrom' => '2026-08-20',
+                'dateTo' => '2026-08-19',
+                'lowStockThreshold' => -1,
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['limit', 'dateTo', 'lowStockThreshold']);
     }
 
     public function test_limit_caps_the_rankings(): void
@@ -79,14 +130,14 @@ class DashboardEndpointTest extends TestCase
 
         InventoryMovement::create([
             'id_product_variant' => $variant->id,
-            'movement_type'      => 'sale',
-            'quantity'           => 2,
-            'previous_stock'     => 3,
-            'new_stock'          => 1,
-            'reference_type'     => 'test',
-            'reference_id'       => null,
-            'notes'              => null,
-            'id_user'            => 1,
+            'movement_type' => 'sale',
+            'quantity' => 2,
+            'previous_stock' => 3,
+            'new_stock' => 1,
+            'reference_type' => 'test',
+            'reference_id' => null,
+            'notes' => null,
+            'id_user' => 1,
         ]);
 
         $this->withoutMiddleware()
@@ -101,14 +152,14 @@ class DashboardEndpointTest extends TestCase
 
         InventoryMovement::create([
             'id_product_variant' => $variant->id,
-            'movement_type'      => 'sale',
-            'quantity'           => 2,
-            'previous_stock'     => 3,
-            'new_stock'          => 1,
-            'reference_type'     => 'test',
-            'reference_id'       => null,
-            'notes'              => null,
-            'id_user'            => 1,
+            'movement_type' => 'sale',
+            'quantity' => 2,
+            'previous_stock' => 3,
+            'new_stock' => 1,
+            'reference_type' => 'test',
+            'reference_id' => null,
+            'notes' => null,
+            'id_user' => 1,
         ]);
 
         $today = now()->toDateString();

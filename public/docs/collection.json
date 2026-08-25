@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "be73113d-f78b-4d48-ae33-95662359b4fb",
+        "_postman_id": "0c193021-21cd-453f-b860-63c0f670edd3",
         "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"logo\":\"m\",\"street\":\"i\",\"externalNumber\":\"y\",\"crossStreetOne\":\"v\",\"crossStreetTwo\":\"d\",\"postalCode\":\"l\",\"neighborhood\":\"j\",\"city\":\"n\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":8,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -366,7 +366,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -455,7 +455,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -527,7 +527,42 @@
             "description": "",
             "item": [
                 {
-                    "name": "Dashboard metrics",
+                    "name": "Query dashboard metrics (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/dashboard\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/dashboard\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"limit\":5,\"dateFrom\":\"2026-01-01\",\"dateTo\":\"2026-07-21\",\"lowStockThreshold\":5}"
+                        },
+                        "description": "Accepts the dashboard filters as a JSON body. It returns the same data\nas `GET \/api\/dashboard`, which remains available for compatibility.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Dashboard retrieved.\",\"data\":{\"topProducts\":[],\"lowestStock\":[],\"highestStock\":[],\"criticalStockBySize\":[{\"product\":\"Filipina caballero\",\"key\":\"FIL-001\",\"size\":\"G\",\"stock\":2}],\"summary\":{\"totalProducts\":0,\"activeProducts\":0,\"totalVariants\":0,\"totalStock\":0,\"inventoryValue\":0,\"lowStockCount\":0,\"outOfStockCount\":0}}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Dashboard metrics (GET)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -536,25 +571,25 @@
                                 {
                                     "key": "limit",
                                     "value": "5",
-                                    "description": "Rows per ranking (1-50, default 5).",
+                                    "description": "Rows per ranking (1-50, default 5). Does not apply to criticalStockBySize.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "dateFrom",
                                     "value": "2026-01-01",
-                                    "description": "date Start of the sales range.",
+                                    "description": "date Start of the sales range, inclusive. Only filters topProducts.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "dateTo",
                                     "value": "2026-07-21",
-                                    "description": "date End of the sales range.",
+                                    "description": "date End of the sales range, inclusive (whole day). Only filters topProducts.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "lowStockThreshold",
                                     "value": "5",
-                                    "description": "Stock level considered low (default 5).",
+                                    "description": "Stock level considered low (default 5). Filters criticalStockBySize and summary.lowStockCount.",
                                     "disabled": false
                                 }
                             ],
@@ -573,15 +608,15 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-08-16T14:23:50\",\"dateTo\":\"2052-09-08\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-08-25T11:09:27\",\"dateTo\":\"2052-09-17\",\"lowStockThreshold\":39}"
                         },
-                        "description": "Returns best-selling products, stock ranking (lowest\/highest) and\ninventory KPIs in a single payload."
+                        "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Dashboard retrieved.\",\"data\":{\"topProducts\":[],\"lowestStock\":[],\"highestStock\":[],\"summary\":{\"totalProducts\":0,\"activeProducts\":0,\"totalVariants\":0,\"totalStock\":0,\"inventoryValue\":0,\"lowStockCount\":0}}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Dashboard retrieved.\",\"data\":{\"topProducts\":[],\"lowestStock\":[],\"highestStock\":[],\"criticalStockBySize\":[{\"product\":\"Filipina caballero\",\"key\":\"FIL-001\",\"size\":\"G\",\"stock\":2}],\"summary\":{\"totalProducts\":0,\"activeProducts\":0,\"totalVariants\":0,\"totalStock\":0,\"inventoryValue\":0,\"lowStockCount\":0,\"outOfStockCount\":0}}}",
                             "name": ""
                         }
                     ]
@@ -819,7 +854,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1210,7 +1245,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1450,7 +1485,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -2072,7 +2107,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"adjustment\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"cancel\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"inactive\"}]}"
                         },
                         "description": ""
                     },
@@ -2161,7 +2196,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2327,7 +2362,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
