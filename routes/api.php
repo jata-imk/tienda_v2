@@ -46,6 +46,9 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
 
     Route::post('products/query', [ProductController::class, 'query']);
     Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
+    Route::post('products/{product}/variants', [ProductVariantController::class, 'store']);
+    Route::put('products/{product}/variants/{variant}', [ProductVariantController::class, 'update']);
+    Route::delete('products/{product}/variants/{variant}', [ProductVariantController::class, 'destroy']);
     Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
     Route::delete('products/{product}/image', [ProductController::class, 'deleteImage']);
     Route::get('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'index']);

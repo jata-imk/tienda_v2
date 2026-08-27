@@ -6,13 +6,14 @@ use App\DTOs\Product\CreateProductDTO;
 use App\DTOs\Product\InitialMovementDTO;
 use App\DTOs\Product\VariantInputDTO;
 use App\Http\Requests\Product\Concerns\NormalizesCategoriesInput;
-use App\Models\Size;
+use App\Http\Requests\Product\Concerns\ValidatesVariantInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateProductRequest extends FormRequest
 {
     use NormalizesCategoriesInput;
+    use ValidatesVariantInput;
 
     public function authorize(): bool
     {
@@ -69,32 +70,8 @@ class CreateProductRequest extends FormRequest
                 return;
             }
 
-            // Las tallas de las variantes deben pertenecer al grupo del producto.
-            if ($groupId) {
-                $validSizeIds = Size::where('id_size_group', $groupId)->pluck('id')->all();
-                foreach ($variants as $i => $variant) {
-                    $sizeId = $variant['idSize'] ?? null;
-                    if ($sizeId !== null && !in_array((int) $sizeId, $validSizeIds, true)) {
-                        $validator->errors()->add(
-                            "variants.{$i}.idSize",
-                            'La talla seleccionada no pertenece al grupo de tallas del producto.'
-                        );
-                    }
-                }
-            }
-
-            // No se permite repetir la combinacion talla + color dentro del payload.
-            $combos = [];
-            foreach ($variants as $i => $variant) {
-                $combo = ($variant['idSize'] ?? '') . '-' . ($variant['idColor'] ?? '');
-                if (isset($combos[$combo])) {
-                    $validator->errors()->add(
-                        "variants.{$i}.idColor",
-                        'La combinacion de talla y color esta repetida.'
-                    );
-                }
-                $combos[$combo] = true;
-            }
+            $this->validateSizesBelongToGroup($validator, $variants, $groupId ? (int) $groupId : null);
+            $this->validateCombosAreUniqueInPayload($validator, $variants);
         });
     }
 

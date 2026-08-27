@@ -219,6 +219,15 @@
                                                                                 <li class="tocify-item level-2" data-unique="inventory-GETapi-products--product--variants">
                                 <a href="#inventory-GETapi-products--product--variants">List product variants</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-POSTapi-products--product--variants">
+                                <a href="#inventory-POSTapi-products--product--variants">Add variants to a product</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-PUTapi-products--product--variants--variant-">
+                                <a href="#inventory-PUTapi-products--product--variants--variant-">Update a product variant</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-DELETEapi-products--product--variants--variant-">
+                                <a href="#inventory-DELETEapi-products--product--variants--variant-">Deactivate a product variant</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="inventory-POSTapi-products--product--image">
                                 <a href="#inventory-POSTapi-products--product--image">Upload product image</a>
                             </li>
@@ -285,7 +294,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 25, 2026</li>
+        <li>Last updated: August 26, 2026</li>
     </ul>
 </div>
 
@@ -1001,7 +1010,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"postalCode\": \"l\",
     \"neighborhood\": \"j\",
     \"city\": \"n\",
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 8,
     \"status\": \"active\"
@@ -1033,7 +1042,7 @@ let body = {
     "postalCode": "l",
     "neighborhood": "j",
     "city": "n",
-    "stockControl": false,
+    "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 8,
     "status": "active"
@@ -1323,7 +1332,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -1408,7 +1417,7 @@ Must be one of:
     \"postalCode\": \"l\",
     \"neighborhood\": \"j\",
     \"city\": \"n\",
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 8,
     \"status\": \"inactive\"
@@ -1440,7 +1449,7 @@ let body = {
     "postalCode": "l",
     "neighborhood": "j",
     "city": "n",
-    "stockControl": false,
+    "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 8,
     "status": "inactive"
@@ -1730,7 +1739,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -1818,7 +1827,7 @@ Must be one of:
     \"stockControl\": false,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 8,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1850,7 +1859,7 @@ let body = {
     "stockControl": false,
     "quantityIntegers": 5,
     "quantityDecimals": 8,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -2182,10 +2191,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-company-info"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2721,7 +2730,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -2741,7 +2750,7 @@ let body = {
     "name": "b",
     "code": "ngzmiy",
     "symbol": "vdljni",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -2924,10 +2933,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3351,8 +3360,8 @@ product-size combinations and inventory KPIs in a single payload.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-08-25T11:09:27\",
-    \"dateTo\": \"2052-09-17\",
+    \"dateFrom\": \"2026-08-26T21:55:35\",
+    \"dateTo\": \"2052-09-18\",
     \"lowStockThreshold\": 39
 }"
 </code></pre></div>
@@ -3380,8 +3389,8 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-08-25T11:09:27",
-    "dateTo": "2052-09-17",
+    "dateFrom": "2026-08-26T21:55:35",
+    "dateTo": "2052-09-18",
     "lowStockThreshold": 39
 };
 
@@ -3581,10 +3590,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-08-25T11:09:27"
+               value="2026-08-26T21:55:35"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-08-25T11:09:27</code></p>
+<p>Must be a valid date. Example: <code>2026-08-26T21:55:35</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -3593,10 +3602,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-dashboard"
-               value="2052-09-17"
+               value="2052-09-18"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-09-17</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-09-18</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>lowStockThreshold</code></b>&nbsp;&nbsp;
@@ -4487,7 +4496,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -4506,7 +4515,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -4677,10 +4686,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5517,7 +5526,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -5536,7 +5545,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -5707,10 +5716,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-size-groups--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -6563,7 +6572,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -6583,7 +6592,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -6766,10 +6775,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-sizes--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7251,7 +7260,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -7270,7 +7279,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -7411,10 +7420,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-colors"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7606,7 +7615,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -7625,7 +7634,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -7796,10 +7805,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-colors--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -8384,6 +8393,778 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                    <h2 id="inventory-POSTapi-products--product--variants">Add variants to a product</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Agrega una o varias variantes (talla x color) a un producto existente, por
+ejemplo un color nuevo. Si se envia <code>initialMovement</code> se genera un movimiento
+de inventario por cada variante con existencia inicial mayor a cero.</p>
+
+<span id="example-requests-POSTapi-products--product--variants">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/products/1/variants" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"variants\": [
+        {
+            \"idSize\": 2,
+            \"idColor\": 3,
+            \"sku\": \"CAM-001-34-BEI\",
+            \"codeBar\": \"7500000000011\",
+            \"stock\": 3,
+            \"status\": \"active\"
+        }
+    ],
+    \"initialMovement\": {
+        \"movementType\": \"entry\",
+        \"referenceType\": \"b\",
+        \"referenceId\": 16,
+        \"notes\": \"architecto\",
+        \"idUser\": 1
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/products/1/variants"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "variants": [
+        {
+            "idSize": 2,
+            "idColor": 3,
+            "sku": "CAM-001-34-BEI",
+            "codeBar": "7500000000011",
+            "stock": 3,
+            "status": "active"
+        }
+    ],
+    "initialMovement": {
+        "movementType": "entry",
+        "referenceType": "b",
+        "referenceId": 16,
+        "notes": "architecto",
+        "idUser": 1
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-products--product--variants">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 201,
+    &quot;status&quot;: &quot;Created&quot;,
+    &quot;message&quot;: &quot;Variants created.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [],
+        &quot;totalStock&quot;: 0
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 404,
+    &quot;status&quot;: &quot;Not Found&quot;,
+    &quot;message&quot;: &quot;Product not found.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-products--product--variants" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-products--product--variants"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-products--product--variants"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-products--product--variants" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-products--product--variants">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-products--product--variants" data-method="POST"
+      data-path="api/products/{product}/variants"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-products--product--variants', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-products--product--variants"
+                    onclick="tryItOut('POSTapi-products--product--variants');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-products--product--variants"
+                    onclick="cancelTryOut('POSTapi-products--product--variants');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-products--product--variants"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/products/{product}/variants</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-products--product--variants"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-products--product--variants"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-products--product--variants"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="POSTapi-products--product--variants"
+               value="1"
+               data-component="url">
+    <br>
+<p>Product ID. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>variants</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Variantes a agregar.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>idSize</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.0.idSize"                data-endpoint="POSTapi-products--product--variants"
+               value="2"
+               data-component="body">
+    <br>
+<p>Size ID (debe pertenecer al grupo de tallas del producto). Example: <code>2</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>idColor</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.0.idColor"                data-endpoint="POSTapi-products--product--variants"
+               value="3"
+               data-component="body">
+    <br>
+<p>Color ID. Example: <code>3</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>sku</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="variants.0.sku"                data-endpoint="POSTapi-products--product--variants"
+               value="CAM-001-34-BEI"
+               data-component="body">
+    <br>
+<p>SKU unico de la variante. Example: <code>CAM-001-34-BEI</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>codeBar</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="variants.0.codeBar"                data-endpoint="POSTapi-products--product--variants"
+               value="7500000000011"
+               data-component="body">
+    <br>
+<p>Codigo de barras de la variante. Example: <code>7500000000011</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>stock</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.0.stock"                data-endpoint="POSTapi-products--product--variants"
+               value="3"
+               data-component="body">
+    <br>
+<p>Existencia inicial. Example: <code>3</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="variants.0.status"                data-endpoint="POSTapi-products--product--variants"
+               value="active"
+               data-component="body">
+    <br>
+<p>active o inactive. Example: <code>active</code></p>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>initialMovement</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>Movimiento inicial opcional.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>movementType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="initialMovement.movementType"                data-endpoint="POSTapi-products--product--variants"
+               value="entry"
+               data-component="body">
+    <br>
+<p>required_with:initialMovement entry, sale, adjustment, return o cancel. Example: <code>entry</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>referenceType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="initialMovement.referenceType"                data-endpoint="POSTapi-products--product--variants"
+               value="b"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>b</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>referenceId</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="initialMovement.referenceId"                data-endpoint="POSTapi-products--product--variants"
+               value="16"
+               data-component="body">
+    <br>
+<p>Example: <code>16</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>notes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="initialMovement.notes"                data-endpoint="POSTapi-products--product--variants"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>idUser</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="initialMovement.idUser"                data-endpoint="POSTapi-products--product--variants"
+               value="1"
+               data-component="body">
+    <br>
+<p>required_with:initialMovement Usuario que genera el movimiento. Example: <code>1</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
+
+                    <h2 id="inventory-PUTapi-products--product--variants--variant-">Update a product variant</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Solo se editan <code>sku</code>, <code>codeBar</code> y <code>status</code>. La talla y el color son fijos
+(identifican la variante) y el <code>stock</code> se mueve por <code>POST /api/inventory/movements</code>.</p>
+
+<span id="example-requests-PUTapi-products--product--variants--variant-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://127.0.0.1:8000/api/products/1/variants/1" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"sku\": \"CAM-001-34-BEI\",
+    \"codeBar\": \"7500000000011\",
+    \"status\": \"active\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/products/1/variants/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "sku": "CAM-001-34-BEI",
+    "codeBar": "7500000000011",
+    "status": "active"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-products--product--variants--variant-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Variant updated.&quot;,
+    &quot;data&quot;: {}
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 404,
+    &quot;status&quot;: &quot;Not Found&quot;,
+    &quot;message&quot;: &quot;Variant not found for this product.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-products--product--variants--variant-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-products--product--variants--variant-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-products--product--variants--variant-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-products--product--variants--variant-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-products--product--variants--variant-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-products--product--variants--variant-" data-method="PUT"
+      data-path="api/products/{product}/variants/{variant}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-products--product--variants--variant-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-products--product--variants--variant-"
+                    onclick="tryItOut('PUTapi-products--product--variants--variant-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-products--product--variants--variant-"
+                    onclick="cancelTryOut('PUTapi-products--product--variants--variant-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-products--product--variants--variant-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/products/{product}/variants/{variant}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-products--product--variants--variant-"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="1"
+               data-component="url">
+    <br>
+<p>Product ID. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>variant</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variant"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="1"
+               data-component="url">
+    <br>
+<p>Product variant ID. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sku</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sku"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="CAM-001-34-BEI"
+               data-component="body">
+    <br>
+<p>SKU unico de la variante. Example: <code>CAM-001-34-BEI</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>codeBar</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="codeBar"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="7500000000011"
+               data-component="body">
+    <br>
+<p>Codigo de barras de la variante. Example: <code>7500000000011</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="PUTapi-products--product--variants--variant-"
+               value="active"
+               data-component="body">
+    <br>
+<p>active o inactive. Example: <code>active</code></p>
+        </div>
+        </form>
+
+                    <h2 id="inventory-DELETEapi-products--product--variants--variant-">Deactivate a product variant</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Pone <code>status</code> en <code>inactive</code>. No borra la fila ni sus movimientos; la variante
+deja de sumar en el <code>totalStock</code> del producto.</p>
+
+<span id="example-requests-DELETEapi-products--product--variants--variant-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://127.0.0.1:8000/api/products/1/variants/1" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/products/1/variants/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-products--product--variants--variant-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Variant deactivated.&quot;,
+    &quot;data&quot;: {}
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 404,
+    &quot;status&quot;: &quot;Not Found&quot;,
+    &quot;message&quot;: &quot;Variant not found for this product.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-products--product--variants--variant-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-products--product--variants--variant-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-products--product--variants--variant-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-products--product--variants--variant-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-products--product--variants--variant-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-products--product--variants--variant-" data-method="DELETE"
+      data-path="api/products/{product}/variants/{variant}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-products--product--variants--variant-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-products--product--variants--variant-"
+                    onclick="tryItOut('DELETEapi-products--product--variants--variant-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-products--product--variants--variant-"
+                    onclick="cancelTryOut('DELETEapi-products--product--variants--variant-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-products--product--variants--variant-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/products/{product}/variants/{variant}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-products--product--variants--variant-"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-products--product--variants--variant-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-products--product--variants--variant-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="DELETEapi-products--product--variants--variant-"
+               value="1"
+               data-component="url">
+    <br>
+<p>Product ID. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>variant</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variant"                data-endpoint="DELETEapi-products--product--variants--variant-"
+               value="1"
+               data-component="url">
+    <br>
+<p>Product variant ID. Example: <code>1</code></p>
+            </div>
+                    </form>
+
                     <h2 id="inventory-POSTapi-products--product--image">Upload product image</h2>
 
 <p>
@@ -8403,7 +9184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php5467.tmp" </code></pre></div>
+    --form "image=@C:\Users\jatai\AppData\Local\Temp\phpE061.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8575,7 +9356,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php5467.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jatai\AppData\Local\Temp\phpE061.tmp</code></p>
         </div>
         </form>
 
@@ -8958,7 +9739,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php54A8.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jatai\AppData\Local\Temp\phpE074.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9623,9 +10404,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"inactive\",
+    \"status\": \"active\",
     \"initialMovement\": {
-        \"movementType\": \"cancel\",
+        \"movementType\": \"adjustment\",
         \"referenceType\": \"w\",
         \"referenceId\": 16,
         \"notes\": \"architecto\",
@@ -9675,9 +10456,9 @@ let body = {
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "inactive",
+    "status": "active",
     "initialMovement": {
-        "movementType": "cancel",
+        "movementType": "adjustment",
         "referenceType": "w",
         "referenceId": 16,
         "notes": "architecto",
@@ -10001,10 +10782,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -10111,10 +10892,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="initialMovement.movementType"                data-endpoint="POSTapi-products"
-               value="cancel"
+               value="adjustment"
                data-component="body">
     <br>
-<p>This field is required when <code>initialMovement</code> is present. Example: <code>cancel</code></p>
+<p>This field is required when <code>initialMovement</code> is present. Example: <code>adjustment</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>sale</code></li> <li><code>adjustment</code></li> <li><code>return</code></li> <li><code>cancel</code></li></ul>
                     </div>
@@ -10364,14 +11145,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"discount\": 19,
-    \"typeIva\": 1,
+    \"typeIva\": 4,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -10398,14 +11179,14 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": false,
+    "stockControl": true,
     "discount": 19,
-    "typeIva": 1,
+    "typeIva": 4,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -10663,7 +11444,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -10684,10 +11465,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="1"
+               value="4"
                data-component="body">
     <br>
-<p>Example: <code>1</code></p>
+<p>Example: <code>4</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -10746,10 +11527,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -11806,7 +12587,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -11829,7 +12610,7 @@ let body = {
     "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -12048,10 +12829,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-users--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>

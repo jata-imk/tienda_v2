@@ -93,6 +93,9 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products/{id}/variants` | Variantes del producto (matriz) |
 | `POST` | `/api/products` | Crear producto + variantes + movimientos iniciales |
 | `PUT` | `/api/products/{id}` | Actualizar datos base del producto |
+| `POST` | `/api/products/{id}/variants` | Agregar una o varias variantes a un producto existente |
+| `PUT` | `/api/products/{id}/variants/{variantId}` | Editar `sku`, `codeBar` o `status` de una variante |
+| `DELETE` | `/api/products/{id}/variants/{variantId}` | Desactivar variante (status → inactive) |
 | `POST` | `/api/products/{id}/image` | Subir/reemplazar imagen de portada (multipart) |
 | `DELETE` | `/api/products/{id}/image` | Borrar imagen de portada y thumbnail |
 | `GET` | `/api/products/{id}/colors/{colorId}/images` | Listar imágenes de un color |
@@ -245,6 +248,84 @@ enviado se agrega como una fila nueva. Para quitar una imagen puntual se usa
 ```
 
 Si `stockControl` es `false`, no se exige `idSizeGroup` ni `variants` (enviar `variants: []`).
+Un producto así puede recibir variantes después: primero se activa con
+`PUT /api/products/{id}` (`stockControl: true` + `idSizeGroup`) y luego se usa
+`POST /api/products/{id}/variants`.
+
+---
+
+## Agregar variantes a un producto existente
+
+`PUT /api/products/{id}` **solo toca los datos base**: ignora `variants`. Para dar de alta un
+color o una talla nueva sobre un producto ya creado se usa el subrecurso `/variants`.
+
+### `POST /api/products/{id}/variants`
+
+Mismo formato que el bloque `variants` del alta, más el `initialMovement` opcional:
+
+```json
+{
+  "variants": [
+    { "idSize": 2, "idColor": 3, "sku": "CAM-001-34-BEI", "codeBar": "7500000000021", "stock": 3 },
+    { "idSize": 3, "idColor": 3, "sku": "CAM-001-36-BEI", "stock": 2 }
+  ],
+  "initialMovement": {
+    "movementType": "entry",
+    "referenceType": "initial_load",
+    "notes": "Alta de color Beige",
+    "idUser": 1
+  }
+}
+```
+
+```json
+// Response 201
+{
+  "ok": true, "code": 201, "status": "Created", "message": "Variants created.",
+  "data": {
+    "items": [
+      { "id": 7, "idProduct": 1, "idSize": 2, "size": "34", "idColor": 3, "color": "Beige",
+        "hexColor": "#D8C3A5", "sku": "CAM-001-34-BEI", "codeBar": "7500000000021",
+        "stock": 3, "status": "active" }
+    ],
+    "totalStock": 16
+  }
+}
+```
+
+Validaciones (`422` si fallan, no se crea nada del lote):
+
+- El producto debe tener `stockControl = true`.
+- Cada `idSize` debe pertenecer al `idSizeGroup` del producto.
+- La combinación `idSize + idColor` no puede repetirse dentro del payload **ni existir ya** en el
+  producto (`product_variants` tiene un unique `id_product + id_size + id_color`).
+- `sku` es único en toda la tabla.
+
+Igual que en el alta del producto, `initialMovement` genera **un movimiento por cada variante con
+`stock > 0`** (`previous_stock = 0`, `new_stock = stock`). Sin `initialMovement` la variante nace
+con su `stock` y sin historial.
+
+Producto inexistente → `404`.
+
+### `PUT /api/products/{id}/variants/{variantId}`
+
+Campos editables: `sku`, `codeBar`, `status`. Los omitidos no se tocan.
+
+`idSize` e `idColor` **no** son editables (identifican la variante y romperían la trazabilidad de
+los movimientos): para cambiar de talla o color se desactiva la variante y se crea otra. El `stock`
+tampoco: se mueve por `POST /api/inventory/movements`.
+
+Si la variante no pertenece al producto de la URL → `404 Variant not found for this product.`
+
+### `DELETE /api/products/{id}/variants/{variantId}`
+
+Baja lógica: pone `status = inactive`. La fila y sus movimientos se conservan; la variante deja de
+sumar en `totalStock`. Se reactiva con `PUT ... { "status": "active" }`.
+
+### Imágenes del color nuevo
+
+`POST /api/products/{id}/colors/{colorId}/images` exige que el color exista en alguna variante del
+producto. Al agregar la variante del color nuevo, su galería queda habilitada de inmediato.
 
 ---
 

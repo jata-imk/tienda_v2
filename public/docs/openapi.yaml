@@ -512,7 +512,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -670,7 +670,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -846,7 +846,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1106,7 +1106,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1482,11 +1482,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-08-25T11:09:27'
+                  example: '2026-08-26T21:55:35'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-09-17'
+                  example: '2052-09-18'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1917,7 +1917,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2313,7 +2313,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2716,7 +2716,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2956,7 +2956,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3112,7 +3112,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3359,11 +3359,327 @@ paths:
                     nullable: true
       tags:
         - Inventory
+    post:
+      summary: 'Add variants to a product'
+      operationId: addVariantsToAProduct
+      description: "Agrega una o varias variantes (talla x color) a un producto existente, por\nejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento\nde inventario por cada variante con existencia inicial mayor a cero."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Variants created.'
+                  data:
+                    items: []
+                    totalStock: 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Variants created.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalStock:
+                        type: integer
+                        example: 0
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                variants:
+                  type: array
+                  description: 'Variantes a agregar.'
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      idSize:
+                        type: integer
+                        description: 'Size ID (debe pertenecer al grupo de tallas del producto).'
+                        example: 2
+                      idColor:
+                        type: integer
+                        description: 'Color ID.'
+                        example: 3
+                      sku:
+                        type: string
+                        description: 'SKU unico de la variante.'
+                        example: CAM-001-34-BEI
+                      codeBar:
+                        type: string
+                        description: 'Codigo de barras de la variante.'
+                        example: '7500000000011'
+                        nullable: true
+                      stock:
+                        type: number
+                        description: 'Existencia inicial.'
+                        example: 3.0
+                      status:
+                        type: string
+                        description: 'active o inactive.'
+                        example: active
+                    required:
+                      - idSize
+                      - idColor
+                      - sku
+                      - stock
+                initialMovement:
+                  type: object
+                  description: 'Movimiento inicial opcional.'
+                  example: []
+                  properties:
+                    movementType:
+                      type: string
+                      description: 'required_with:initialMovement entry, sale, adjustment, return o cancel.'
+                      example: entry
+                    referenceType:
+                      type: string
+                      description: 'Must not be greater than 50 characters.'
+                      example: b
+                      nullable: true
+                    referenceId:
+                      type: integer
+                      description: ''
+                      example: 16
+                      nullable: true
+                    notes:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    idUser:
+                      type: integer
+                      description: 'required_with:initialMovement Usuario que genera el movimiento.'
+                      example: 1
+              required:
+                - variants
     parameters:
       -
         in: path
         name: product
         description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/products/{product}/variants/{variant}':
+    put:
+      summary: 'Update a product variant'
+      operationId: updateAProductVariant
+      description: "Solo se editan `sku`, `codeBar` y `status`. La talla y el color son fijos\n(identifican la variante) y el `stock` se mueve por `POST /api/inventory/movements`."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Variant updated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Variant updated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Variant not found for this product.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Variant not found for this product.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: 'SKU unico de la variante.'
+                  example: CAM-001-34-BEI
+                codeBar:
+                  type: string
+                  description: 'Codigo de barras de la variante.'
+                  example: '7500000000011'
+                  nullable: true
+                status:
+                  type: string
+                  description: 'active o inactive.'
+                  example: active
+    delete:
+      summary: 'Deactivate a product variant'
+      operationId: deactivateAProductVariant
+      description: "Pone `status` en `inactive`. No borra la fila ni sus movimientos; la variante\ndeja de sumar en el `totalStock` del producto."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Variant deactivated.'
+                  data: {  }
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Variant deactivated.'
+                  data:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Variant not found for this product.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Variant not found for this product.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: variant
+        description: 'Product variant ID.'
         example: 1
         required: true
         schema:
@@ -4060,7 +4376,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4112,7 +4428,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: cancel
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -4325,7 +4641,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4333,7 +4649,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 4
                   enum:
                     - 1
                     - 2
@@ -4360,7 +4676,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4910,7 +5226,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
