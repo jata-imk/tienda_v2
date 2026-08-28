@@ -81,15 +81,18 @@ class CurrencyController extends Controller
      *
      * @urlParam id integer required Currency ID. Example: 1
      *
+     * Fails with 409 if it is the company's base currency.
+     *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Currency deactivated.","data":null}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Currency not found.","data":null}
+     * @response 409 {"ok":false,"code":409,"status":"Conflict","message":"Currency is the company base currency.","data":null}
      */
     public function destroy(int $id): JsonResponse
     {
-        if (!$this->currencyService->destroy($id)) {
-            return ApiResponse::error('Currency not found.', 404);
-        }
-
-        return ApiResponse::ok('Currency deactivated.');
+        return match ($this->currencyService->destroy($id)) {
+            'not_found' => ApiResponse::error('Currency not found.', 404),
+            'in_use'    => ApiResponse::error('Currency is the company base currency.', 409),
+            default     => ApiResponse::ok('Currency deactivated.'),
+        };
     }
 }

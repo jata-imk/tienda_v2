@@ -469,50 +469,55 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
+                idCurrency:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the currencies table.'
+                  example: 16
+                  nullable: true
                 logo:
                   type: string
                   description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
-                  example: m
+                  example: 'n'
                   nullable: true
                 street:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: i
+                  example: g
                   nullable: true
                 externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'y'
+                  example: z
                   nullable: true
                 crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: m
                   nullable: true
                 crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: d
+                  example: i
                   nullable: true
                 postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: l
+                  example: 'y'
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: j
+                  example: v
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: d
                   nullable: true
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -520,7 +525,7 @@ paths:
                 quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 8
+                  example: 19
                 gridSettings:
                   type: object
                   description: ''
@@ -627,45 +632,50 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
+                idCurrency:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the currencies table.'
+                  example: 16
+                  nullable: true
                 logo:
                   type: string
                   description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
-                  example: m
+                  example: 'n'
                   nullable: true
                 street:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: i
+                  example: g
                   nullable: true
                 externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'y'
+                  example: z
                   nullable: true
                 crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: m
                   nullable: true
                 crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: d
+                  example: i
                   nullable: true
                 postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: l
+                  example: 'y'
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: j
+                  example: v
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: d
                   nullable: true
                 stockControl:
                   type: boolean
@@ -678,7 +688,7 @@ paths:
                 quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 8
+                  example: 19
                 gridSettings:
                   type: object
                   description: ''
@@ -688,7 +698,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -785,45 +795,50 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: z
                   nullable: true
+                idCurrency:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the currencies table.'
+                  example: 16
+                  nullable: true
                 logo:
                   type: string
                   description: 'Must match the regex /^(data:image\/(png|jpe?g|webp);base64,)?[A-Za-z0-9+\/=\s]+$/. Must not be greater than 2800000 characters.'
-                  example: m
+                  example: 'n'
                   nullable: true
                 street:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: i
+                  example: g
                   nullable: true
                 externalNumber:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'y'
+                  example: z
                   nullable: true
                 crossStreetOne:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: m
                   nullable: true
                 crossStreetTwo:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: d
+                  example: i
                   nullable: true
                 postalCode:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: l
+                  example: 'y'
                   nullable: true
                 neighborhood:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: j
+                  example: v
                   nullable: true
                 city:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: 'n'
+                  example: d
                   nullable: true
                 stockControl:
                   type: boolean
@@ -836,7 +851,7 @@ paths:
                 quantityDecimals:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
-                  example: 8
+                  example: 19
                 gridSettings:
                   type: object
                   description: ''
@@ -846,7 +861,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -942,10 +957,14 @@ paths:
                   type: string
                   description: 'Must not be greater than 10 characters.'
                   example: vdljni
+                exchangeRate:
+                  type: number
+                  description: 'Must be between 0.000001 and 999999999999.'
+                  example: 0
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1103,6 +1122,10 @@ paths:
                   type: string
                   description: 'Must not be greater than 10 characters.'
                   example: vdljni
+                exchangeRate:
+                  type: number
+                  description: 'Must be between 0.000001 and 999999999999.'
+                  example: 0
                 status:
                   type: string
                   description: ''
@@ -1170,6 +1193,35 @@ paths:
                   message:
                     type: string
                     example: 'Currency not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Currency is the company base currency.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Currency is the company base currency.'
                   data:
                     type: string
                     example: null
@@ -1482,7 +1534,7 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-08-27T21:53:58'
+                  example: '2026-08-27T22:50:03'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
@@ -1917,7 +1969,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2716,7 +2768,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4346,7 +4398,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4428,7 +4480,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: entry
+                      example: cancel
                       enum:
                         - entry
                         - sale
@@ -4641,7 +4693,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4649,7 +4701,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -4676,7 +4728,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -5049,7 +5101,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -5226,7 +5278,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive

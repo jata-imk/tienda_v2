@@ -8,6 +8,7 @@ readonly class CreateCurrencyDTO
         public string $name,
         public string $code,
         public string $symbol,
+        public float $exchangeRate = 1.0,
         public string $status = 'active',
     ) {}
 }

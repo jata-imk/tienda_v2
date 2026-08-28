@@ -10,13 +10,14 @@ class CurrencyResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'        => $this->id,
-            'name'      => $this->name,
-            'code'      => $this->code,
-            'symbol'    => $this->symbol,
-            'status'    => $this->status,
-            'createdAt' => $this->created_at?->toDateTimeString(),
-            'updatedAt' => $this->updated_at?->toDateTimeString(),
+            'id'           => $this->id,
+            'name'         => $this->name,
+            'code'         => $this->code,
+            'symbol'       => $this->symbol,
+            'exchangeRate' => $this->exchange_rate,
+            'status'       => $this->status,
+            'createdAt'    => $this->created_at?->toDateTimeString(),
+            'updatedAt'    => $this->updated_at?->toDateTimeString(),
         ];
     }
 }

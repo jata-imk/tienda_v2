@@ -10,7 +10,7 @@ class CompanyInfoService
 {
     public function show(): ?CompanyInfo
     {
-        return CompanyInfo::first();
+        return CompanyInfo::with('currency')->first();
     }
 
     /**
@@ -23,7 +23,7 @@ class CompanyInfoService
             return null;
         }
 
-        return CompanyInfo::create($dto->fields);
+        return CompanyInfo::create($dto->fields)->load('currency');
     }
 
     public function update(UpdateCompanyInfoDTO $dto): ?CompanyInfo
@@ -36,6 +36,6 @@ class CompanyInfoService
 
         $companyInfo->update($dto->fields);
 
-        return $companyInfo->fresh();
+        return $companyInfo->fresh('currency');
     }
 }

@@ -10,9 +10,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserTypeSeeder::class,
+            // CurrencySeeder va antes: CompanySeeder referencia la moneda base.
+            CurrencySeeder::class,
             CompanySeeder::class,
             UserSeeder::class,
-            CurrencySeeder::class,
             CategorySeeder::class,
             SizeGroupSeeder::class,
             SizeSeeder::class,

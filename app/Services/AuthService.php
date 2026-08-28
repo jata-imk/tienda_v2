@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\Auth\LoginDTO;
+use App\Http\Resources\Currency\CurrencyResource;
 use App\Models\CompanyInfo;
 use App\Services\CatalogService;
 use App\Models\User;
@@ -28,7 +29,7 @@ class AuthService
         }
 
         $token   = $this->resolveToken($user);
-        $company = CompanyInfo::first();
+        $company = CompanyInfo::with('currency')->first();
 
         return [
             'result'  => 'ok',
@@ -119,6 +120,8 @@ class AuthService
         return [
             'name'         => $company->name,
             'logo'         => $company->logo,
+            // Misma forma que en GET /api/company-info: una sola fuente de verdad.
+            'currency'     => $company->currency ? (new CurrencyResource($company->currency))->resolve() : null,
             'gridSettings' => $company->grid_settings ?? [],
             'status'       => $company->status,
             'updatedAt'    => $company->updated_at?->toDateTimeString(),

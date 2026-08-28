@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CompanyInfo;
+use App\Models\Currency;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -83,5 +84,56 @@ class CompanyInfoCrudTest extends TestCase
             ->patchJson('/api/company-info', ['logo' => 'https://ejemplo.com/logo.png'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['logo']);
+    }
+
+    public function test_patch_sets_the_base_currency_and_returns_it_nested(): void
+    {
+        CompanyInfo::create(['name' => 'Tienda demo', 'status' => 'active']);
+        $currency = Currency::create([
+            'name' => 'Dolar', 'code' => 'USD', 'symbol' => '$', 'exchange_rate' => 17.25, 'status' => 'active',
+        ]);
+
+        $this->withoutMiddleware()
+            ->patchJson('/api/company-info', ['idCurrency' => $currency->id])
+            ->assertOk()
+            ->assertJsonPath('data.idCurrency', $currency->id)
+            ->assertJsonPath('data.currency.code', 'USD')
+            ->assertJsonPath('data.currency.exchangeRate', 17.25);
+
+        $this->assertSame($currency->id, CompanyInfo::first()->id_currency);
+    }
+
+    public function test_get_returns_a_null_currency_when_none_is_set(): void
+    {
+        CompanyInfo::create(['name' => 'Tienda demo', 'status' => 'active']);
+
+        $this->withoutMiddleware()
+            ->getJson('/api/company-info')
+            ->assertOk()
+            ->assertJsonPath('data.idCurrency', null)
+            ->assertJsonPath('data.currency', null);
+    }
+
+    public function test_patch_rejects_a_currency_that_does_not_exist(): void
+    {
+        CompanyInfo::create(['name' => 'Tienda demo', 'status' => 'active']);
+
+        $this->withoutMiddleware()
+            ->patchJson('/api/company-info', ['idCurrency' => 9999])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['idCurrency']);
+    }
+
+    public function test_patch_rejects_an_inactive_currency_as_the_base(): void
+    {
+        CompanyInfo::create(['name' => 'Tienda demo', 'status' => 'active']);
+        $currency = Currency::create([
+            'name' => 'Dolar', 'code' => 'USD', 'symbol' => '$', 'exchange_rate' => 17.25, 'status' => 'inactive',
+        ]);
+
+        $this->withoutMiddleware()
+            ->patchJson('/api/company-info', ['idCurrency' => $currency->id])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['idCurrency']);
     }
 }

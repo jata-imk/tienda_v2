@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\CompanyInfo;
 
+use App\Http\Resources\Currency\CurrencyResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,6 +16,8 @@ class CompanyInfoResource extends JsonResource
             'rfc'              => $this->rfc,
             'legalName'        => $this->legal_name,
             'taxRegime'        => $this->tax_regime,
+            'idCurrency'       => $this->id_currency,
+            'currency'         => $this->currency ? new CurrencyResource($this->currency) : null,
             'logo'             => $this->logo,
             'street'           => $this->street,
             'externalNumber'   => $this->external_number,

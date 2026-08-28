@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CompanyInfo;
+use App\Models\Currency;
 use Illuminate\Database\Seeder;
 
 class CompanySeeder extends Seeder
@@ -14,6 +15,7 @@ class CompanySeeder extends Seeder
             'rfc'                => 'XAXX010101000',
             'legal_name'         => 'Guayaberas Lopez Silva S.A. de C.V.',
             'tax_regime'         => '601',
+            'id_currency'        => Currency::where('code', 'MXN')->value('id'),
             'logo'               => null,
             'street'             => 'Calle 15',
             'external_number'    => '94 A',

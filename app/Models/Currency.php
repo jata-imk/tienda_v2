@@ -11,5 +11,10 @@ class Currency extends Model
 
     protected $table = 'currencies';
 
-    protected $fillable = ['name', 'code', 'symbol', 'status'];
+    protected $fillable = ['name', 'code', 'symbol', 'exchange_rate', 'status'];
+
+    // Sin el cast, MariaDB devuelve el decimal como string ("17.250000").
+    protected $casts = [
+        'exchange_rate' => 'float',
+    ];
 }

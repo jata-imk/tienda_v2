@@ -5,6 +5,7 @@ namespace App\Http\Requests\CompanyInfo;
 use App\DTOs\CompanyInfo\UpdateCompanyInfoDTO;
 use App\Http\Requests\CompanyInfo\Concerns\NormalizesCompanyInfoInput;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PatchCompanyInfoRequest extends FormRequest
 {
@@ -22,6 +23,7 @@ class PatchCompanyInfoRequest extends FormRequest
             'rfc'              => 'sometimes|nullable|string|max:255',
             'legalName'        => 'sometimes|nullable|string|max:255',
             'taxRegime'        => 'sometimes|nullable|string|max:255',
+            'idCurrency'       => ['sometimes', 'nullable', 'integer', Rule::exists('currencies', 'id')->where('status', 'active')],
             'logo'             => array_merge(['sometimes'], self::LOGO_RULES),
             'street'           => 'sometimes|nullable|string|max:255',
             'externalNumber'   => 'sometimes|nullable|string|max:255',

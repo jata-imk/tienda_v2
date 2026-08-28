@@ -8,6 +8,7 @@ readonly class UpdateCurrencyDTO
         public ?string $name,
         public ?string $code,
         public ?string $symbol,
+        public ?float $exchangeRate,
         public ?string $status,
     ) {}
 }
