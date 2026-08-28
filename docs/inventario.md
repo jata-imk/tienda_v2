@@ -25,10 +25,63 @@ El `w` en formato array (`{f, ao, v, lo}`) es el que manda el `filterRow` de Dev
 | `notcontains` | `NOT LIKE '%valor%'` |
 | `startswith` | `LIKE 'valor%'` |
 | `endswith` | `LIKE '%valor'` |
-| `between` (`v: [a, b]`) | se parte en `>= a` y `<= b` |
+| `between` (`v: [a, b]`) | `BETWEEN a AND b` |
+| `in` (`v: [1, 2, 3]`) | `IN (...)`. Alias: `anyof` (filterBuilder de DevExtreme) |
+| `notin` (`v: [1, 2, 3]`) | `NOT IN (...)`. Alias: `not in`, `noneof` |
 
 Los `%` y `_` dentro del texto se escapan, así que no actúan como comodines.
-Cualquier `ao` desconocido cae en `=`.
+Un `ao` desconocido cae en `=` si el valor es escalar; si el valor es un **array**
+se trata como `in` (nunca se colapsa la lista a su primer elemento).
+
+### Agrupación lógica de `lo`
+
+`lo` conecta cada condición con la anterior. Una condición `&&` seguida de una o
+más `||` forma **un solo grupo OR**, que se AND-ea con el resto. Este `w`:
+
+```jsonc
+[
+  { "f": "status",      "ao": "==",       "v": "active",  "lo": "&&" },
+  { "f": "categories",  "ao": "in",       "v": [1, 2],    "lo": "&&" },
+  { "f": "name",        "ao": "contains", "v": "asas",    "lo": "&&" },
+  { "f": "key",         "ao": "contains", "v": "asas",    "lo": "||" },
+  { "f": "categories",  "ao": "contains", "v": "asas",    "lo": "||" },
+  { "f": "idSizeGroup", "ao": "contains", "v": "asas",    "lo": "||" }
+]
+```
+
+se evalúa como:
+
+```text
+status = active
+AND categories IN (1, 2)
+AND ( name LIKE '%asas%' OR key LIKE '%asas%'
+      OR categoría LIKE '%asas%' OR grupo de tallas LIKE '%asas%' )
+```
+
+Los `||` **no** se aplican planos: si lo hicieran, el `status` y el filtro de
+categorías se perderían por la precedencia de SQL.
+
+### Campos que son relaciones, no columnas
+
+| Condición | Se resuelve como |
+|---|---|
+| `categories` + `in` / `notin` (ids) | `whereHas('categories', … whereIn('categories.id', $ids))` |
+| `categories` + `contains` (texto) | busca en `categories.name`, no en el id |
+| `categories` + `==` (id) | `whereHas('categories', … categories.id = $id)` |
+| `idSizeGroup` + `contains` (texto) | busca en `size_groups.name` vía la relación |
+| `idSizeGroup` + `==`, `>`, … | comparación directa contra la columna `id_size_group` |
+
+Un `in` con lista vacía se ignora (no filtra), igual que una selección vacía en
+el frontend. Un producto que caiga en varias categorías seleccionadas aparece
+**una sola vez**: el filtro compila a un `EXISTS` correlacionado, no a un `JOIN`.
+
+### `search` — extensión propia (no forma parte del contrato)
+
+Además de lo anterior, el backend acepta el campo virtual
+`{ "f": "search", "ao": "contains", "v": "texto" }`, que arma del lado servidor
+el mismo grupo OR sobre `name`, `key`, `description`, `code_bar`, la categoría y
+el grupo de tallas. Es un atajo para no mandar las cuatro condiciones `||` a
+mano; el harness Angular lo usa. Un término vacío o sólo con espacios se ignora.
 
 ---
 

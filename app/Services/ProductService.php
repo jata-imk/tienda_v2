@@ -7,12 +7,15 @@ use App\DTOs\Product\UpdateProductDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\Concerns\AppliesGridConditions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
+    use AppliesGridConditions;
+
     private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color', 'colorImages'];
 
     /**
@@ -30,49 +33,21 @@ class ProductService
         // where filters — `categories` ya no es columna: se resuelve por la pivote
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
-                foreach ($filters['w'] as $cond) {
-                    $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
-
-                    // Campo virtual `search`: OR agrupado sobre columnas y relaciones.
-                    if ($cond['column'] === 'search') {
-                        if ($this->searchTermIsEmpty($cond['value'])) {
-                            continue;
-                        }
-
-                        $this->applySearchGroup($query, $method, $cond['operator'], $cond['value']);
+                // Cada `&&` abre un bloque y arrastra los `||` que le siguen; un
+                // bloque de dos o mas se envuelve en parentesis para que el OR no
+                // se lleve por delante los filtros AND anteriores.
+                foreach ($this->groupGridConditions($filters['w']) as $block) {
+                    if (count($block) === 1) {
+                        $this->applyProductCondition($query, $block[0], 'and');
 
                         continue;
                     }
 
-                    if (in_array($cond['column'], self::CATEGORY_FILTER_KEYS, true)) {
-                        $relMethod = $method === 'orWhere' ? 'orWhereHas' : 'whereHas';
-
-                        // `anyof` llega como operador `in` + lista de ids -> whereIn.
-                        if (($cond['operator'] ?? null) === 'in') {
-                            $ids = array_values(array_filter(
-                                (array) $cond['value'],
-                                fn($v) => $v !== null && $v !== '',
-                            ));
-
-                            if ($ids === []) {
-                                continue;
-                            }
-
-                            $query->$relMethod('categories', fn($q) => $q->whereIn('categories.id', $ids));
-
-                            continue;
+                    $query->where(function ($group) use ($block) {
+                        foreach ($block as $index => $cond) {
+                            $this->applyProductCondition($group, $cond, $index === 0 ? 'and' : 'or');
                         }
-
-                        $query->$relMethod('categories', fn($q) => $q->where(
-                            'categories.id',
-                            $cond['operator'],
-                            $cond['value'],
-                        ));
-
-                        continue;
-                    }
-
-                    $query->$method($cond['column'], $cond['operator'], $cond['value']);
+                    });
                 }
             } else {
                 foreach ($filters['w'] as $column => $value) {
@@ -129,6 +104,107 @@ class ProductService
         }
 
         return $items;
+    }
+
+    /**
+     * Resuelve una condicion de producto. `$boolean` es el conector con la
+     * condicion anterior dentro del bloque (`and` en la primera, `or` en las
+     * demas). Las columnas que en realidad son relaciones (`categories`,
+     * `id_size_group`) nunca llegan al builder plano.
+     *
+     * @param array<string, mixed> $cond
+     */
+    private function applyProductCondition($query, array $cond, string $boolean): void
+    {
+        $or       = $boolean === 'or';
+        $column   = $cond['column'];
+        $operator = $cond['operator'] ?? '=';
+        $value    = $cond['value'] ?? null;
+
+        // Campo virtual `search`: OR agrupado sobre columnas y relaciones.
+        if ($column === 'search') {
+            if ($this->searchTermIsEmpty($value)) {
+                return;
+            }
+
+            $this->applySearchGroup($query, $or ? 'orWhere' : 'where', $operator, $value);
+
+            return;
+        }
+
+        if (in_array($column, self::CATEGORY_FILTER_KEYS, true)) {
+            $this->applyCategoryCondition($query, $operator, $value, $or);
+
+            return;
+        }
+
+        // `idSizeGroup contains texto` busca en el nombre del grupo de tallas, no
+        // en el FK entero. Con comparadores escalares sigue siendo la columna.
+        if ($column === 'id_size_group' && $this->isLikeOperator($operator)) {
+            $method = $this->relationMethod($operator === 'like', $or);
+
+            $query->$method(
+                'sizeGroup',
+                fn($q) => $q->whereRaw('size_groups.name LIKE ? ESCAPE ?', [$value, '\\']),
+            );
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
+    }
+
+    /**
+     * Filtro por categoria: siempre contra la pivote. `in` / `not in` traen una
+     * lista de ids; `contains` (`like`) busca en el nombre de la categoria.
+     */
+    private function applyCategoryCondition($query, string $operator, mixed $value, bool $or): void
+    {
+        if ($operator === 'in' || $operator === 'not in') {
+            $ids = $this->normalizeInValues($value);
+
+            // Seleccion vacia: el frontend no filtro por categoria.
+            if ($ids === []) {
+                return;
+            }
+
+            $method = $this->relationMethod($operator === 'in', $or);
+
+            $query->$method('categories', fn($q) => $q->whereIn('categories.id', $ids));
+
+            return;
+        }
+
+        if ($this->isLikeOperator($operator)) {
+            $method = $this->relationMethod($operator === 'like', $or);
+
+            $query->$method(
+                'categories',
+                fn($q) => $q->whereRaw('categories.name LIKE ? ESCAPE ?', [$value, '\\']),
+            );
+
+            return;
+        }
+
+        $query->{$this->relationMethod(true, $or)}(
+            'categories',
+            fn($q) => $q->where('categories.id', $operator, $value),
+        );
+    }
+
+    /** `whereHas` / `whereDoesntHave` y sus variantes `or`. */
+    private function relationMethod(bool $positive, bool $or): string
+    {
+        if ($positive) {
+            return $or ? 'orWhereHas' : 'whereHas';
+        }
+
+        return $or ? 'orWhereDoesntHave' : 'whereDoesntHave';
+    }
+
+    private function isLikeOperator(string $operator): bool
+    {
+        return in_array($operator, ['like', 'not like'], true);
     }
 
     /**

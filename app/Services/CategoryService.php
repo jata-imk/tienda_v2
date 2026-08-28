@@ -5,11 +5,14 @@ namespace App\Services;
 use App\DTOs\Category\CreateCategoryDTO;
 use App\DTOs\Category\UpdateCategoryDTO;
 use App\Models\Category;
+use App\Services\Concerns\AppliesGridConditions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryService
 {
+    use AppliesGridConditions;
+
     public function index(array $filters = []): array|Collection
     {
         $query = Category::query();
@@ -17,27 +20,20 @@ class CategoryService
         // where filters
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
-                foreach ($filters['w'] as $cond) {
-                    $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
-
-                    // Campo virtual `search`: OR agrupado sobre name/description.
-                    if ($cond['column'] === 'search') {
-                        if (trim(trim((string) $cond['value'], '%')) === '') {
-                            continue;
-                        }
-
-                        $sql  = strtoupper($cond['operator']) . ' ? ESCAPE ?';
-                        $bind = [$cond['value'], '\\'];
-
-                        $query->$method(function ($q) use ($sql, $bind) {
-                            $q->whereRaw("name $sql", $bind)
-                                ->orWhereRaw("description $sql", $bind);
-                        });
+                // Cada `&&` abre un bloque y arrastra los `||` que le siguen, para
+                // que un grupo OR no anule los filtros AND anteriores.
+                foreach ($this->groupGridConditions($filters['w']) as $block) {
+                    if (count($block) === 1) {
+                        $this->applyCategoryCondition($query, $block[0], 'and');
 
                         continue;
                     }
 
-                    $query->$method($cond['column'], $cond['operator'], $cond['value']);
+                    $query->where(function ($group) use ($block) {
+                        foreach ($block as $index => $cond) {
+                            $this->applyCategoryCondition($group, $cond, $index === 0 ? 'and' : 'or');
+                        }
+                    });
                 }
             } else {
                 foreach ($filters['w'] as $column => $value) {
@@ -83,6 +79,34 @@ class CategoryService
         }
 
         return $items;
+    }
+
+    /**
+     * Resuelve una condicion. `$boolean` es el conector con la condicion anterior
+     * dentro del bloque (`and` en la primera, `or` en las demas).
+     *
+     * @param array<string, mixed> $cond
+     */
+    private function applyCategoryCondition($query, array $cond, string $boolean): void
+    {
+        // Campo virtual `search`: OR agrupado sobre name/description.
+        if ($cond['column'] === 'search') {
+            if (trim(trim((string) $cond['value'], '%')) === '') {
+                return;
+            }
+
+            $sql  = strtoupper($cond['operator']) . ' ? ESCAPE ?';
+            $bind = [$cond['value'], '\\'];
+
+            $query->{$boolean === 'or' ? 'orWhere' : 'where'}(function ($q) use ($sql, $bind) {
+                $q->whereRaw("name $sql", $bind)
+                    ->orWhereRaw("description $sql", $bind);
+            });
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
     }
 
     public function show(int $id): ?Category

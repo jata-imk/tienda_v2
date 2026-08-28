@@ -10,8 +10,8 @@ use Illuminate\Support\Str;
  * (`{column, operator, value, logic}`).
  *
  * Los operadores de texto (`contains`, `startswith`, ...) se convierten a
- * `LIKE` con el comodin correspondiente; `between` se parte en dos
- * condiciones (`>=` y `<=`) para no requerir `whereBetween` en los Services.
+ * `LIKE` con el comodin correspondiente; `between` y los operadores de conjunto
+ * (`in` / `notin`) viajan como una sola condicion con la lista de valores.
  */
 trait TranslatesGridFilters
 {
@@ -28,13 +28,6 @@ trait TranslatesGridFilters
             $logic  = strtolower($condition['lo'] ?? '&&') === '||' ? 'or' : 'and';
             $ao     = $condition['ao'] ?? '==';
             $value  = $condition['v'] ?? null;
-
-            if ($ao === 'between' && is_array($value) && count($value) === 2) {
-                $translated[] = ['column' => $column, 'operator' => '>=', 'value' => $value[0], 'logic' => $logic];
-                $translated[] = ['column' => $column, 'operator' => '<=', 'value' => $value[1], 'logic' => 'and'];
-
-                continue;
-            }
 
             [$operator, $value] = $this->mapGridOperator($ao, $value);
 
@@ -64,10 +57,24 @@ trait TranslatesGridFilters
             'notcontains' => ['not like', '%' . $this->escapeLike($value) . '%'],
             'startswith'  => ['like', $this->escapeLike($value) . '%'],
             'endswith'    => ['like', '%' . $this->escapeLike($value)],
-            // `anyof` viaja como una lista de ids; el Service lo resuelve con
-            // `whereIn` (no es un operador SQL, por eso el sentinel `in`).
-            'anyof'       => ['in', array_values((array) $value)],
-            default       => ['=', $value],
+            // `between` no se parte en dos condiciones: partirlo rompe la
+            // agrupacion cuando la condicion llega con `lo: '||'`.
+            'between'     => is_array($value) && count($value) === 2
+                ? ['between', array_values($value)]
+                : ['=', $value],
+            // Operadores de conjunto: viajan como una lista de valores y los
+            // Services los resuelven con `whereIn` / `whereNotIn`. `in` es el
+            // nombre del contrato; `anyof` / `noneof` son los alias que manda el
+            // filterBuilder de DevExtreme. El sentinel no es un operador SQL.
+            'in', 'anyof'               => ['in', array_values((array) $value)],
+            'notin', 'not in', 'noneof' => ['not in', array_values((array) $value)],
+            // Un operador desconocido con valor escalar cae en `=` (comportamiento
+            // historico), pero con un array NO: Laravel colapsaria la lista a su
+            // primer elemento (`Builder::flattenValue`) y el filtro devolveria
+            // resultados incompletos en silencio. Se trata como `in`.
+            default       => is_array($value)
+                ? ['in', array_values($value)]
+                : ['=', $value],
         };
     }
 

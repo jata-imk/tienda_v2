@@ -5,10 +5,13 @@ namespace App\Services;
 use App\DTOs\SizeGroup\CreateSizeGroupDTO;
 use App\DTOs\SizeGroup\UpdateSizeGroupDTO;
 use App\Models\SizeGroup;
+use App\Services\Concerns\AppliesGridConditions;
 use Illuminate\Database\Eloquent\Collection;
 
 class SizeGroupService
 {
+    use AppliesGridConditions;
+
     public function index(array $filters = []): array|Collection
     {
         $query = SizeGroup::query();
@@ -16,8 +19,7 @@ class SizeGroupService
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 foreach ($filters['w'] as $cond) {
-                    $method = ($cond['logic'] ?? 'and') === 'or' ? 'orWhere' : 'where';
-                    $query->$method($cond['column'], $cond['operator'], $cond['value']);
+                    $this->applyGridCondition($query, $cond);
                 }
             } else {
                 foreach ($filters['w'] as $column => $value) {
