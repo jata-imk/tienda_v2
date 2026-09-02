@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\InventoryMovement;
+use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -49,13 +50,15 @@ class DashboardEndpointTest extends TestCase
                     'criticalStockBySize',
                     'summary' => [
                         'totalProducts', 'activeProducts', 'totalVariants',
-                        'totalStock', 'inventoryValue', 'lowStockCount',
+                        'totalStock', 'inventoryValue', 'inventorySaleValue', 'lowStockCount',
                         'outOfStockCount',
                     ],
                 ],
             ]);
 
         $this->assertSame(2, $response->json('data.summary.totalProducts'));
+        $this->assertSame(6600, $response->json('data.summary.inventoryValue'));
+        $this->assertSame(8800, $response->json('data.summary.inventorySaleValue'));
 
         $lowest = $response->json('data.lowestStock');
         $highest = $response->json('data.highestStock');
@@ -210,6 +213,77 @@ class DashboardEndpointTest extends TestCase
         $this->assertNotContains('SERV-001', array_column($response->json('data.criticalStockBySize'), 'key'));
     }
 
+    public function test_zero_stock_without_movements_is_excluded_from_all_alerts(): void
+    {
+        [$product] = $this->createInventoryProductWithVariant(
+            key: 'NEW-001',
+            sku: 'NEW-001-34-BLA',
+            stock: 0,
+        );
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/dashboard?limit=50&lowStockThreshold=5')
+            ->assertOk()
+            ->assertJsonPath('data.summary.lowStockCount', 0)
+            ->assertJsonPath('data.summary.outOfStockCount', 0);
+
+        $this->assertNotContains($product->key, array_column($response->json('data.criticalStockBySize'), 'key'));
+        $this->assertNotContains($product->key, array_column($response->json('data.lowestStock'), 'key'));
+    }
+
+    public function test_depleted_stock_with_movements_is_included_in_all_alerts(): void
+    {
+        [$product, $variant] = $this->createInventoryProductWithVariant(
+            key: 'OUT-001',
+            sku: 'OUT-001-34-BLA',
+            stock: 0,
+        );
+
+        InventoryMovement::create([
+            'id_product_variant' => $variant->id,
+            'movement_type' => 'sale',
+            'quantity' => 1,
+            'previous_stock' => 1,
+            'new_stock' => 0,
+            'reference_type' => 'test',
+            'reference_id' => null,
+            'notes' => null,
+            'id_user' => 1,
+        ]);
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/dashboard?limit=50&lowStockThreshold=5')
+            ->assertOk()
+            ->assertJsonPath('data.summary.lowStockCount', 1)
+            ->assertJsonPath('data.summary.outOfStockCount', 1);
+
+        $criticalRow = collect($response->json('data.criticalStockBySize'))
+            ->firstWhere('key', $product->key);
+        $lowestRow = collect($response->json('data.lowestStock'))
+            ->firstWhere('key', $product->key);
+
+        $this->assertSame(0, $criticalRow['stock'] ?? null);
+        $this->assertSame(0, $lowestRow['stock'] ?? null);
+    }
+
+    public function test_positive_stock_without_movements_is_still_included_in_alerts(): void
+    {
+        [$product] = $this->createInventoryProductWithVariant(
+            key: 'LEGACY-001',
+            sku: 'LEGACY-001-34-BLA',
+            stock: 2,
+        );
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/dashboard?limit=50&lowStockThreshold=5')
+            ->assertOk()
+            ->assertJsonPath('data.summary.lowStockCount', 1)
+            ->assertJsonPath('data.summary.outOfStockCount', 0);
+
+        $this->assertContains($product->key, array_column($response->json('data.criticalStockBySize'), 'key'));
+        $this->assertContains($product->key, array_column($response->json('data.lowestStock'), 'key'));
+    }
+
     /**
      * Seed: CAM-001 (unico producto con control de existencias) suma 11.
      * Ningun umbral por debajo de 11 debe contarlo — el umbral llega como
@@ -255,5 +329,28 @@ class DashboardEndpointTest extends TestCase
             ->getJson('/api/dashboard?limit=999')
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['limit']);
+    }
+
+    /**
+     * @return array{Product, ProductVariant}
+     */
+    private function createInventoryProductWithVariant(string $key, string $sku, float $stock): array
+    {
+        $product = Product::where('key', 'CAM-001')->firstOrFail()->replicate();
+        $product->key = $key;
+        $product->name = $key;
+        $product->save();
+
+        $variant = ProductVariant::create([
+            'id_product' => $product->id,
+            'id_size' => 2,
+            'id_color' => 1,
+            'sku' => $sku,
+            'code_bar' => null,
+            'stock' => $stock,
+            'status' => 'active',
+        ]);
+
+        return [$product, $variant];
     }
 }

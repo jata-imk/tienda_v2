@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -680,7 +680,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -861,7 +861,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1241,7 +1241,7 @@ paths:
     post:
       summary: 'Query dashboard metrics (POST)'
       operationId: queryDashboardMetricsPOST
-      description: "Accepts the dashboard filters as a JSON body. It returns the same data\nas `GET /api/dashboard`, which remains available for compatibility.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
+      description: "Accepts the dashboard filters as a JSON body. It returns the same data\nas `GET /api/dashboard`, which remains available for compatibility.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range. Stock alerts omit\nzero-stock variants that have never had inventory movements."
       parameters: []
       responses:
         200:
@@ -1271,6 +1271,7 @@ paths:
                       totalVariants: 0
                       totalStock: 0
                       inventoryValue: 0
+                      inventorySaleValue: 0
                       lowStockCount: 0
                       outOfStockCount: 0
                 properties:
@@ -1339,6 +1340,9 @@ paths:
                           inventoryValue:
                             type: integer
                             example: 0
+                          inventorySaleValue:
+                            type: integer
+                            example: 0
                           lowStockCount:
                             type: integer
                             example: 0
@@ -1374,7 +1378,7 @@ paths:
     get:
       summary: 'Dashboard metrics (GET)'
       operationId: dashboardMetricsGET
-      description: "Returns best-selling products, stock ranking (lowest/highest), critical\nproduct-size combinations and inventory KPIs in a single payload.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
+      description: "Returns best-selling products, stock ranking (lowest/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
       parameters:
         -
           in: query
@@ -1444,6 +1448,7 @@ paths:
                       totalVariants: 0
                       totalStock: 0
                       inventoryValue: 0
+                      inventorySaleValue: 0
                       lowStockCount: 0
                       outOfStockCount: 0
                 properties:
@@ -1512,6 +1517,9 @@ paths:
                           inventoryValue:
                             type: integer
                             example: 0
+                          inventorySaleValue:
+                            type: integer
+                            example: 0
                           lowStockCount:
                             type: integer
                             example: 0
@@ -1534,11 +1542,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-08-27T22:50:03'
+                  example: '2026-09-02T15:15:24'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-09-19'
+                  example: '2052-09-25'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1813,7 +1821,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2365,7 +2373,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2608,7 +2616,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3164,7 +3172,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4398,7 +4406,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4480,7 +4488,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: cancel
+                      example: entry
                       enum:
                         - entry
                         - sale
@@ -4701,7 +4709,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -4728,7 +4736,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -5278,7 +5286,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

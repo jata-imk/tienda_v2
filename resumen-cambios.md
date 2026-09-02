@@ -346,6 +346,7 @@ export interface DashboardSummary {
   totalVariants: number;
   totalStock: number;
   inventoryValue: number;
+  inventorySaleValue: number;
   lowStockCount: number;
 }
 

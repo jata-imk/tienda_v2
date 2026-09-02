@@ -27,11 +27,11 @@ class DashboardService
     public function summary(DashboardFiltersDTO $filters): array
     {
         return [
-            'topProducts'         => $this->topProducts($filters),
-            'lowestStock'         => $this->stockRanking($filters->limit, 'asc'),
-            'highestStock'        => $this->stockRanking($filters->limit, 'desc'),
+            'topProducts' => $this->topProducts($filters),
+            'lowestStock' => $this->stockRanking($filters->limit, 'asc', initializedOnly: true),
+            'highestStock' => $this->stockRanking($filters->limit, 'desc'),
             'criticalStockBySize' => $this->criticalStockBySize($filters->lowStockThreshold),
-            'summary'             => $this->totals($filters->lowStockThreshold),
+            'summary' => $this->totals($filters->lowStockThreshold),
         ];
     }
 
@@ -64,10 +64,10 @@ class DashboardService
         }
 
         return $query->get()
-            ->map(fn($row) => [
-                'id'           => (int) $row->id,
-                'key'          => $row->key,
-                'name'         => $row->name,
+            ->map(fn ($row) => [
+                'id' => (int) $row->id,
+                'key' => $row->key,
+                'name' => $row->name,
                 'quantitySold' => (float) $row->quantity_sold,
             ])
             ->all();
@@ -76,14 +76,20 @@ class DashboardService
     /**
      * Ranking de existencias por producto (suma de variantes activas).
      */
-    private function stockRanking(int $limit, string $direction): array
+    private function stockRanking(int $limit, string $direction, bool $initializedOnly = false): array
     {
-        return Product::query()
+        $query = Product::query()
             ->leftJoin('product_variants', function ($join) {
                 $join->on('product_variants.id_product', '=', 'products.id')
                     ->where('product_variants.status', 'active');
             })
-            ->where('products.status', 'active')
+            ->where('products.status', 'active');
+
+        if ($initializedOnly) {
+            $this->whereInventoryIsInitialized($query);
+        }
+
+        return $query
             ->groupBy('products.id', 'products.key', 'products.name')
             ->select([
                 'products.id',
@@ -94,10 +100,10 @@ class DashboardService
             ->orderBy('stock', $direction)
             ->limit($limit)
             ->get()
-            ->map(fn($row) => [
-                'id'    => (int) $row->id,
-                'key'   => $row->key,
-                'name'  => $row->name,
+            ->map(fn ($row) => [
+                'id' => (int) $row->id,
+                'key' => $row->key,
+                'name' => $row->name,
                 'stock' => (float) $row->stock,
             ])
             ->all();
@@ -122,6 +128,9 @@ class DashboardService
             ->join('sizes', 'sizes.id', '=', 'product_variants.id_size')
             ->where('products.status', 'active')
             ->where('products.stock_control', true)
+            ->where(function ($query) {
+                $this->whereInventoryIsInitialized($query);
+            })
             ->groupBy('products.id', 'products.key', 'products.name', 'sizes.id', 'sizes.name', 'sizes.sort_order')
             ->select([
                 'products.key',
@@ -129,16 +138,16 @@ class DashboardService
                 'sizes.name as size_name',
                 DB::raw('SUM(product_variants.stock) as stock'),
             ])
-            ->havingRaw('SUM(product_variants.stock) <= ' . self::NUMERIC_PARAM, [$lowStockThreshold])
+            ->havingRaw('SUM(product_variants.stock) <= '.self::NUMERIC_PARAM, [$lowStockThreshold])
             ->orderByRaw('SUM(product_variants.stock) asc')
             ->orderBy('products.name')
             ->orderBy('sizes.sort_order')
             ->get()
-            ->map(fn($row) => [
+            ->map(fn ($row) => [
                 'product' => $row->product_name,
-                'key'     => $row->key,
-                'size'    => $row->size_name,
-                'stock'   => (float) $row->stock,
+                'key' => $row->key,
+                'size' => $row->size_name,
+                'stock' => (float) $row->stock,
             ])
             ->all();
     }
@@ -154,16 +163,18 @@ class DashboardService
             ->where('product_variants.status', 'active')
             ->selectRaw('COUNT(*) as total')
             ->selectRaw('COALESCE(SUM(product_variants.stock), 0) as stock')
-            ->selectRaw('COALESCE(SUM(product_variants.stock * products.cost), 0) as value')
+            ->selectRaw('COALESCE(SUM(product_variants.stock * products.cost), 0) as cost_value')
+            ->selectRaw('COALESCE(SUM(product_variants.stock * products.price), 0) as sale_value')
             ->first();
 
         return [
-            'totalProducts'   => (int) $products->total,
-            'activeProducts'  => (int) $products->active,
-            'totalVariants'   => (int) $variants->total,
-            'totalStock'      => (float) $variants->stock,
-            'inventoryValue'  => round((float) $variants->value, 2),
-            'lowStockCount'   => $this->countProductsWithStockUpTo($lowStockThreshold),
+            'totalProducts' => (int) $products->total,
+            'activeProducts' => (int) $products->active,
+            'totalVariants' => (int) $variants->total,
+            'totalStock' => (float) $variants->stock,
+            'inventoryValue' => round((float) $variants->cost_value, 2),
+            'inventorySaleValue' => round((float) $variants->sale_value, 2),
+            'lowStockCount' => $this->countProductsWithStockUpTo($lowStockThreshold),
             'outOfStockCount' => $this->countProductsWithStockUpTo(0),
         ];
     }
@@ -177,7 +188,7 @@ class DashboardService
     {
         return DB::query()
             ->fromSub($this->stockByProduct(), 'stock_by_product')
-            ->whereRaw('stock <= ' . self::NUMERIC_PARAM, [$limit])
+            ->whereRaw('stock <= '.self::NUMERIC_PARAM, [$limit])
             ->count();
     }
 
@@ -194,9 +205,31 @@ class DashboardService
             })
             ->where('products.status', 'active')
             ->where('products.stock_control', true)
+            ->where(function ($query) {
+                $this->whereInventoryIsInitialized($query);
+            })
             ->groupBy('products.id')
             ->select('products.id')
             ->selectRaw('COALESCE(SUM(product_variants.stock), 0) as stock')
             ->toBase();
+    }
+
+    /**
+     * Conserva variantes con existencia actual o con historial. Una variante
+     * creada en cero y nunca abastecida no representa una alerta de stock.
+     */
+    private function whereInventoryIsInitialized($query): void
+    {
+        $query->where(function ($query) {
+            $query->where('product_variants.stock', '>', 0)
+                ->orWhereExists(function ($movements) {
+                    $movements->selectRaw('1')
+                        ->from('inventory_movements')
+                        ->whereColumn(
+                            'inventory_movements.id_product_variant',
+                            'product_variants.id',
+                        );
+                });
+        });
     }
 }
