@@ -1,23 +1,31 @@
-# Guía de Integración Frontend: Endpoints POST .../query y Kardex
+# Guía de Integración Frontend: Dashboard, Endpoints POST .../query y Kardex
 
 > **Para el desarrollador frontend y su agente de IA:**
-> Este documento explica los cambios implementados en el backend del POS (`tienda-backend`), el contrato de consulta unificado para componentes de cuadrícula (**DevExtreme DataGrid / CustomStore** u otros), los endpoints nuevos disponibles y cómo consumirlos. Es agnóstico de framework: contiene contratos HTTP reales, tipos TypeScript listos para copiar y ejemplos de integración.
+> Este documento explica los cambios implementados en el backend del POS (`tienda-backend`) a lo largo de los dos últimos commits:
+> - **Commit `8fe7cd3`**: Unificación de alertas de existencias del Dashboard y adición de la métrica `inventorySaleValue`.
+> - **Commit `103b0f1`**: Estandarización de `POST /{recurso}/query`, solución a la precedencia SQL en operadores `||` (OR) e implementación de nuevos endpoints (Kardex, variantes, usuarios, monedas).
+> 
+> Es un documento agnóstico de framework con contratos HTTP reales, esquemas JSON, tipos TypeScript listos para copiar y ejemplos prácticos para DevExtreme o cualquier cliente HTTP.
 
 ---
 
 ## 1. Resumen Ejecutivo de Cambios
 
-1. **Unificación del patrón POST /{recurso}/query:**
+1. **Dashboard (`POST /api/dashboard/query` y `GET /api/dashboard`):**
+   - **Nuevo campo de valuación:** `summary.inventorySaleValue` calcula el valor total del inventario al precio de venta vigente (`SUM(stock * price)`), complementando a `inventoryValue` (valuación a costo).
+   - **Alertas de stock unificadas:** `lowStockCount`, `outOfStockCount`, `lowestStock` y `criticalStockBySize` ahora solo evalúan productos con control de existencias (`stockControl = true`) y variantes con inventario *inicializado* (existencia > 0 o que tengan al menos un movimiento registrado en el Kardex). Esto evita reportar como agotados productos recién creados en cero que nunca han sido surtidos.
+   - **Consulta unificada:** Soporta `POST /api/dashboard/query` con body JSON `{ limit, dateFrom, dateTo, lowStockThreshold }` y mantiene compatibilidad con `GET /api/dashboard` por query string.
+2. **Unificación del patrón POST /{recurso}/query:**
    - Todos los recursos tabulares del sistema ahora cuentan con su versión `POST /api/{recurso}/query` además del `GET /api/{recurso}` estándar.
    - Ambos reciben y procesan los mismos parámetros de paginación, filtros y ordenación, pero `POST .../query` envía los parámetros en un cuerpo JSON para evitar limitaciones de longitud de URL (HTTP 414) y problemas de codificación con árboles de filtros complejos.
-2. **Corrección de precedencia de operadores OR:**
+3. **Corrección de precedencia de operadores OR:**
    - Se resolvió un bug en el backend donde filtros con operadores `||` (OR) podían anular filtros `AND` previos (por ejemplo, `status = active`). Ahora los bloques OR se agrupan automáticamente entre paréntesis en SQL.
-3. **Nuevos endpoints disponibles:**
+4. **Nuevos endpoints disponibles:**
    - **Usuarios**: `POST /api/users/query` y `GET /api/users` con soporte de grid.
    - **Historial de Inventario (Kardex)**: `GET /api/inventory/movements` y `POST /api/inventory/movements/query`.
    - **Variantes de Producto**: `POST /api/products/{id}/variants/query`.
    - **Monedas**: `POST /api/currencies/query`.
-4. **Campo virtual `search` universal:**
+5. **Campo virtual `search` universal:**
    - Ahora todos los catálogos y recursos admiten el filtro rápido `{ "f": "search", "ao": "contains", "v": "texto" }` para búsquedas globales desde barras de búsqueda en la UI sin tener que armar múltiples condiciones `||` a mano.
 
 ---
@@ -290,11 +298,129 @@ Content-Type: application/json
 
 ---
 
+### 5.5 Dashboard — `POST /api/dashboard/query` y `GET /api/dashboard`
+
+Proporciona métricas consolidadas, KPIs de inventario, valuación y rankings de productos en una sola petición.
+
+**Parámetros aceptados (Body JSON en POST o Query Params en GET):**
+- `limit` (int, default: 5, min: 1, max: 50): Cantidad de elementos en los rankings `topProducts`, `lowestStock` y `highestStock`.
+- `dateFrom` (string `YYYY-MM-DD`, opcional): Inicio inclusivo del rango para ventas de `topProducts`.
+- `dateTo` (string `YYYY-MM-DD`, opcional): Fin inclusivo del rango para ventas (debe ser ≥ `dateFrom`).
+- `lowStockThreshold` (number, default: 5): Umbral de existencia para considerar stock bajo.
+
+> **Importante:** Las alertas de stock (`lowStockCount`, `outOfStockCount`, `lowestStock` y `criticalStockBySize`) solo incluyen productos con `stockControl = true` y variantes con inventario inicializado (existencia > 0 o que hayan registrado al menos un movimiento de inventario en el historial).
+
+**Ejemplo de Request:**
+```http
+POST /api/dashboard/query
+Content-Type: application/json
+
+{
+  "limit": 5,
+  "dateFrom": "2026-08-01",
+  "dateTo": "2026-08-31",
+  "lowStockThreshold": 5
+}
+```
+
+**Ejemplo de Response (200):**
+```json
+{
+  "ok": true,
+  "code": 200,
+  "status": "OK",
+  "message": "Dashboard retrieved.",
+  "data": {
+    "topProducts": [
+      { "id": 1, "key": "CAM-001", "name": "Camisa lino caballero", "quantitySold": 42.0 }
+    ],
+    "lowestStock": [
+      { "id": 3, "key": "FIL-001", "name": "Filipina caballero", "stock": 2.0 }
+    ],
+    "highestStock": [
+      { "id": 1, "key": "CAM-001", "name": "Camisa lino caballero", "stock": 180.0 }
+    ],
+    "criticalStockBySize": [
+      { "product": "Filipina caballero", "key": "FIL-001", "size": "G", "stock": 2.0 },
+      { "product": "Camisa bolitas", "key": "CAM-003", "size": "CH", "stock": 3.0 }
+    ],
+    "summary": {
+      "totalProducts": 4,
+      "activeProducts": 4,
+      "totalVariants": 22,
+      "totalStock": 35.0,
+      "inventoryValue": 12100.0,
+      "inventorySaleValue": 16800.0,
+      "lowStockCount": 1,
+      "outOfStockCount": 0
+    }
+  }
+}
+```
+
+---
+
 ## 6. Tipos TypeScript para el Frontend
 
 Puedes copiar estos tipos directamente en tu proyecto (por ejemplo en `src/types/api.ts`):
 
 ```typescript
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+
+export interface DashboardQueryParams {
+  limit?: number;               // Default: 5
+  dateFrom?: string;            // YYYY-MM-DD
+  dateTo?: string;              // YYYY-MM-DD
+  lowStockThreshold?: number;   // Default: 5
+}
+
+export interface TopProduct {
+  id: number;
+  key: string;
+  name: string;
+  quantitySold: number;
+}
+
+export interface StockProduct {
+  id: number;
+  key: string;
+  name: string;
+  stock: number;
+}
+
+export interface CriticalStockBySize {
+  product: string;
+  key: string;
+  size: string;
+  stock: number;
+}
+
+export interface DashboardSummary {
+  totalProducts: number;
+  activeProducts: number;
+  totalVariants: number;
+  totalStock: number;
+  inventoryValue: number;       // Valuación a costo: SUM(stock * cost)
+  inventorySaleValue: number;   // Valuación a precio de venta: SUM(stock * price)
+  lowStockCount: number;        // Productos activos con stock <= threshold
+  outOfStockCount: number;      // Productos activos con stock <= 0
+}
+
+export interface DashboardData {
+  topProducts: TopProduct[];
+  lowestStock: StockProduct[];
+  highestStock: StockProduct[];
+  criticalStockBySize: CriticalStockBySize[];
+  summary: DashboardSummary;
+}
+
+export interface DashboardResponse {
+  ok: boolean;
+  code: number;
+  status: string;
+  message: string;
+  data: DashboardData;
+}
 // ─── Tipos Base de Consulta ──────────────────────────────────────────────────
 
 export type Status = 'active' | 'inactive';
