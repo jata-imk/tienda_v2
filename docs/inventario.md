@@ -79,9 +79,16 @@ el frontend. Un producto que caiga en varias categorías seleccionadas aparece
 
 Además de lo anterior, el backend acepta el campo virtual
 `{ "f": "search", "ao": "contains", "v": "texto" }`, que arma del lado servidor
-el mismo grupo OR sobre `name`, `key`, `description`, `code_bar`, la categoría y
-el grupo de tallas. Es un atajo para no mandar las cuatro condiciones `||` a
-mano; el harness Angular lo usa. Un término vacío o sólo con espacios se ignora.
+el mismo grupo OR sobre campos clave del recurso. Disponible en:
+- `products`: `name`, `key`, `description`, `code_bar`, categoría y grupo de tallas.
+- `categories`: `name` y `description`.
+- `colors`: `name` y `hex_color`.
+- `sizes`: `name` y nombre del grupo de tallas.
+- `size-groups`: `name` y `description`.
+- `users`: nombre, apellidos, usuario y email.
+- `inventory/movements`: `notes`, `reference_type`, SKU de variante y nombre/clave del producto.
+
+Un término vacío o sólo con espacios se ignora.
 
 ---
 
@@ -143,7 +150,8 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products` | Listar (incluye `variants` y `totalStock`) |
 | `POST` | `/api/products/query` | Listar con filtros avanzados |
 | `GET` | `/api/products/{id}` | Ver uno con variantes |
-| `GET` | `/api/products/{id}/variants` | Variantes del producto (matriz) |
+| `GET` | `/api/products/{id}/variants` | Variantes del producto (soporta filtros de grid) |
+| `POST` | `/api/products/{id}/variants/query` | Consultar variantes del producto (filtros en body) |
 | `POST` | `/api/products` | Crear producto + variantes + movimientos iniciales |
 | `PUT` | `/api/products/{id}` | Actualizar datos base del producto |
 | `POST` | `/api/products/{id}/variants` | Agregar una o varias variantes a un producto existente |
@@ -382,13 +390,69 @@ producto. Al agregar la variante del color nuevo, su galería queda habilitada d
 
 ---
 
-## `/api/inventory/movements` — Ajuste de existencias
+## `/api/inventory/movements` — Historial (Kardex) y Ajuste de existencias
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/inventory/movements` | Listar movimientos de inventario (soporta filtros de grid) |
+| `POST` | `/api/inventory/movements/query` | Consultar movimientos (filtros avanzados en body) |
+| `POST` | `/api/inventory/movements` | Registrar uno o varios movimientos de existencias |
+
+### Consulta de movimientos (`GET` y `POST /query`)
+
+Soportan paginación (`p`), selección de campos (`f`), ordenación (`o`), filtros (`w`) y `totalCount`.
+
+Filtros soportados en `w`:
+- `movement_type`: `entry`, `sale`, `adjustment`, `return`, `cancel` (o array con `in`)
+- `id_product`: ID del producto (resuelto a través de la variante)
+- `sku`: SKU puntual de la variante
+- `id_user`: usuario que generó el movimiento
+- `created_at`: filtros de fecha / rango
+- `search`: búsqueda de texto sobre notas, origen, usuario, SKU o nombre del producto
+
+Respuesta estándar (`ApiResponse::query`):
+```json
+{
+  "ok": true,
+  "code": 200,
+  "status": "OK",
+  "message": "Inventory movements retrieved.",
+  "data": {
+    "items": [
+      {
+        "id": 501,
+        "idProductVariant": 101,
+        "movementType": "adjustment",
+        "quantity": 2.0,
+        "previousStock": 8.0,
+        "newStock": 6.0,
+        "referenceType": "manual_adjustment",
+        "referenceId": null,
+        "notes": "Ajuste por conteo físico",
+        "idUser": 1,
+        "createdAt": "2026-08-12 21:45:00",
+        "userName": "suriel.dzul",
+        "idProduct": 25,
+        "productName": "Camisa lino caballero",
+        "productKey": "CAM-001",
+        "sku": "CAM-001-34-BLA",
+        "size": "34",
+        "color": "Blanco"
+      }
+    ],
+    "totalCount": 1,
+    "summary": [1]
+  }
+}
+```
+
+### Registro de movimientos (`POST /api/inventory/movements`)
 
 `POST` registra uno o varios movimientos sobre variantes de **un mismo producto** y actualiza
 su `stock` en una sola operación atómica: si cualquier elemento de `movements` falla, no se
 aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo físico completo.
 
-### Campos generales
+### Campos generales del registro
 
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|

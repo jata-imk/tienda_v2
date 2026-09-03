@@ -15,6 +15,42 @@ namespace App\Services\Concerns;
 trait AppliesGridConditions
 {
     /**
+     * Aplica la lista de condiciones agrupando los bloques OR en closures para
+     * respetar la precedencia de operadores SQL. Si se proporciona un callback
+     * `$customApplier`, este se invoca para condiciones especificas o campos
+     * virtuales; de lo contrario, se aplica mediante `applyGridCondition`.
+     *
+     * @param mixed $query
+     * @param array<int, array<string, mixed>> $conditions
+     * @param (callable(mixed, array<string, mixed>, string): void)|null $customApplier
+     */
+    protected function applyConditions($query, array $conditions, ?callable $customApplier = null): void
+    {
+        foreach ($this->groupGridConditions($conditions) as $block) {
+            if (count($block) === 1) {
+                if ($customApplier !== null) {
+                    $customApplier($query, $block[0], 'and');
+                } else {
+                    $this->applyGridCondition($query, $block[0], 'and');
+                }
+
+                continue;
+            }
+
+            $query->where(function ($group) use ($block, $customApplier) {
+                foreach ($block as $index => $cond) {
+                    $boolean = $index === 0 ? 'and' : 'or';
+                    if ($customApplier !== null) {
+                        $customApplier($group, $cond, $boolean);
+                    } else {
+                        $this->applyGridCondition($group, $cond, $boolean);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
      * Reparte la lista plana en bloques: cada bloque arranca con una condicion
      * `and` y arrastra las `or` que vengan detras.
      *

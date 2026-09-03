@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Product\CreateProductVariantsRequest;
 use App\Http\Requests\Product\UpdateProductVariantRequest;
 use App\Http\Resources\Product\ProductVariantResource;
@@ -10,6 +11,7 @@ use App\Models\ProductVariant;
 use App\Services\ProductVariantService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @group Inventory
@@ -18,6 +20,8 @@ use Illuminate\Http\JsonResponse;
  */
 class ProductVariantController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private ProductVariantService $productVariantService) {}
 
     /**
@@ -30,15 +34,38 @@ class ProductVariantController extends Controller
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Variants retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Product not found.","data":null}
      */
-    public function index(int $product): JsonResponse
+    public function index(Request $request, int $product): JsonResponse
     {
         if (!Product::whereKey($product)->exists()) {
             return ApiResponse::error('Product not found.', 404);
         }
 
-        $variants = $this->productVariantService->listByProduct($product);
+        $filters  = $this->extractGridFilters($request);
+        $variants = $this->productVariantService->queryByProduct($product, $filters);
 
-        return ApiResponse::query('Variants retrieved.', ProductVariantResource::collection($variants), $variants->count());
+        return $this->gridResponse('Variants retrieved.', $variants, ProductVariantResource::class);
+    }
+
+    /**
+     * Query product variants (POST)
+     *
+     * Same payload formats as `POST /products/query`.
+     *
+     * @urlParam product integer required Product ID. Example: 1
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Variants retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
+     * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Product not found.","data":null}
+     */
+    public function query(Request $request, int $product): JsonResponse
+    {
+        if (!Product::whereKey($product)->exists()) {
+            return ApiResponse::error('Product not found.', 404);
+        }
+
+        $filters  = $this->extractGridFilters($request);
+        $variants = $this->productVariantService->queryByProduct($product, $filters);
+
+        return $this->gridResponse('Variants retrieved.', $variants, ProductVariantResource::class);
     }
 
     /**

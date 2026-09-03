@@ -29,6 +29,7 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
 
     // Users
+    Route::post('users/query', [UserController::class, 'query']);
     Route::apiResource('users', UserController::class);
 
     // Inventory
@@ -45,6 +46,7 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::apiResource('colors', ColorController::class);
 
     Route::post('products/query', [ProductController::class, 'query']);
+    Route::post('products/{product}/variants/query', [ProductVariantController::class, 'query']);
     Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
     Route::post('products/{product}/variants', [ProductVariantController::class, 'store']);
     Route::put('products/{product}/variants/{variant}', [ProductVariantController::class, 'update']);
@@ -56,6 +58,8 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::delete('products/{product}/colors/{color}/images/{image}', [ProductColorImageController::class, 'destroy']);
     Route::apiResource('products', ProductController::class);
 
+    Route::get('inventory/movements', [InventoryMovementController::class, 'index']);
+    Route::post('inventory/movements/query', [InventoryMovementController::class, 'query']);
     Route::post('inventory/movements', [InventoryMovementController::class, 'store']);
 
     // Configuration
@@ -63,5 +67,6 @@ Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
     Route::post('company-info', [CompanyInfoController::class, 'store']);
     Route::put('company-info', [CompanyInfoController::class, 'update']);
     Route::patch('company-info', [CompanyInfoController::class, 'patch']);
+    Route::post('currencies/query', [CurrencyController::class, 'query']);
     Route::apiResource('currencies', CurrencyController::class);
 });

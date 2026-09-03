@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\InventoryDomainException;
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\InventoryMovement\CreateMovementRequest;
 use App\Http\Resources\InventoryMovement\InventoryMovementResource;
 use App\Services\InventoryMovementService;
 use App\Support\ApiResponse;
 use DomainException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @group Inventory
@@ -17,7 +19,37 @@ use Illuminate\Http\JsonResponse;
  */
 class InventoryMovementController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private InventoryMovementService $movementService) {}
+
+    /**
+     * List inventory movements (Kardex)
+     *
+     * Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Inventory movements retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Inventory movements retrieved.', $this->movementService->index($filters), InventoryMovementResource::class);
+    }
+
+    /**
+     * Query inventory movements (POST)
+     *
+     * Same payload formats as `POST /products/query`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Inventory movements retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
+     */
+    public function query(Request $request): JsonResponse
+    {
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Inventory movements retrieved.', $this->movementService->index($filters), InventoryMovementResource::class);
+    }
 
     /**
      * Register inventory movements

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Concerns;
 
+use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
@@ -15,6 +18,80 @@ use Illuminate\Support\Str;
  */
 trait TranslatesGridFilters
 {
+    /**
+     * Extrae y normaliza los filtros de consulta ya sea desde query params (GET)
+     * o desde el body JSON (POST).
+     *
+     * @return array<string, mixed>
+     */
+    protected function extractGridFilters(Request $request): array
+    {
+        $payload = $request->isMethod('GET')
+            ? $request->query()
+            : ($request->json()->all() ?: $request->all());
+
+        $filters = [];
+
+        // Pagination — p.page/p.r = row offset (0-indexed en DevExtreme); p.per_page/p.s = page size
+        if (!empty($payload['p'])) {
+            $p       = $payload['p'];
+            $perPage = (int) ($p['per_page'] ?? $p['s'] ?? 15);
+            $perPage = $perPage > 0 ? $perPage : 15;
+
+            if (isset($p['r'])) {
+                $offset = (int) $p['r'];
+                $page   = max(1, intdiv($offset, $perPage) + 1);
+            } elseif (!$request->isMethod('GET') && isset($p['page'])) {
+                $offset = (int) $p['page'];
+                $page   = max(1, intdiv($offset, $perPage) + 1);
+            } else {
+                $page   = max(1, (int) ($p['page'] ?? 1));
+            }
+
+            $filters['p'] = [
+                'per_page' => $perPage,
+                'page'     => $page,
+            ];
+        }
+
+        // Field selection — convierte camelCase a snake_case
+        if (isset($payload['f']) && is_array($payload['f']) && count($payload['f']) > 0) {
+            $filters['f'] = array_values(array_map(fn($f) => Str::snake($f), $payload['f']));
+        }
+
+        // Ordering — column/direction (Formato B) o field/type (Formato A)
+        if (!empty($payload['o'])) {
+            $filters['o'] = [
+                'column'    => Str::snake($payload['o']['column'] ?? $payload['o']['field'] ?? 'id'),
+                'direction' => strtolower($payload['o']['direction'] ?? $payload['o']['type'] ?? 'asc'),
+            ];
+        }
+
+        // Where — asociativo plano o condiciones DevExtreme
+        if (!empty($payload['w'])) {
+            $w = $payload['w'];
+            $filters['w'] = array_is_list($w) ? $this->translateGridFilters($w) : $w;
+        }
+
+        // totalCount
+        if (array_key_exists('totalCount', $payload)) {
+            $filters['totalCount'] = filter_var($payload['totalCount'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $filters;
+    }
+
+    /**
+     * Envoltorio estandar para respuestas de grid con items y totalCount.
+     */
+    protected function gridResponse(string $message, mixed $result, string $resourceClass): JsonResponse
+    {
+        $items = is_array($result) && isset($result['items']) ? $result['items'] : $result;
+        $total = is_array($result) ? ($result['total'] ?? null) : null;
+
+        return ApiResponse::query($message, $resourceClass::collection($items), $total);
+    }
+
     /**
      * @param  array<int, array<string, mixed>> $conditions
      * @return array<int, array<string, mixed>>

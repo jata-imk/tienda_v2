@@ -7,6 +7,7 @@ use App\DTOs\Product\UpdateVariantDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\Concerns\AppliesGridConditions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -16,11 +17,130 @@ use Illuminate\Support\Facades\DB;
  */
 class ProductVariantService
 {
+    use AppliesGridConditions;
+
     public function listByProduct(int $productId): Collection
     {
         return ProductVariant::with(['size', 'color'])
             ->where('id_product', $productId)
             ->get();
+    }
+
+    /**
+     * Consulta paginada o filtrada de las variantes de un producto.
+     *
+     * @param array<string, mixed> $filters
+     * @return array{items: mixed, total: ?int, page?: int, pages?: int}|Collection
+     */
+    public function queryByProduct(int $productId, array $filters = []): array|Collection
+    {
+        $query = ProductVariant::with(['size', 'color'])
+            ->where('id_product', $productId);
+
+        if (!empty($filters['w'])) {
+            if (array_is_list($filters['w'])) {
+                $this->applyConditions($query, $filters['w'], [$this, 'applyVariantCondition']);
+            } else {
+                foreach ($filters['w'] as $column => $value) {
+                    $this->applyVariantCondition($query, [
+                        'column'   => $column,
+                        'operator' => is_array($value) ? 'in' : '=',
+                        'value'    => $value,
+                        'logic'    => 'and',
+                    ], 'and');
+                }
+            }
+        }
+
+        if (!empty($filters['f'])) {
+            $query->select($filters['f']);
+        }
+
+        if (!empty($filters['o'])) {
+            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+        }
+
+        $totalCount = isset($filters['totalCount'])
+            ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
+            : true;
+
+        if (!empty($filters['p'])) {
+            $page    = (int) ($filters['p']['page'] ?? 1);
+            $perPage = (int) ($filters['p']['per_page'] ?? 15);
+            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+
+            return [
+                'items' => $items->items(),
+                'total' => $totalCount ? $items->total() : null,
+                'page'  => $items->currentPage(),
+                'pages' => $items->lastPage(),
+            ];
+        }
+
+        $items = $query->get();
+
+        if ($totalCount) {
+            return ['items' => $items, 'total' => $items->count()];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Resuelve una condicion de variante de producto soportando relaciones y campo virtual `search`.
+     *
+     * @param mixed $query
+     * @param array<string, mixed> $cond
+     */
+    public function applyVariantCondition($query, array $cond, string $boolean): void
+    {
+        $or     = $boolean === 'or';
+        $column = $cond['column'];
+
+        if ($column === 'search') {
+            $value = trim(trim((string) ($cond['value'] ?? ''), '%'));
+            if ($value === '') {
+                return;
+            }
+
+            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
+            $method  = $or ? 'orWhere' : 'where';
+
+            $query->$method(function ($q) use ($likeVal) {
+                $q->where('sku', 'like', $likeVal)
+                  ->orWhere('code_bar', 'like', $likeVal)
+                  ->orWhereHas('size', fn($sq) => $sq->where('name', 'like', $likeVal))
+                  ->orWhereHas('color', fn($cq) => $cq->where('name', 'like', $likeVal));
+            });
+
+            return;
+        }
+
+        if ($column === 'size' || $column === 'size_name') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhereHas' : 'whereHas';
+
+            $query->$method('size', function ($sq) use ($operator, $value) {
+                $sq->where('name', $operator, $value);
+            });
+
+            return;
+        }
+
+        if ($column === 'color' || $column === 'color_name') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhereHas' : 'whereHas';
+
+            $query->$method('color', function ($cq) use ($operator, $value) {
+                $cq->where('name', $operator, $value);
+            });
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
     }
 
     /**

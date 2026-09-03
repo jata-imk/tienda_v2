@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserResource;
 use App\Services\UserService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @group Users
@@ -16,16 +18,36 @@ use Illuminate\Http\JsonResponse;
  */
 class UserController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private UserService $userService) {}
 
     /**
      * List users
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Users retrieved.","data":[]}
+     * Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Users retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return ApiResponse::ok('Users retrieved.', UserResource::collection($this->userService->index()));
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Users retrieved.', $this->userService->index($filters), UserResource::class);
+    }
+
+    /**
+     * Query users (POST)
+     *
+     * Same payload formats as `POST /products/query`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Users retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
+     */
+    public function query(Request $request): JsonResponse
+    {
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Users retrieved.', $this->userService->index($filters), UserResource::class);
     }
 
     /**

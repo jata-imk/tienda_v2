@@ -18,9 +18,7 @@ class SizeService
 
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
-                foreach ($filters['w'] as $cond) {
-                    $this->applyGridCondition($query, $cond);
-                }
+                $this->applyConditions($query, $filters['w'], [$this, 'applySizeCondition']);
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     $query->where($column, $value);
@@ -112,5 +110,48 @@ class SizeService
         $size->update(['status' => 'inactive']);
 
         return true;
+    }
+
+    /**
+     * Resuelve una condicion de talla soportando relaciones y campo virtual `search`.
+     *
+     * @param mixed $query
+     * @param array<string, mixed> $cond
+     */
+    public function applySizeCondition($query, array $cond, string $boolean): void
+    {
+        $or     = $boolean === 'or';
+        $column = $cond['column'];
+
+        if ($column === 'search') {
+            $value = trim(trim((string) ($cond['value'] ?? ''), '%'));
+            if ($value === '') {
+                return;
+            }
+
+            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
+            $method  = $or ? 'orWhere' : 'where';
+
+            $query->$method(function ($q) use ($likeVal) {
+                $q->where('name', 'like', $likeVal)
+                  ->orWhereHas('sizeGroup', fn($sq) => $sq->where('name', 'like', $likeVal));
+            });
+
+            return;
+        }
+
+        if ($column === 'size_group') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhereHas' : 'whereHas';
+
+            $query->$method('sizeGroup', function ($sq) use ($operator, $value) {
+                $sq->where('name', $operator, $value);
+            });
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
     }
 }

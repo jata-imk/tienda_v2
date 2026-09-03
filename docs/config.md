@@ -75,11 +75,12 @@ Actualiza uno o más porcentajes. Solo los campos enviados se modifican.
 
 ## /api/currencies — CRUD completo
 
-Registrado con `Route::apiResource('currencies', ...)` en `routes/api.php:66`.
+Registrado con `Route::post('currencies/query', ...)` y `Route::apiResource('currencies', ...)`.
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| `GET` | `/api/currencies` | Listar |
+| `GET` | `/api/currencies` | Listar (soporta filtros de grid `p`, `f`, `o`, `w`, `totalCount`) |
+| `POST` | `/api/currencies/query` | Consultar monedas (filtros avanzados en body) |
 | `GET` | `/api/currencies/{id}` | Ver uno |
 | `POST` | `/api/currencies` | Crear |
 | `PUT` | `/api/currencies/{id}` | Actualizar |

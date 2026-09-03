@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Currency\CreateCurrencyRequest;
 use App\Http\Requests\Currency\UpdateCurrencyRequest;
 use App\Http\Resources\Currency\CurrencyResource;
 use App\Services\CurrencyService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @group Configuration
@@ -16,16 +18,36 @@ use Illuminate\Http\JsonResponse;
  */
 class CurrencyController extends Controller
 {
+    use TranslatesGridFilters;
+
     public function __construct(private CurrencyService $currencyService) {}
 
     /**
      * List currencies
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Currencies retrieved.","data":[]}
+     * Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Currencies retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return ApiResponse::ok('Currencies retrieved.', CurrencyResource::collection($this->currencyService->index()));
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Currencies retrieved.', $this->currencyService->index($filters), CurrencyResource::class);
+    }
+
+    /**
+     * Query currencies (POST)
+     *
+     * Same payload formats as `POST /products/query`.
+     *
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Currencies retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
+     */
+    public function query(Request $request): JsonResponse
+    {
+        $filters = $this->extractGridFilters($request);
+
+        return $this->gridResponse('Currencies retrieved.', $this->currencyService->index($filters), CurrencyResource::class);
     }
 
     /**

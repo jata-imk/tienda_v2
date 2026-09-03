@@ -7,10 +7,141 @@ use App\Exceptions\InventoryDomainException;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\Concerns\AppliesGridConditions;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class InventoryMovementService
 {
+    use AppliesGridConditions;
+
+    private const MOVEMENT_RELATIONS = ['variant.product', 'variant.size', 'variant.color', 'user'];
+
+    /**
+     * Listado o consulta paginada del historial de movimientos (Kardex).
+     *
+     * @param array<string, mixed> $filters
+     * @return array{items: mixed, total: ?int, page?: int, pages?: int}|Collection
+     */
+    public function index(array $filters = []): array|Collection
+    {
+        $query = InventoryMovement::with(self::MOVEMENT_RELATIONS);
+
+        if (!empty($filters['w'])) {
+            if (array_is_list($filters['w'])) {
+                $this->applyConditions($query, $filters['w'], [$this, 'applyMovementCondition']);
+            } else {
+                foreach ($filters['w'] as $column => $value) {
+                    $this->applyMovementCondition($query, [
+                        'column'   => $column,
+                        'operator' => is_array($value) ? 'in' : '=',
+                        'value'    => $value,
+                        'logic'    => 'and',
+                    ], 'and');
+                }
+            }
+        }
+
+        if (!empty($filters['f'])) {
+            $query->select($filters['f']);
+        }
+
+        if (!empty($filters['o'])) {
+            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+        } else {
+            $query->orderByDesc('id');
+        }
+
+        $totalCount = isset($filters['totalCount'])
+            ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
+            : true;
+
+        if (!empty($filters['p'])) {
+            $page    = (int) ($filters['p']['page'] ?? 1);
+            $perPage = (int) ($filters['p']['per_page'] ?? 15);
+            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+
+            return [
+                'items' => $items->items(),
+                'total' => $totalCount ? $items->total() : null,
+                'page'  => $items->currentPage(),
+                'pages' => $items->lastPage(),
+            ];
+        }
+
+        $items = $query->get();
+
+        if ($totalCount) {
+            return ['items' => $items, 'total' => $items->count()];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Resuelve una condicion de movimiento de inventario soportando relaciones y virtual `search`.
+     *
+     * @param mixed $query
+     * @param array<string, mixed> $cond
+     */
+    public function applyMovementCondition($query, array $cond, string $boolean): void
+    {
+        $or     = $boolean === 'or';
+        $column = $cond['column'];
+
+        if ($column === 'search') {
+            $value = trim(trim((string) ($cond['value'] ?? ''), '%'));
+            if ($value === '') {
+                return;
+            }
+
+            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
+            $method  = $or ? 'orWhere' : 'where';
+
+            $query->$method(function ($q) use ($likeVal) {
+                $q->where('notes', 'like', $likeVal)
+                  ->orWhere('reference_type', 'like', $likeVal)
+                  ->orWhereHas('user', fn($uq) => $uq->where('user_name', 'like', $likeVal))
+                  ->orWhereHas('variant', function ($vq) use ($likeVal) {
+                      $vq->where('sku', 'like', $likeVal)
+                         ->orWhereHas('product', fn($pq) => $pq->where('name', 'like', $likeVal)->orWhere('key', 'like', $likeVal));
+                  });
+            });
+
+            return;
+        }
+
+        if ($column === 'id_product' || $column === 'product') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhereHas' : 'whereHas';
+
+            $query->$method('variant', function ($vq) use ($operator, $value) {
+                if ($operator === 'in' || is_array($value)) {
+                    $vq->whereIn('id_product', (array) $value);
+                } else {
+                    $vq->where('id_product', $operator, $value);
+                }
+            });
+
+            return;
+        }
+
+        if ($column === 'sku') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhereHas' : 'whereHas';
+
+            $query->$method('variant', function ($vq) use ($operator, $value) {
+                $vq->where('sku', $operator, $value);
+            });
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
+    }
+
     /**
      * Tipos de movimiento que incrementan la existencia.
      * Los demas (sale, adjustment) la disminuyen.

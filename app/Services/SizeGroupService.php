@@ -18,9 +18,7 @@ class SizeGroupService
 
         if (!empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
-                foreach ($filters['w'] as $cond) {
-                    $this->applyGridCondition($query, $cond);
-                }
+                $this->applyConditions($query, $filters['w'], [$this, 'applySizeGroupCondition']);
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     $query->where($column, $value);
@@ -106,5 +104,35 @@ class SizeGroupService
         $sizeGroup->update(['status' => 'inactive']);
 
         return true;
+    }
+
+    /**
+     * Resuelve una condicion de grupo de tallas soportando el campo virtual `search`.
+     *
+     * @param mixed $query
+     * @param array<string, mixed> $cond
+     */
+    public function applySizeGroupCondition($query, array $cond, string $boolean): void
+    {
+        $or = $boolean === 'or';
+
+        if ($cond['column'] === 'search') {
+            $value = trim(trim((string) ($cond['value'] ?? ''), '%'));
+            if ($value === '') {
+                return;
+            }
+
+            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
+            $method  = $or ? 'orWhere' : 'where';
+
+            $query->$method(function ($q) use ($likeVal) {
+                $q->where('name', 'like', $likeVal)
+                  ->orWhere('description', 'like', $likeVal);
+            });
+
+            return;
+        }
+
+        $this->applyGridCondition($query, $cond, $boolean);
     }
 }

@@ -10,52 +10,69 @@ CRUD de usuarios. Todos los endpoints requieren:
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| `GET` | `/api/usuarios` | Listar todos |
-| `GET` | `/api/usuarios/{id}` | Ver uno |
-| `POST` | `/api/usuarios` | Crear |
-| `PUT` | `/api/usuarios/{id}` | Actualizar |
-| `DELETE` | `/api/usuarios/{id}` | Desactivar (soft-delete) |
+| `GET` | `/api/users` | Listar usuarios (soporta filtros de grid) |
+| `POST` | `/api/users/query` | Consultar usuarios (filtros avanzados en body) |
+| `GET` | `/api/users/{id}` | Ver uno |
+| `POST` | `/api/users` | Crear usuario |
+| `PUT` | `/api/users/{id}` | Actualizar usuario |
+| `DELETE` | `/api/users/{id}` | Desactivar (status → inactive) |
 
 ---
 
-## GET /api/usuarios
+## GET /api/users y POST /api/users/query
+
+Ambos endpoints soportan paginación (`p`), selección de columnas (`f`), ordenamiento (`o`), filtros (`w`) y conteo (`totalCount`).
+
+En `POST /api/users/query` el body acepta:
+- `p`: `{ "page": 0, "per_page": 15 }` o `{ "r": 0, "s": 15 }`
+- `f`: `["id", "userName", "email", "status"]`
+- `o`: `{ "column": "userName", "direction": "asc" }`
+- `w`: Lista de filtros DevExtreme o asociativo `{ "status": "active" }`
+- `w` soporta el campo virtual `search`: busca sobre nombre, apellidos, usuario, email y rol.
+- `totalCount`: `true` / `false`
 
 ```json
 // Response 200
 {
-  "result": "ok",
-  "message": "Usuarios obtenidos.",
-  "data": [
-    {
-      "id": 1,
-      "nombre": "Suriel",
-      "primerApellido": "Dzul",
-      "segundoApellido": "Dzul",
-      "usuario": "suriel.dzul",
-      "email": "dzulsuriel@gmail.com",
-      "tipoUsuario": "administrador",
-      "status": "activo",
-      "dateCreation": "2024-01-01 00:00:00"
-    }
-  ]
+  "ok": true,
+  "code": 200,
+  "status": "OK",
+  "message": "Users retrieved.",
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "idUserType": 1,
+        "userType": "administrador",
+        "firstName": "Suriel",
+        "lastName": "Dzul",
+        "userName": "suriel.dzul",
+        "email": "dzulsuriel@gmail.com",
+        "status": "active",
+        "createdAt": "2024-01-01 00:00:00",
+        "updatedAt": "2024-01-01 00:00:00"
+      }
+    ],
+    "totalCount": 1,
+    "summary": [1]
+  }
 }
 ```
 
 ---
 
-## POST /api/usuarios
+## POST /api/users
 
 ```json
 // Request
 {
-  "name": "Juan",
-  "first_name": "Pérez",
-  "last_name": "López",
-  "username": "juan.perez",
+  "firstName": "Juan",
+  "lastName": "Pérez López",
+  "userName": "juan.perez",
   "email": "juan@empresa.com",
   "password": "secreto123",
-  "user_type_id": 1,
-  "status": "activo"        // opcional, default: activo
+  "idUserType": 1,
+  "status": "active"        // opcional, default: active
 }
 
 // Response 201

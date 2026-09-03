@@ -517,7 +517,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -680,7 +680,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -861,15 +861,15 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
-  /api/currencies:
-    get:
-      summary: 'List currencies'
-      operationId: listCurrencies
-      description: ''
+  /api/currencies/query:
+    post:
+      summary: 'Query currencies (POST)'
+      operationId: queryCurrenciesPOST
+      description: 'Same payload formats as `POST /products/query`.'
       parameters: []
       responses:
         200:
@@ -883,7 +883,11 @@ paths:
                   code: 200
                   status: OK
                   message: 'Currencies retrieved.'
-                  data: []
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -898,8 +902,73 @@ paths:
                     type: string
                     example: 'Currencies retrieved.'
                   data:
-                    type: array
-                    example: []
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Configuration
+  /api/currencies:
+    get:
+      summary: 'List currencies'
+      operationId: listCurrencies
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Currencies retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Currencies retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Configuration
     post:
@@ -1542,11 +1611,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-09-02T15:15:24'
+                  example: '2026-09-03T09:27:23'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-09-25'
+                  example: '2052-09-26'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1821,7 +1890,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1977,7 +2046,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2776,7 +2845,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3016,7 +3085,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3337,6 +3406,97 @@ paths:
                   type: boolean
                   description: 'Include total count (default true).'
                   example: true
+  '/api/products/{product}/variants/query':
+    post:
+      summary: 'Query product variants (POST)'
+      operationId: queryProductVariantsPOST
+      description: 'Same payload formats as `POST /products/query`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Variants retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Variants retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Product not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Product not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Inventory
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'Product ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   '/api/products/{product}/variants':
     get:
       summary: 'List product variants'
@@ -4436,7 +4596,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4488,7 +4648,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: entry
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -4701,7 +4861,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4816,6 +4976,58 @@ paths:
         schema:
           type: integer
   /api/inventory/movements:
+    get:
+      summary: 'List inventory movements (Kardex)'
+      operationId: listInventoryMovementsKardex
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Inventory movements retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Inventory movements retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
     post:
       summary: 'Register inventory movements'
       operationId: registerInventoryMovements
@@ -5002,11 +5214,64 @@ paths:
                 - idProduct
                 - idUser
                 - movements
-  /api/users:
-    get:
-      summary: 'List users'
-      operationId: listUsers
-      description: ''
+  /api/inventory/movements/query:
+    post:
+      summary: 'Query inventory movements (POST)'
+      operationId: queryInventoryMovementsPOST
+      description: 'Same payload formats as `POST /products/query`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Inventory movements retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Inventory movements retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Inventory
+  /api/users/query:
+    post:
+      summary: 'Query users (POST)'
+      operationId: queryUsersPOST
+      description: 'Same payload formats as `POST /products/query`.'
       parameters: []
       responses:
         200:
@@ -5020,7 +5285,11 @@ paths:
                   code: 200
                   status: OK
                   message: 'Users retrieved.'
-                  data: []
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
                 properties:
                   ok:
                     type: boolean
@@ -5035,8 +5304,73 @@ paths:
                     type: string
                     example: 'Users retrieved.'
                   data:
-                    type: array
-                    example: []
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Users
+  /api/users:
+    get:
+      summary: 'List users'
+      operationId: listUsers
+      description: 'Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Users retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Users retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
       tags:
         - Users
     post:

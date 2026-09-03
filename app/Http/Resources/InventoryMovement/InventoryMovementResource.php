@@ -21,6 +21,13 @@ class InventoryMovementResource extends JsonResource
             'notes'            => $this->notes,
             'idUser'           => $this->id_user,
             'createdAt'        => $this->created_at?->toDateTimeString(),
+            'userName'         => $this->whenLoaded('user', fn() => $this->user?->user_name),
+            'idProduct'        => $this->whenLoaded('variant', fn() => $this->variant?->id_product),
+            'productName'      => $this->whenLoaded('variant', fn() => $this->variant?->product?->name),
+            'productKey'       => $this->whenLoaded('variant', fn() => $this->variant?->product?->key),
+            'sku'              => $this->whenLoaded('variant', fn() => $this->variant?->sku),
+            'size'             => $this->whenLoaded('variant', fn() => $this->variant?->size?->name),
+            'color'            => $this->whenLoaded('variant', fn() => $this->variant?->color?->name),
         ];
     }
 }

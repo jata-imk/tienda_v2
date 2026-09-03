@@ -41,13 +41,9 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $filters = $request->only(['p', 'f', 'o', 'w', 'totalCount']);
-        $result  = $this->productService->index($filters);
+        $filters = $this->extractGridFilters($request);
 
-        $items = is_array($result) && isset($result['items']) ? $result['items'] : $result;
-        $total = is_array($result) ? ($result['total'] ?? null) : null;
-
-        return ApiResponse::query('Products retrieved.', ProductResource::collection($items), $total);
+        return $this->gridResponse('Products retrieved.', $this->productService->index($filters), ProductResource::class);
     }
 
     /**
@@ -68,54 +64,9 @@ class ProductController extends Controller
      */
     public function query(Request $request): JsonResponse
     {
-        $body    = $request->json()->all();
-        $filters = [];
+        $filters = $this->extractGridFilters($request);
 
-        // Pagination — p.page/p.r = row offset (0-indexed); p.per_page/p.s = page size
-        if (!empty($body['p'])) {
-            $p       = $body['p'];
-            $perPage = (int) ($p['per_page'] ?? $p['s'] ?? 15);
-            $offset  = (int) ($p['page'] ?? $p['r'] ?? 0);
-            $filters['p'] = [
-                'per_page' => $perPage > 0 ? $perPage : 15,
-                'page'     => $perPage > 0 ? max(1, intdiv($offset, $perPage) + 1) : 1,
-            ];
-        }
-
-        // Field selection
-        if (isset($body['f']) && is_array($body['f']) && count($body['f']) > 0) {
-            $filters['f'] = array_map(fn($f) => Str::snake($f), $body['f']);
-        }
-
-        // Ordering — supports column/direction (Formato B) or field/type (Formato A)
-        if (!empty($body['o'])) {
-            $filters['o'] = [
-                'column'    => $body['o']['column'] ?? $body['o']['field'] ?? 'id',
-                'direction' => $body['o']['direction'] ?? $body['o']['type'] ?? 'asc',
-            ];
-        }
-
-        // Where — associative object (simple) or array of condition objects (advanced)
-        if (!empty($body['w'])) {
-            $w = $body['w'];
-            if (array_is_list($w)) {
-                $filters['w'] = $this->translateGridFilters($w);
-            } else {
-                $filters['w'] = $w;
-            }
-        }
-
-        // totalCount — default true handled by service
-        if (array_key_exists('totalCount', $body)) {
-            $filters['totalCount'] = $body['totalCount'];
-        }
-
-        $result = $this->productService->index($filters);
-
-        $items = is_array($result) && isset($result['items']) ? $result['items'] : $result;
-        $total = is_array($result) ? ($result['total'] ?? null) : null;
-
-        return ApiResponse::query('Products retrieved.', ProductResource::collection($items), $total);
+        return $this->gridResponse('Products retrieved.', $this->productService->index($filters), ProductResource::class);
     }
 
     /**
