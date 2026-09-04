@@ -61,6 +61,7 @@ git config core.hooksPath .githooks
 | OpenAPI YAML | `public/docs/openapi.yaml` |
 | Auth (interno) | `docs/auth.md` |
 | Roles (interno) | `docs/roles.md` |
+| Entrega backend/frontend | `docs/entrega-roles-seeders-frontend.md` |
 | Base de datos (interno) | `docs/database.md` |
 
 Para regenerar manualmente:
