@@ -16,10 +16,9 @@ class ColorSeeder extends Seeder
         ];
 
         foreach ($colors as $color) {
-            Color::create([
-                'name'      => $color['name'],
+            Color::firstOrCreate(['name' => $color['name']], [
                 'hex_color' => $color['hex_color'],
-                'status'    => 'active',
+                'status' => 'active',
             ]);
         }
     }

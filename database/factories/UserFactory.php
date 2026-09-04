@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use App\Models\UserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,13 +18,15 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user_type' => UserType::first()?->id ?? 1,
-            'first_name'   => fake()->firstName(),
-            'last_name'    => fake()->lastName(),
-            'user_name'    => fake()->unique()->userName(),
-            'email'        => fake()->unique()->safeEmail(),
-            'password'     => static::$password ??= Hash::make('password'),
-            'status'       => 'active',
+            'id_user_type' => UserType::where('code', UserRole::Administrator->value)->first()?->id
+                ?? UserType::first()?->id
+                ?? 1,
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'user_name' => fake()->unique()->userName(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => static::$password ??= Hash::make('password'),
+            'status' => 'active',
         ];
     }
 }

@@ -20,6 +20,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = ['password'];
 
     protected $casts = [
+        'id_user_type' => 'integer',
         'password' => 'hashed',
     ];
 

@@ -1,116 +1,72 @@
-# Autenticación
+# Autenticación y autorización
 
-## Endpoint
+## Login
 
-```
+```http
 POST /api/login
 Content-Type: application/json
 ```
 
-## Request
-
-| Campo | Tipo | Requerido | Descripción |
-|---|---|---|---|
-| `username` | string | sí | Nombre de usuario |
-| `password` | string | sí | Contraseña en texto plano |
-
 ```json
 {
-  "username": "suriel.dzul",
-  "password": "suriel2024"
+  "userName": "admin",
+  "password": "admin"
 }
 ```
 
-
-## Respuesta exitosa (200)
+El usuario y su tipo deben tener `status: active`. La respuesta mantiene `userType`
+como ID por compatibilidad y expone el código estable utilizado por el frontend:
 
 ```json
 {
   "ok": true,
   "code": 200,
   "status": "OK",
-  "message": "Inicio de sesión exitoso",
+  "message": "Login successful",
   "data": {
-    "token": "<JWT válido 24h>",
-    "empresa": {
-      "nombre": "Guayaberas Lopez Silva",
-      "logo": null,
-      "modoOscuro": false,
-      "configImp": [],
-      "fechaUpdate": "2024-01-01 00:00:00",
-      "settings": { "grids": [] }
-    },
+    "token": "<JWT>",
     "user": {
-      "nombre": "Suriel",
-      "primerApellido": "Dzul",
-      "segundoApellido": "Dzul",
-      "usuario": "suriel.dzul",
-      "email": "dzulsuriel@gmail.com",
-      "tipoUsuario": "1",
-      "permisos": []
-    }
+      "id": 1,
+      "firstName": "Administrador",
+      "lastName": "Sistema",
+      "userName": "admin",
+      "email": "admin@tienda.local",
+      "userType": 1,
+      "roleCode": "administrator",
+      "roleName": "Administrador"
+    },
+    "companyInfo": {},
+    "catalogs": {}
   }
 }
 ```
 
-## Respuesta de error (401)
+Un usuario inexistente, contraseña incorrecta, usuario inactivo o tipo de usuario
+inactivo recibe `401`.
 
-```json
-{
-  "ok": false,
-  "code": 401,
-  "status": "Unauthorized",
-  "message": "Contraseña incorrecta",
-  "data": null
-}
+En una instalación productiva sin usuarios, el seeder crea temporalmente
+`admin` / `admin`. No existe bloqueo de primer acceso: debe cambiarse desde el
+módulo Usuarios por una contraseña de al menos 8 caracteres. El cambio revoca
+las sesiones existentes y obliga a iniciar sesión nuevamente.
+
+## JWT y sesiones
+
+- El guard `api` utiliza `php-open-source-saver/jwt-auth`.
+- El JWT expira según `JWT_TTL` y debe existir en `user_sessions`.
+- Cada petición comprueba que la sesión no esté expirada ni revocada.
+- También se comprueba en cada petición el estado actual del usuario y de su rol.
+- Desactivar un usuario, desactivar su rol o cambiarlo de rol revoca sus sesiones.
+- Los claims del JWT no son la fuente de autorización; se consulta la BD.
+
+## Logout
+
+```http
+DELETE /api/logout
+Authorization: Bearer <JWT>
 ```
 
-## Flujo de lógica (`AuthService`)
+Está disponible para cualquier usuario autenticado cuyo usuario y rol estén activos.
 
-```
-1. Buscar usuario por `username` en tabla `usuarios`
-2. Verificar status = 'activo'
-3. Hash::check(pass_input, hash_bcrypt_guardado)
-4. Buscar sesión vigente (status='vigente') del usuario
-   ├── SIN sesión  → crear JWT → guardar en `tokens` → crear `sesiones`
-   └── CON sesión  → ¿token vigente y no expirado?
-         ├── SÍ → reutilizar mismo JWT
-         └── NO → marcar caducado → crear JWT nuevo → nueva sesión
-5. Retornar token + empresa + user
-```
+## Roles
 
-## Contraseña
-
-- Almacenada como hash **bcrypt** (Laravel `Hash::make()`)
-- Nunca se guarda ni transmite en texto plano
-- Verificación: `Hash::check($input, $hash)` — unidireccional, no hay "descifrado"
-- Rondas de bcrypt: `BCRYPT_ROUNDS=12` en `.env`
-
-## JWT
-
-- Paquete: `php-open-source-saver/jwt-auth`
-- Algoritmo: `HS256` (simétrico, firmado con `JWT_SECRET`)
-- Expiración: **24 horas** desde la creación
-- Payload incluye: `sub` (user id), `username`, `user_type`, `iat`, `exp`
-- El JWT se guarda en la tabla `tokens` para tracking de sesiones en BD
-
-## Tablas involucradas
-
-| Tabla | Rol |
-|---|---|
-| `usuarios` | Credenciales y datos del usuario |
-| `tipos_usuario` | Tipo/rol del usuario (ej. administrador) |
-| `tokens` | JWT emitidos con su estado y fecha de expiración |
-| `sesiones` | Relación usuario ↔ token activo |
-| `companies` | Datos de la empresa retornados en el login |
-
-Ver esquema completo en [database.md](database.md).
-
-## Usuario de prueba (seeder)
-
-| Campo | Valor |
-|---|---|
-| username | `suriel.dzul` |
-| password | `suriel2024` |
-| email | dzulsuriel@gmail.com |
-| tipo | administrador |
+Consulta la matriz vigente en [roles.md](roles.md).

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\JwtAuthenticate;
+use App\Http\Middleware\RequireRole;
 use App\Support\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -16,8 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'es.administrador'  => \App\Http\Middleware\EsAdministrador::class,
-            'jwt.authenticate'  => \App\Http\Middleware\JwtAuthenticate::class,
+            'jwt.authenticate' => JwtAuthenticate::class,
+            'role' => RequireRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -23,7 +23,7 @@ class CatalogController extends Controller
      * bundled inside the login response — use this endpoint to refresh the
      * frontend's local cache without requiring a new login.
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Catalogs retrieved.","data":{"currencies":[],"categories":[],"colors":[],"sizeGroups":[],"sizes":[],"userTypes":[],"ivaTypes":[]}}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Catalogs retrieved.","data":{"currencies":[],"categories":[],"colors":[],"sizeGroups":[],"sizes":[],"userTypes":[{"id":1,"name":"Administrador","code":"administrator","status":"active"}],"ivaTypes":[{"id":1,"name":"General"},{"id":2,"name":"Por producto"},{"id":3,"name":"Cuota fija"},{"id":4,"name":"No aplica"}]}}
      */
     public function index(): JsonResponse
     {

@@ -2,7 +2,7 @@
 
 CRUD de usuarios. Todos los endpoints requieren:
 - Header `Authorization: Bearer <JWT>` (obtenido del login)
-- Usuario autenticado con tipo `administrador`
+- Usuario autenticado con código de rol `administrator`
 
 ---
 
@@ -43,11 +43,12 @@ En `POST /api/users/query` el body acepta:
       {
         "id": 1,
         "idUserType": 1,
-        "userType": "administrador",
+        "userType": "Administrador",
+        "roleCode": "administrator",
         "firstName": "Suriel",
         "lastName": "Dzul",
-        "userName": "suriel.dzul",
-        "email": "dzulsuriel@gmail.com",
+        "userName": "admin",
+        "email": "admin@tienda.local",
         "status": "active",
         "createdAt": "2024-01-01 00:00:00",
         "updatedAt": "2024-01-01 00:00:00"
@@ -135,6 +136,6 @@ No elimina el registro — cambia `status` a `inactivo` para conservar historial
 
 ## Middleware de protección
 
-**`auth:api`** — Verifica el JWT con `JWTAuth`. Si el token es inválido o expirado retorna 401.
+**`jwt.authenticate`** — Verifica el JWT, la sesión y que el usuario y su rol estén activos. Si no se cumple retorna 401.
 
-**`es.administrador`** — Verifica que `usuario->tipoUsuario->type_user === 'administrador'`. Retorna 403 si no cumple.
+**`role:administrator`** — Autoriza mediante `user_types.code`, sin depender del nombre visible. Retorna 403 si el rol no cumple.

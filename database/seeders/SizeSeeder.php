@@ -3,32 +3,30 @@
 namespace Database\Seeders;
 
 use App\Models\Size;
+use App\Models\SizeGroup;
 use Illuminate\Database\Seeder;
 
 class SizeSeeder extends Seeder
 {
     public function run(): void
     {
-        // Grupo Adultos (id 1): numericas y por letra.
-        $adults = ['32', '34', '36', '38', '40', '42', '44', '46', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
-        foreach ($adults as $i => $name) {
-            Size::create([
-                'id_size_group' => 1,
-                'name'          => $name,
-                'sort_order'    => ($i + 1) * 10,
-                'status'        => 'active',
-            ]);
-        }
+        $sizesByGroup = [
+            'Adultos' => ['32', '34', '36', '38', '40', '42', '44', '46', 'XS', 'S', 'M', 'L', 'XL', 'XXL'],
+            'Niños' => ['1', '2', '4', '6', '8', '10', '12', '14', '16'],
+        ];
 
-        // Grupo Niños (id 2).
-        $kids = ['1', '2', '4', '6', '8', '10', '12', '14', '16'];
-        foreach ($kids as $i => $name) {
-            Size::create([
-                'id_size_group' => 2,
-                'name'          => $name,
-                'sort_order'    => ($i + 1) * 10,
-                'status'        => 'active',
-            ]);
+        foreach ($sizesByGroup as $groupName => $sizes) {
+            $group = SizeGroup::where('name', $groupName)->firstOrFail();
+
+            foreach ($sizes as $index => $name) {
+                Size::firstOrCreate([
+                    'id_size_group' => $group->id,
+                    'name' => $name,
+                ], [
+                    'sort_order' => ($index + 1) * 10,
+                    'status' => 'active',
+                ]);
+            }
         }
     }
 }

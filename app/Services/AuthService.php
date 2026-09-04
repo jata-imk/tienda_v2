@@ -5,11 +5,11 @@ namespace App\Services;
 use App\DTOs\Auth\LoginDTO;
 use App\Http\Resources\Currency\CurrencyResource;
 use App\Models\CompanyInfo;
-use App\Services\CatalogService;
 use App\Models\User;
 use App\Models\UserSession;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -18,27 +18,27 @@ class AuthService
 
     public function login(LoginDTO $dto): array
     {
-        $user = User::where('user_name', $dto->userName)->first();
+        $user = User::with('userType')->where('user_name', $dto->userName)->first();
 
-        if (!$user || $user->status !== 'active') {
+        if (! $user || $user->status !== 'active' || $user->userType?->status !== 'active') {
             return ['result' => 'error', 'message' => 'User not found or inactive', 'data' => null];
         }
 
-        if (!Hash::check($dto->password, $user->password)) {
+        if (! Hash::check($dto->password, $user->password)) {
             return ['result' => 'error', 'message' => 'Incorrect password', 'data' => null];
         }
 
-        $token   = $this->resolveToken($user);
+        $token = $this->resolveToken($user);
         $company = CompanyInfo::with('currency')->first();
 
         return [
-            'result'  => 'ok',
+            'result' => 'ok',
             'message' => 'Login successful',
-            'data'    => [
-                'token'       => $token,
+            'data' => [
+                'token' => $token,
                 'companyInfo' => $this->formatCompany($company),
-                'user'        => $this->formatUser($user),
-                'catalogs'    => $this->catalogService->all(),
+                'user' => $this->formatUser($user),
+                'catalogs' => $this->catalogService->all(),
             ],
         ];
     }
@@ -49,7 +49,7 @@ class AuthService
             ->whereNull('revoked_at')
             ->first();
 
-        if (!$session) {
+        if (! $session) {
             return false;
         }
 
@@ -57,7 +57,7 @@ class AuthService
 
         try {
             JWTAuth::setToken($tokenHash)->invalidate();
-        } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException) {
+        } catch (JWTException) {
             // Token ya inválido, ignorar
         }
 
@@ -77,7 +77,7 @@ class AuthService
                 JWTAuth::setToken($activeSession->token_hash)->checkOrFail();
 
                 return $activeSession->token_hash;
-            } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException) {
+            } catch (JWTException) {
                 // JWT expiró aunque la sesión BD siga "activa" (datos viejos pre-fix)
                 $activeSession->update(['revoked_at' => Carbon::now()]);
             }
@@ -91,7 +91,7 @@ class AuthService
         $jwtString = JWTAuth::fromUser($user);
 
         UserSession::create([
-            'id_user'    => $user->id,
+            'id_user' => $user->id,
             'token_hash' => $jwtString,
             'expires_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
         ]);
@@ -102,29 +102,31 @@ class AuthService
     private function formatUser(User $user): array
     {
         return [
-            'id'        => $user->id,
+            'id' => $user->id,
             'firstName' => $user->first_name,
-            'lastName'  => $user->last_name,
-            'userName'  => $user->user_name,
-            'email'     => $user->email,
-            'userType'  => $user->id_user_type,
+            'lastName' => $user->last_name,
+            'userName' => $user->user_name,
+            'email' => $user->email,
+            'userType' => $user->id_user_type,
+            'roleCode' => $user->userType->code,
+            'roleName' => $user->userType->name,
         ];
     }
 
     private function formatCompany(?CompanyInfo $company): array
     {
-        if (!$company) {
+        if (! $company) {
             return [];
         }
 
         return [
-            'name'         => $company->name,
-            'logo'         => $company->logo,
+            'name' => $company->name,
+            'logo' => $company->logo,
             // Misma forma que en GET /api/company-info: una sola fuente de verdad.
-            'currency'     => $company->currency ? (new CurrencyResource($company->currency))->resolve() : null,
+            'currency' => $company->currency ? (new CurrencyResource($company->currency))->resolve() : null,
             'gridSettings' => $company->grid_settings ?? [],
-            'status'       => $company->status,
-            'updatedAt'    => $company->updated_at?->toDateTimeString(),
+            'status' => $company->status,
+            'updatedAt' => $company->updated_at?->toDateTimeString(),
         ];
     }
 }

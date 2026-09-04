@@ -20,7 +20,7 @@ class JwtAuthenticate
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            if (!$this->auth->parseToken()->authenticate()) {
+            if (! $this->auth->parseToken()->authenticate()) {
                 return ApiResponse::error('Usuario no encontrado.', 401);
             }
         } catch (TokenBlacklistedException) {
@@ -33,10 +33,10 @@ class JwtAuthenticate
             return ApiResponse::error('No se proporcionó token de autenticación.', 401);
         }
 
-        $token   = $request->bearerToken();
+        $token = $request->bearerToken();
         $session = UserSession::where('token_hash', $token)->first();
 
-        if (!$session) {
+        if (! $session) {
             return ApiResponse::error('Sesión no registrada.', 401);
         }
 
@@ -48,6 +48,19 @@ class JwtAuthenticate
             return ApiResponse::error('Sesión expirada. Inicia sesión nuevamente.', 401);
         }
 
+        $user = $request->user();
+        $user?->loadMissing('userType');
+
+        if (! $user || $user->status !== 'active' || $user->userType?->status !== 'active') {
+            if ($user) {
+                UserSession::where('id_user', $user->id)
+                    ->whereNull('revoked_at')
+                    ->update(['revoked_at' => now()]);
+            }
+
+            return ApiResponse::error('La cuenta o su rol están inactivos. Inicia sesión nuevamente.', 401);
+        }
+
         return $next($request);
     }
 
@@ -55,7 +68,7 @@ class JwtAuthenticate
     {
         try {
             $token = $request->bearerToken();
-            if (!$token) {
+            if (! $token) {
                 return null;
             }
             $parts = explode('.', $token);
@@ -65,7 +78,7 @@ class JwtAuthenticate
             $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
 
             return [
-                'issuedAt'  => isset($payload['iat']) ? date('Y-m-d H:i:s', $payload['iat']) : null,
+                'issuedAt' => isset($payload['iat']) ? date('Y-m-d H:i:s', $payload['iat']) : null,
                 'expiredAt' => isset($payload['exp']) ? date('Y-m-d H:i:s', $payload['exp']) : null,
             ];
         } catch (\Throwable) {

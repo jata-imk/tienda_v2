@@ -25,12 +25,22 @@ php artisan key:generate
 php artisan jwt:secret
 ```
 
-Edita `.env` con tus credenciales de base de datos, luego:
+Edita `.env` con tus credenciales de base de datos. En desarrollo:
 
 ```bash
-php artisan migrate --seed
+php artisan migrate:fresh --seed
 php artisan serve
 ```
+
+En producción, con `APP_ENV=production`, usa:
+
+```bash
+php artisan migrate --seed --force
+```
+
+`DatabaseSeeder` selecciona el dataset por entorno. Producción recibe únicamente
+el baseline operativo; desarrollo añade datos demo. La cuenta inicial de una BD
+sin usuarios es `admin` / `admin` y su contraseña debe cambiarse inmediatamente.
 
 La API queda disponible en `http://localhost:8000`.
 
@@ -50,6 +60,7 @@ git config core.hooksPath .githooks
 | Postman collection | `public/docs/collection.json` |
 | OpenAPI YAML | `public/docs/openapi.yaml` |
 | Auth (interno) | `docs/auth.md` |
+| Roles (interno) | `docs/roles.md` |
 | Base de datos (interno) | `docs/database.md` |
 
 Para regenerar manualmente:
@@ -60,12 +71,16 @@ php artisan scribe:generate
 
 ## Módulos
 
-- **Auth** — Login con JWT, gestión de sesiones y tokens (`POST /api/login`)
+- **Auth** — Login/logout con JWT, gestión de sesiones y tokens
+- **Roles** — Administrador, Vendedor y Almacén con control de acceso por middleware
+- **Inventario** — Catálogos, productos, variantes y movimientos
+- **Configuración** — Empresa y monedas
 
 ## Endpoints
 
 ```
 POST /api/login
+DELETE /api/logout
 ```
 
 Ver documentación completa en `docs/auth.md` o en la UI de docs.

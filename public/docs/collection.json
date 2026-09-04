@@ -10,8 +10,8 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "309d5d39-7fbb-4b5c-b962-2276898b8f5b",
-        "description": "Backend API del sistema de ventas Tienda. M\u00f3dulo de autenticaci\u00f3n y gesti\u00f3n de sesiones.",
+        "_postman_id": "8c377d7b-f237-4a66-9ce0-cd71ecdd9b2b",
+        "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
@@ -41,7 +41,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"userName\":\"suriel.dzul\",\"password\":\"suriel2024\"}"
+                            "raw": "{\"userName\":\"admin\",\"password\":\"admin\"}"
                         },
                         "description": "Validates credentials, manages session, returns a JWT valid for 24 hours.\nIf the user already has an active session, the same JWT is reused.",
                         "auth": {
@@ -52,7 +52,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Login successful\",\"data\":{\"token\":\"eyJ...\",\"companyInfo\":{},\"user\":{},\"catalogs\":{\"currencies\":[],\"categories\":[],\"colors\":[],\"sizeGroups\":[],\"sizes\":[],\"userTypes\":[],\"ivaTypes\":[]}}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Login successful\",\"data\":{\"token\":\"eyJ...\",\"companyInfo\":{},\"user\":{\"id\":1,\"firstName\":\"Administrador\",\"lastName\":\"Sistema\",\"userName\":\"admin\",\"email\":\"admin@tienda.local\",\"userType\":1,\"roleCode\":\"administrator\",\"roleName\":\"Administrador\"},\"catalogs\":{\"currencies\":[],\"categories\":[],\"colors\":[],\"sizeGroups\":[],\"sizes\":[],\"userTypes\":[{\"id\":1,\"name\":\"Administrador\",\"code\":\"administrator\",\"status\":\"active\"}],\"ivaTypes\":[{\"id\":1,\"name\":\"General\"},{\"id\":2,\"name\":\"Por producto\"},{\"id\":3,\"name\":\"Cuota fija\"},{\"id\":4,\"name\":\"No aplica\"}]}}}",
                             "name": ""
                         },
                         {
@@ -140,7 +140,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Catalogs retrieved.\",\"data\":{\"currencies\":[],\"categories\":[],\"colors\":[],\"sizeGroups\":[],\"sizes\":[],\"userTypes\":[],\"ivaTypes\":[]}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Catalogs retrieved.\",\"data\":{\"currencies\":[],\"categories\":[],\"colors\":[],\"sizeGroups\":[],\"sizes\":[],\"userTypes\":[{\"id\":1,\"name\":\"Administrador\",\"code\":\"administrator\",\"status\":\"active\"}],\"ivaTypes\":[{\"id\":1,\"name\":\"General\"},{\"id\":2,\"name\":\"Por producto\"},{\"id\":3,\"name\":\"Cuota fija\"},{\"id\":4,\"name\":\"No aplica\"}]}}",
                             "name": ""
                         }
                     ]
@@ -211,7 +211,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -487,7 +487,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-09-03T09:27:23\",\"dateTo\":\"2052-09-26\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-09-04T13:24:54\",\"dateTo\":\"2052-09-27\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -803,7 +803,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -892,7 +892,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1132,7 +1132,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1283,7 +1283,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1372,7 +1372,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1523,7 +1523,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1612,7 +1612,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2347,7 +2347,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"adjustment\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"inactive\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"cancel\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": ""
                     },
@@ -2436,7 +2436,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":2,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

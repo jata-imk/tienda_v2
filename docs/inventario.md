@@ -431,7 +431,7 @@ Respuesta estándar (`ApiResponse::query`):
         "notes": "Ajuste por conteo físico",
         "idUser": 1,
         "createdAt": "2026-08-12 21:45:00",
-        "userName": "suriel.dzul",
+        "userName": "admin",
         "idProduct": 25,
         "productName": "Camisa lino caballero",
         "productKey": "CAM-001",

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserRole;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
@@ -18,55 +19,58 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['jwt.authenticate', 'es.administrador'])->group(function () {
+Route::middleware('jwt.authenticate')->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
 
-    // Catalogs
-    Route::get('catalogs', [CatalogController::class, 'index']);
+    Route::middleware('role:'.implode(',', UserRole::values()))->group(function () {
+        // Shared catalogs and inventory
+        Route::get('catalogs', [CatalogController::class, 'index']);
 
-    // Dashboard
-    Route::post('dashboard/query', [DashboardController::class, 'query']);
-    Route::get('dashboard', [DashboardController::class, 'index']);
+        Route::post('categories/query', [CategoryController::class, 'query']);
+        Route::apiResource('categories', CategoryController::class);
 
-    // Users
-    Route::post('users/query', [UserController::class, 'query']);
-    Route::apiResource('users', UserController::class);
+        Route::post('size-groups/query', [SizeGroupController::class, 'query']);
+        Route::apiResource('size-groups', SizeGroupController::class);
 
-    // Inventory
-    Route::post('categories/query', [CategoryController::class, 'query']);
-    Route::apiResource('categories', CategoryController::class);
+        Route::post('sizes/query', [SizeController::class, 'query']);
+        Route::apiResource('sizes', SizeController::class);
 
-    Route::post('size-groups/query', [SizeGroupController::class, 'query']);
-    Route::apiResource('size-groups', SizeGroupController::class);
+        Route::post('colors/query', [ColorController::class, 'query']);
+        Route::apiResource('colors', ColorController::class);
 
-    Route::post('sizes/query', [SizeController::class, 'query']);
-    Route::apiResource('sizes', SizeController::class);
+        Route::post('products/query', [ProductController::class, 'query']);
+        Route::post('products/{product}/variants/query', [ProductVariantController::class, 'query']);
+        Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
+        Route::post('products/{product}/variants', [ProductVariantController::class, 'store']);
+        Route::put('products/{product}/variants/{variant}', [ProductVariantController::class, 'update']);
+        Route::delete('products/{product}/variants/{variant}', [ProductVariantController::class, 'destroy']);
+        Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
+        Route::delete('products/{product}/image', [ProductController::class, 'deleteImage']);
+        Route::get('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'index']);
+        Route::post('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'store']);
+        Route::delete('products/{product}/colors/{color}/images/{image}', [ProductColorImageController::class, 'destroy']);
+        Route::apiResource('products', ProductController::class);
 
-    Route::post('colors/query', [ColorController::class, 'query']);
-    Route::apiResource('colors', ColorController::class);
+        Route::get('inventory/movements', [InventoryMovementController::class, 'index']);
+        Route::post('inventory/movements/query', [InventoryMovementController::class, 'query']);
+        Route::post('inventory/movements', [InventoryMovementController::class, 'store']);
+    });
 
-    Route::post('products/query', [ProductController::class, 'query']);
-    Route::post('products/{product}/variants/query', [ProductVariantController::class, 'query']);
-    Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
-    Route::post('products/{product}/variants', [ProductVariantController::class, 'store']);
-    Route::put('products/{product}/variants/{variant}', [ProductVariantController::class, 'update']);
-    Route::delete('products/{product}/variants/{variant}', [ProductVariantController::class, 'destroy']);
-    Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
-    Route::delete('products/{product}/image', [ProductController::class, 'deleteImage']);
-    Route::get('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'index']);
-    Route::post('products/{product}/colors/{color}/images', [ProductColorImageController::class, 'store']);
-    Route::delete('products/{product}/colors/{color}/images/{image}', [ProductColorImageController::class, 'destroy']);
-    Route::apiResource('products', ProductController::class);
+    Route::middleware('role:'.UserRole::Administrator->value)->group(function () {
+        // Dashboard
+        Route::post('dashboard/query', [DashboardController::class, 'query']);
+        Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::get('inventory/movements', [InventoryMovementController::class, 'index']);
-    Route::post('inventory/movements/query', [InventoryMovementController::class, 'query']);
-    Route::post('inventory/movements', [InventoryMovementController::class, 'store']);
+        // Users
+        Route::post('users/query', [UserController::class, 'query']);
+        Route::apiResource('users', UserController::class);
 
-    // Configuration
-    Route::get('company-info', [CompanyInfoController::class, 'show']);
-    Route::post('company-info', [CompanyInfoController::class, 'store']);
-    Route::put('company-info', [CompanyInfoController::class, 'update']);
-    Route::patch('company-info', [CompanyInfoController::class, 'patch']);
-    Route::post('currencies/query', [CurrencyController::class, 'query']);
-    Route::apiResource('currencies', CurrencyController::class);
+        // Configuration
+        Route::get('company-info', [CompanyInfoController::class, 'show']);
+        Route::post('company-info', [CompanyInfoController::class, 'store']);
+        Route::put('company-info', [CompanyInfoController::class, 'update']);
+        Route::patch('company-info', [CompanyInfoController::class, 'patch']);
+        Route::post('currencies/query', [CurrencyController::class, 'query']);
+        Route::apiResource('currencies', CurrencyController::class);
+    });
 });

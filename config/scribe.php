@@ -14,7 +14,7 @@ return [
     'title' => config('app.name').' API Documentation',
 
     // A short description of your API. Will be included in the docs webpage, Postman collection and OpenAPI spec.
-    'description' => 'Backend API del sistema de ventas Tienda. Módulo de autenticación y gestión de sesiones.',
+    'description' => 'Backend API del sistema de ventas Tienda. Autenticación JWT y acceso para Administrador, Vendedor y Almacén.',
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<'INTRO'

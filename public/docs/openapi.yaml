@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: 'TiendaBackend API Documentation'
-  description: 'Backend API del sistema de ventas Tienda. Módulo de autenticación y gestión de sesiones.'
+  description: 'Backend API del sistema de ventas Tienda. Autenticación JWT y acceso para Administrador, Vendedor y Almacén.'
   version: 1.0.0
 servers:
   -
@@ -56,15 +56,40 @@ paths:
                   data:
                     token: eyJ...
                     companyInfo: {  }
-                    user: {  }
+                    user:
+                      id: 1
+                      firstName: Administrador
+                      lastName: Sistema
+                      userName: admin
+                      email: admin@tienda.local
+                      userType: 1
+                      roleCode: administrator
+                      roleName: Administrador
                     catalogs:
                       currencies: []
                       categories: []
                       colors: []
                       sizeGroups: []
                       sizes: []
-                      userTypes: []
-                      ivaTypes: []
+                      userTypes:
+                        -
+                          id: 1
+                          name: Administrador
+                          code: administrator
+                          status: active
+                      ivaTypes:
+                        -
+                          id: 1
+                          name: General
+                        -
+                          id: 2
+                          name: 'Por producto'
+                        -
+                          id: 3
+                          name: 'Cuota fija'
+                        -
+                          id: 4
+                          name: 'No aplica'
                 properties:
                   ok:
                     type: boolean
@@ -89,7 +114,31 @@ paths:
                         properties: {  }
                       user:
                         type: object
-                        properties: {  }
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          firstName:
+                            type: string
+                            example: Administrador
+                          lastName:
+                            type: string
+                            example: Sistema
+                          userName:
+                            type: string
+                            example: admin
+                          email:
+                            type: string
+                            example: admin@tienda.local
+                          userType:
+                            type: integer
+                            example: 1
+                          roleCode:
+                            type: string
+                            example: administrator
+                          roleName:
+                            type: string
+                            example: Administrador
                       catalogs:
                         type: object
                         properties:
@@ -110,10 +159,51 @@ paths:
                             example: []
                           userTypes:
                             type: array
-                            example: []
+                            example:
+                              -
+                                id: 1
+                                name: Administrador
+                                code: administrator
+                                status: active
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: Administrador
+                                code:
+                                  type: string
+                                  example: administrator
+                                status:
+                                  type: string
+                                  example: active
                           ivaTypes:
                             type: array
-                            example: []
+                            example:
+                              -
+                                id: 1
+                                name: General
+                              -
+                                id: 2
+                                name: 'Por producto'
+                              -
+                                id: 3
+                                name: 'Cuota fija'
+                              -
+                                id: 4
+                                name: 'No aplica'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: General
         401:
           description: ''
           content:
@@ -171,11 +261,11 @@ paths:
                 userName:
                   type: string
                   description: Username.
-                  example: suriel.dzul
+                  example: admin
                 password:
                   type: string
                   description: Password.
-                  example: suriel2024
+                  example: admin
               required:
                 - userName
                 - password
@@ -271,8 +361,25 @@ paths:
                     colors: []
                     sizeGroups: []
                     sizes: []
-                    userTypes: []
-                    ivaTypes: []
+                    userTypes:
+                      -
+                        id: 1
+                        name: Administrador
+                        code: administrator
+                        status: active
+                    ivaTypes:
+                      -
+                        id: 1
+                        name: General
+                      -
+                        id: 2
+                        name: 'Por producto'
+                      -
+                        id: 3
+                        name: 'Cuota fija'
+                      -
+                        id: 4
+                        name: 'No aplica'
                 properties:
                   ok:
                     type: boolean
@@ -306,10 +413,51 @@ paths:
                         example: []
                       userTypes:
                         type: array
-                        example: []
+                        example:
+                          -
+                            id: 1
+                            name: Administrador
+                            code: administrator
+                            status: active
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: Administrador
+                            code:
+                              type: string
+                              example: administrator
+                            status:
+                              type: string
+                              example: active
                       ivaTypes:
                         type: array
-                        example: []
+                        example:
+                          -
+                            id: 1
+                            name: General
+                          -
+                            id: 2
+                            name: 'Por producto'
+                          -
+                            id: 3
+                            name: 'Cuota fija'
+                          -
+                            id: 4
+                            name: 'No aplica'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: General
       tags:
         - Catalogs
   /api/company-info:
@@ -535,7 +683,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -861,7 +1009,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1198,7 +1346,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1611,11 +1759,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-09-03T09:27:23'
+                  example: '2026-09-04T13:24:54'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-09-26'
+                  example: '2052-09-27'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -1890,7 +2038,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2046,7 +2194,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2442,7 +2590,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2685,7 +2833,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2845,7 +2993,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3085,7 +3233,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3241,7 +3389,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4566,7 +4714,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4631,7 +4779,7 @@ paths:
                       status:
                         type: string
                         description: ''
-                        example: inactive
+                        example: active
                         enum:
                           - active
                           - inactive
@@ -4648,7 +4796,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: adjustment
+                      example: cancel
                       enum:
                         - entry
                         - sale
@@ -4869,7 +5017,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -4896,7 +5044,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

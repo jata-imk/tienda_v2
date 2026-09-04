@@ -5,22 +5,23 @@ Motor: **MariaDB**. Configurar en `.env` con `DB_CONNECTION=mysql`.
 ## Diagrama de relaciones
 
 ```
-tipos_usuario (1) ──< usuarios (N)
-tokens        (1) ──< sesiones (N) >── (1) usuarios
-companies           (independiente — datos de la empresa)
+user_types (1) ──< users (N) ──< user_sessions (N)
+company_info       (independiente — datos de la empresa)
 ```
 
 ## Tablas
 
-### `tipos_usuario`
+### `user_types`
 Catálogo de roles de usuario.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
 | `id` | bigint PK | Auto-incremental |
-| `type_user` | varchar | Nombre del tipo (ej. "administrador") |
-| `status` | enum | `activo` / `inactivo` |
-| `date_creation` | timestamp | Fecha de creación (default: now) |
+| `name` | varchar | Etiqueta visible del rol |
+| `code` | varchar unique | Código estable usado para autorización |
+| `status` | enum | `active` / `inactive` |
+| `created_at` | timestamp | Fecha de creación |
+| `updated_at` | timestamp nullable | Fecha de actualización |
 
 ### `companies`
 Datos de la empresa. Se retorna en cada login.
@@ -88,15 +89,29 @@ Relación activa entre un usuario y su token JWT.
 
 ## Seeders
 
-| Seeder | Datos |
-|---|---|
-| `UserTypeSeeder` | tipo id=1 "administrador" activo |
-| `CompanySeeder` | empresa "Guayaberas Lopez Silva" |
-| `UserSeeder` | usuario `suriel.dzul` / pass `suriel2024` |
+Las migraciones crean y transforman estructura, pero no insertan el baseline
+operativo. `DatabaseSeeder` selecciona uno de estos orquestadores según `APP_ENV`:
 
-Correr con:
+| Seeder | Entorno | Datos |
+|---|---|---|
+| `ProductionSeeder` | `production` | Roles, MXN/USD, empresa, grupos, tallas y primer `admin` si no hay usuarios |
+| `DevelopmentSeeder` | Otros | Todo producción más categorías, colores, productos e inventario demo |
+
+Los seeders de catálogos son idempotentes: una segunda ejecución no duplica ni
+restablece configuración existente. `DevelopmentSeeder` rechaza su ejecución en
+producción aunque se invoque directamente.
+
+Producción:
+
 ```bash
-php artisan migrate --seed
-# o para resetear todo:
+php artisan migrate --seed --force
+```
+
+Desarrollo:
+
+```bash
 php artisan migrate:fresh --seed
 ```
+
+En una BD productiva sin usuarios se crea `admin` / `admin`. Debe cambiarse de
+inmediato desde Usuarios; la nueva contraseña debe tener al menos 8 caracteres.

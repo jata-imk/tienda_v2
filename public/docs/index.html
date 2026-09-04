@@ -309,7 +309,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: September 3, 2026</li>
+        <li>Last updated: September 4, 2026</li>
     </ul>
 </div>
 
@@ -317,7 +317,7 @@
     <div class="dark-box"></div>
     <div class="content">
         <h1 id="introduction">Introduction</h1>
-<p>Backend API del sistema de ventas Tienda. Módulo de autenticación y gestión de sesiones.</p>
+<p>Backend API del sistema de ventas Tienda. Autenticación JWT y acceso para Administrador, Vendedor y Almacén.</p>
 <aside>
     <strong>Base URL</strong>: <code>http://127.0.0.1:8000</code>
 </aside>
@@ -353,8 +353,8 @@ If the user already has an active session, the same JWT is reused.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"userName\": \"suriel.dzul\",
-    \"password\": \"suriel2024\"
+    \"userName\": \"admin\",
+    \"password\": \"admin\"
 }"
 </code></pre></div>
 
@@ -370,8 +370,8 @@ const headers = {
 };
 
 let body = {
-    "userName": "suriel.dzul",
-    "password": "suriel2024"
+    "userName": "admin",
+    "password": "admin"
 };
 
 fetch(url, {
@@ -396,15 +396,48 @@ fetch(url, {
     &quot;data&quot;: {
         &quot;token&quot;: &quot;eyJ...&quot;,
         &quot;companyInfo&quot;: {},
-        &quot;user&quot;: {},
+        &quot;user&quot;: {
+            &quot;id&quot;: 1,
+            &quot;firstName&quot;: &quot;Administrador&quot;,
+            &quot;lastName&quot;: &quot;Sistema&quot;,
+            &quot;userName&quot;: &quot;admin&quot;,
+            &quot;email&quot;: &quot;admin@tienda.local&quot;,
+            &quot;userType&quot;: 1,
+            &quot;roleCode&quot;: &quot;administrator&quot;,
+            &quot;roleName&quot;: &quot;Administrador&quot;
+        },
         &quot;catalogs&quot;: {
             &quot;currencies&quot;: [],
             &quot;categories&quot;: [],
             &quot;colors&quot;: [],
             &quot;sizeGroups&quot;: [],
             &quot;sizes&quot;: [],
-            &quot;userTypes&quot;: [],
-            &quot;ivaTypes&quot;: []
+            &quot;userTypes&quot;: [
+                {
+                    &quot;id&quot;: 1,
+                    &quot;name&quot;: &quot;Administrador&quot;,
+                    &quot;code&quot;: &quot;administrator&quot;,
+                    &quot;status&quot;: &quot;active&quot;
+                }
+            ],
+            &quot;ivaTypes&quot;: [
+                {
+                    &quot;id&quot;: 1,
+                    &quot;name&quot;: &quot;General&quot;
+                },
+                {
+                    &quot;id&quot;: 2,
+                    &quot;name&quot;: &quot;Por producto&quot;
+                },
+                {
+                    &quot;id&quot;: 3,
+                    &quot;name&quot;: &quot;Cuota fija&quot;
+                },
+                {
+                    &quot;id&quot;: 4,
+                    &quot;name&quot;: &quot;No aplica&quot;
+                }
+            ]
         }
     }
 }</code>
@@ -512,10 +545,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="userName"                data-endpoint="POSTapi-login"
-               value="suriel.dzul"
+               value="admin"
                data-component="body">
     <br>
-<p>Username. Example: <code>suriel.dzul</code></p>
+<p>Username. Example: <code>admin</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
@@ -524,10 +557,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="password"                data-endpoint="POSTapi-login"
-               value="suriel2024"
+               value="admin"
                data-component="body">
     <br>
-<p>Password. Example: <code>suriel2024</code></p>
+<p>Password. Example: <code>admin</code></p>
         </div>
         </form>
 
@@ -746,8 +779,32 @@ fetch(url, {
         &quot;colors&quot;: [],
         &quot;sizeGroups&quot;: [],
         &quot;sizes&quot;: [],
-        &quot;userTypes&quot;: [],
-        &quot;ivaTypes&quot;: []
+        &quot;userTypes&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;name&quot;: &quot;Administrador&quot;,
+                &quot;code&quot;: &quot;administrator&quot;,
+                &quot;status&quot;: &quot;active&quot;
+            }
+        ],
+        &quot;ivaTypes&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;name&quot;: &quot;General&quot;
+            },
+            {
+                &quot;id&quot;: 2,
+                &quot;name&quot;: &quot;Por producto&quot;
+            },
+            {
+                &quot;id&quot;: 3,
+                &quot;name&quot;: &quot;Cuota fija&quot;
+            },
+            {
+                &quot;id&quot;: 4,
+                &quot;name&quot;: &quot;No aplica&quot;
+            }
+        ]
     }
 }</code>
  </pre>
@@ -1029,7 +1086,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1062,7 +1119,7 @@ let body = {
     "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -1406,10 +1463,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-company-info"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1871,7 +1928,7 @@ Must be one of:
     \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1904,7 +1961,7 @@ let body = {
     "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -2248,10 +2305,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-company-info"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2953,7 +3010,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
     \"exchangeRate\": 0,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -2974,7 +3031,7 @@ let body = {
     "code": "ngzmiy",
     "symbol": "vdljni",
     "exchangeRate": 0,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -3169,10 +3226,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3612,8 +3669,8 @@ alerts omit zero-stock variants that have never had inventory movements.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-09-03T09:27:23\",
-    \"dateTo\": \"2052-09-26\",
+    \"dateFrom\": \"2026-09-04T13:24:54\",
+    \"dateTo\": \"2052-09-27\",
     \"lowStockThreshold\": 39
 }"
 </code></pre></div>
@@ -3641,8 +3698,8 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-09-03T09:27:23",
-    "dateTo": "2052-09-26",
+    "dateFrom": "2026-09-04T13:24:54",
+    "dateTo": "2052-09-27",
     "lowStockThreshold": 39
 };
 
@@ -3843,10 +3900,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-09-03T09:27:23"
+               value="2026-09-04T13:24:54"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-09-03T09:27:23</code></p>
+<p>Must be a valid date. Example: <code>2026-09-04T13:24:54</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -3855,10 +3912,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-dashboard"
-               value="2052-09-26"
+               value="2052-09-27"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-09-26</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-09-27</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>lowStockThreshold</code></b>&nbsp;&nbsp;
@@ -4394,7 +4451,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -4413,7 +4470,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -4554,10 +4611,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-categories"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4749,7 +4806,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -4768,7 +4825,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -4939,10 +4996,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5779,7 +5836,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -5798,7 +5855,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -5969,10 +6026,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-size-groups--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -6456,7 +6513,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -6476,7 +6533,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -6629,10 +6686,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-sizes"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -6825,7 +6882,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -6845,7 +6902,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -7028,10 +7085,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-sizes--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7513,7 +7570,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -7532,7 +7589,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -7673,10 +7730,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-colors"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7868,7 +7925,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -7887,7 +7944,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -8058,10 +8115,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-colors--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -9608,7 +9665,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php4659.tmp" </code></pre></div>
+    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php1F0C.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9780,7 +9837,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php4659.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php1F0C.tmp</code></p>
         </div>
         </form>
 
@@ -10163,7 +10220,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php468B.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php1F2E.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -10821,7 +10878,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"discount\": 19,
     \"typeIva\": 1,
     \"rateIva\": 17,
@@ -10830,7 +10887,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"impEsp\": 14,
     \"status\": \"active\",
     \"initialMovement\": {
-        \"movementType\": \"adjustment\",
+        \"movementType\": \"cancel\",
         \"referenceType\": \"w\",
         \"referenceId\": 16,
         \"notes\": \"architecto\",
@@ -10843,7 +10900,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             \"sku\": \"n\",
             \"codeBar\": \"g\",
             \"stock\": 12,
-            \"status\": \"inactive\"
+            \"status\": \"active\"
         }
     ]
 }"
@@ -10873,7 +10930,7 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": true,
+    "stockControl": false,
     "discount": 19,
     "typeIva": 1,
     "rateIva": 17,
@@ -10882,7 +10939,7 @@ let body = {
     "impEsp": 14,
     "status": "active",
     "initialMovement": {
-        "movementType": "adjustment",
+        "movementType": "cancel",
         "referenceType": "w",
         "referenceId": 16,
         "notes": "architecto",
@@ -10895,7 +10952,7 @@ let body = {
             "sku": "n",
             "codeBar": "g",
             "stock": 12,
-            "status": "inactive"
+            "status": "active"
         }
     ]
 };
@@ -11125,7 +11182,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -11290,10 +11347,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="variants.0.status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
                     </div>
@@ -11316,10 +11373,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="initialMovement.movementType"                data-endpoint="POSTapi-products"
-               value="adjustment"
+               value="cancel"
                data-component="body">
     <br>
-<p>This field is required when <code>initialMovement</code> is present. Example: <code>adjustment</code></p>
+<p>This field is required when <code>initialMovement</code> is present. Example: <code>cancel</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>sale</code></li> <li><code>adjustment</code></li> <li><code>return</code></li> <li><code>cancel</code></li></ul>
                     </div>
@@ -11571,12 +11628,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"cost\": 37,
     \"stockControl\": false,
     \"discount\": 19,
-    \"typeIva\": 2,
+    \"typeIva\": 1,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -11605,12 +11662,12 @@ let body = {
     "cost": 37,
     "stockControl": false,
     "discount": 19,
-    "typeIva": 2,
+    "typeIva": 1,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -11889,10 +11946,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="2"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>2</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -11951,10 +12008,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>

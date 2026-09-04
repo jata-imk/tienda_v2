@@ -9,16 +9,14 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        Category::create([
-            'name'        => 'Camisas lino',
+        Category::firstOrCreate(['name' => 'Camisas lino'], [
             'description' => 'Camisas de todos tipos de lino',
-            'status'      => 'active',
+            'status' => 'active',
         ]);
 
-        Category::create([
-            'name'        => 'Caballero',
+        Category::firstOrCreate(['name' => 'Caballero'], [
             'description' => 'Prendas para caballero',
-            'status'      => 'active',
+            'status' => 'active',
         ]);
     }
 }

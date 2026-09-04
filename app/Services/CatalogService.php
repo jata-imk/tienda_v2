@@ -28,26 +28,25 @@ class CatalogService
         return [
             'currencies' => CurrencyResource::collection(Currency::orderBy('name')->get()),
             'categories' => CategoryResource::collection(Category::orderBy('name')->get()),
-            'colors'     => ColorResource::collection(Color::orderBy('name')->get()),
+            'colors' => ColorResource::collection(Color::orderBy('name')->get()),
             'sizeGroups' => SizeGroupResource::collection(SizeGroup::orderBy('name')->get()),
-            'sizes'      => SizeResource::collection(Size::orderBy('sort_order')->get()),
-            'userTypes'  => UserTypeResource::collection(UserType::orderBy('name')->get()),
-            'ivaTypes'   => $this->ivaTypes(),
+            'sizes' => SizeResource::collection(Size::orderBy('sort_order')->get()),
+            'userTypes' => UserTypeResource::collection(UserType::orderBy('name')->get()),
+            'ivaTypes' => $this->ivaTypes(),
         ];
     }
 
     /**
-     * IVA types are a fixed enum (1-4), validated in CreateProductRequest
-     * (`typeIva` => 'in:1,2,3,4') — there is no cat_tax... table backing it.
-     * TODO: replace these placeholder names with the real labels once provided.
+     * IVA types are a fixed enum (1-4), validated in CreateProductRequest.
+     * There is no database table backing it.
      */
     private function ivaTypes(): array
     {
         return [
-            ['id' => 1, 'name' => 'Tipo IVA 1'],
-            ['id' => 2, 'name' => 'Tipo IVA 2'],
-            ['id' => 3, 'name' => 'Tipo IVA 3'],
-            ['id' => 4, 'name' => 'Tipo IVA 4'],
+            ['id' => 1, 'name' => 'General'],
+            ['id' => 2, 'name' => 'Por producto'],
+            ['id' => 3, 'name' => 'Cuota fija'],
+            ['id' => 4, 'name' => 'No aplica'],
         ];
     }
 }

@@ -9,16 +9,14 @@ class SizeGroupSeeder extends Seeder
 {
     public function run(): void
     {
-        SizeGroup::create([
-            'name'        => 'Adultos',
+        SizeGroup::firstOrCreate(['name' => 'Adultos'], [
             'description' => 'Tallas de adulto: 32 a 46 y letras',
-            'status'      => 'active',
+            'status' => 'active',
         ]);
 
-        SizeGroup::create([
-            'name'        => 'Niños',
+        SizeGroup::firstOrCreate(['name' => 'Niños'], [
             'description' => 'Tallas infantiles: 1 a 16',
-            'status'      => 'active',
+            'status' => 'active',
         ]);
     }
 }

@@ -10,20 +10,18 @@ class CurrencySeeder extends Seeder
     public function run(): void
     {
         // Moneda base: su tipo de cambio siempre es 1.
-        Currency::create([
-            'name'          => 'Pesos Mexicanos',
-            'code'          => 'MXN',
-            'symbol'        => '$',
+        Currency::firstOrCreate(['code' => 'MXN'], [
+            'name' => 'Pesos Mexicanos',
+            'symbol' => '$',
             'exchange_rate' => 1,
-            'status'        => 'active',
+            'status' => 'active',
         ]);
 
-        Currency::create([
-            'name'          => 'Dólar Estadounidense',
-            'code'          => 'USD',
-            'symbol'        => '$',
+        Currency::firstOrCreate(['code' => 'USD'], [
+            'name' => 'Dólar Estadounidense',
+            'symbol' => '$',
             'exchange_rate' => 17.25,
-            'status'        => 'active',
+            'status' => 'active',
         ]);
     }
 }

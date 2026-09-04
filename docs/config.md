@@ -21,10 +21,10 @@ Catálogo de tipos de IVA. Solo lectura (4 registros fijos).
   "ok": true, "code": 200, "status": "OK",
   "message": "Tipos de IVA obtenidos.",
   "data": [
-    { "id": 1, "name": "general",        "description": "General (base: 16%)" },
-    { "id": 2, "name": "tasa_producto",  "description": "Tasa por producto" },
-    { "id": 3, "name": "cuota_producto", "description": "Cuota por producto" },
-    { "id": 4, "name": "no_aplica",      "description": "No aplica" }
+    { "id": 1, "name": "General" },
+    { "id": 2, "name": "Por producto" },
+    { "id": 3, "name": "Cuota fija" },
+    { "id": 4, "name": "No aplica" }
   ]
 }
 ```
@@ -112,10 +112,9 @@ El valor se guarda como `decimal(18,6)` y **no lleva histórico**. Si más adela
 Registros default (seeder): `{ name: 'Pesos Mexicanos', code: 'MXN', symbol: '$', exchangeRate: 1 }`
 y `{ name: 'Dólar Estadounidense', code: 'USD', symbol: '$', exchangeRate: 17.25 }`
 
-> **Al desplegar la migración `2026_08_27_000001`:** la columna se crea con `default(1)`, así que
-> **todas** las monedas ya existentes quedan en 1 — incluidas las que no son la base. Los valores
-> del seeder solo aplican en instalaciones nuevas (`migrate:fresh --seed`). Hay que recapturar a
-> mano el tipo de cambio de cada moneda no-base con `PUT /api/currencies/{id}`.
+> Al desplegar la migración `2026_08_27_000001`, todas las monedas existentes reciben inicialmente
+> `exchangeRate = 1`. `ProductionSeeder` crea MXN y USD cuando no existen, pero nunca sobrescribe
+> tasas capturadas posteriormente.
 
 **Rango válido:** entre `0.000001` y `999999999999` (el de `decimal(18,6)`). Fuera de ahí la API
 responde 422 en vez de dejar que la BD redondee a 0 o desborde. Los decimales por encima de 6 se
