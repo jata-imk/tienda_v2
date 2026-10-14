@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\DB;
  * producto cascadeara a sus variantes: las variantes activas de productos
  * inactivos pasan a inactivas.
  *
- * Solo baja; no reactiva. Una variante inactiva en un producto activo es un
- * estado legitimo (talla descontinuada) y revivirla destruiria informacion.
+ * Solo baja; no reactiva. No es una regla de negocio sino una limitacion de
+ * este respaldo puntual: aqui no hay forma de saber por que una variante quedo
+ * inactiva, asi que reactivar a ciegas las variantes de productos activos
+ * perderia las que se descontinuaron a proposito. En runtime si se reactiva en
+ * cascada (ProductService::update), donde el cambio de status del producto es
+ * una accion explicita del usuario.
  */
 return new class extends Migration
 {

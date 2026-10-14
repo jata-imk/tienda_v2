@@ -385,6 +385,34 @@ sumar en `totalStock`. Se reactiva con `PUT ... { "status": "active" }`.
 
 Desactivar una variante **no** afecta al producto: la cascada de status es solo hacia abajo.
 
+### Coherencia de status producto / variante
+
+Regla: **un producto inactivo no puede tener variantes activas.** Se sostiene en tres puntos,
+no solo en la cascada:
+
+| Camino | Comportamiento |
+|---|---|
+| `PUT`/`DELETE` del producto | cascada a todas las variantes (ver seccion siguiente) |
+| `POST /api/products` con `status: "inactive"` | las variantes nacen `inactive`, aunque el payload las mande `active` |
+| `POST /api/products/{id}/variants` sobre un producto inactivo | las variantes nuevas nacen `inactive` |
+| `PUT /api/products/{id}/variants/{variantId}` con `status: "active"` sobre un producto inactivo | **422** |
+
+El 422 devuelve el error bajo la llave `status`:
+
+```json
+{
+  "message": "No se puede activar una variante de un producto inactivo: reactiva primero el producto.",
+  "errors": {
+    "status": ["No se puede activar una variante de un producto inactivo: reactiva primero el producto."]
+  }
+}
+```
+
+Lo que **si** se permite: editar `sku` o `codeBar` de una variante de un producto inactivo, y
+desactivar una variante de un producto inactivo (es idempotente). Tambien es legitimo el caso
+inverso —una variante `inactive` en un producto `active`, por ejemplo una talla descontinuada—,
+asi que al crear un producto activo se respeta un `status: "inactive"` explicito en sus variantes.
+
 ### Orden de las variantes
 
 Las variantes llegan ordenadas **por color alfabético y, dentro de cada color, por talla**

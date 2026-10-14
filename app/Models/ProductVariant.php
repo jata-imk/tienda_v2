@@ -21,6 +21,17 @@ class ProductVariant extends Model
     ];
 
     /**
+     * Status con el que debe nacer una variante. Un producto inactivo no puede
+     * tener variantes activas, asi que la variante hereda su status; si el
+     * producto esta activo se respeta lo pedido, porque una variante inactiva
+     * en un producto activo es un estado legitimo (talla descontinuada).
+     */
+    public static function statusUnder(Product $product, string $requested): string
+    {
+        return $product->status === 'inactive' ? 'inactive' : $requested;
+    }
+
+    /**
      * Orden de presentacion de la matriz talla x color: por color alfabetico y,
      * dentro de cada color, por `sizes.sort_order` — la misma convencion que
      * CatalogService y SizeService. `colors` no tiene columna de orden, asi que

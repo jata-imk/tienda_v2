@@ -167,7 +167,7 @@ class ProductVariantService
                     'sku'        => $variantInput->sku,
                     'code_bar'   => $variantInput->codeBar,
                     'stock'      => $variantInput->stock,
-                    'status'     => $variantInput->status,
+                    'status'     => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
                 // Movimiento inicial por cada variante con existencia > 0.

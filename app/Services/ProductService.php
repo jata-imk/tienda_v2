@@ -292,7 +292,7 @@ class ProductService
                     'sku'        => $variantInput->sku,
                     'code_bar'   => $variantInput->codeBar,
                     'stock'      => $variantInput->stock,
-                    'status'     => $variantInput->status,
+                    'status'     => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
                 // Movimiento inicial por cada variante con existencia > 0.
@@ -419,9 +419,13 @@ class ProductService
     }
 
     /**
-     * Propaga el status del producto a todas sus variantes. El status de un
-     * producto y el de sus variantes nunca quedan en desacuerdo: la baja del
-     * producto da de baja sus variantes y reactivarlo las reactiva.
+     * Propaga el status del producto a todas sus variantes: la baja del producto
+     * da de baja sus variantes y reactivarlo las reactiva.
+     *
+     * Esto cubre los dos caminos por los que cambia el status del producto, pero
+     * no es el unico guardian del invariante "un producto inactivo no tiene
+     * variantes activas": el alta lo resuelve ProductVariant::statusUnder() y la
+     * edicion de una variante suelta, UpdateProductVariantRequest.
      */
     private function cascadeStatusToVariants(Product $product): void
     {

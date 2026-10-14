@@ -102,7 +102,7 @@ GET /api/dashboard?limit=10&dateFrom=2026-01-01&dateTo=2026-07-21&lowStockThresh
 | `topProducts` | `SUM(quantity)` de `inventory_movements` con `movement_type = 'sale'`, agrupado por producto (join `product_variants` → `products`). Hoy es la **única** fuente de ventas: no hay tabla de tickets. |
 | `lowestStock` / `highestStock` | `SUM(product_variants.stock)` de variantes **activas** por producto activo, ordenado asc/desc. `lowestStock` excluye los ceros nunca abastecidos; `highestStock` conserva todos los productos activos. |
 | `totalProducts` / `activeProducts` | `COUNT` sobre `products`. |
-| `totalVariants` / `totalStock` | `COUNT` y `SUM(stock)` de variantes activas. |
+| `totalVariants` / `totalStock` | `COUNT` y `SUM(stock)` de variantes activas **de productos activos**. Un producto dado de baja no suma, ni siquiera si alguna variante quedara activa por datos historicos. |
 | `inventoryValue` | `SUM(product_variants.stock * products.cost)` — valuación a costo. |
 | `inventorySaleValue` | `SUM(product_variants.stock * products.price)` — valuación al precio de lista, sin descuentos ni impuestos. |
 | `lowStockCount` | Productos activos **con `stockControl = true`**, con inventario inicializado y cuya existencia total ≤ `lowStockThreshold`. |
