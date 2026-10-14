@@ -31,7 +31,7 @@ class SizeService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'sizes');
         } else {
             $query->orderBy('sort_order');
         }

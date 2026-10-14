@@ -2,6 +2,9 @@
 
 namespace App\Services\Concerns;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
+
 /**
  * Aplica al query builder las condiciones ya normalizadas por
  * `TranslatesGridFilters` (`{column, operator, value, logic}`).
@@ -14,6 +17,61 @@ namespace App\Services\Concerns;
  */
 trait AppliesGridConditions
 {
+    /**
+     * Aplica el ordenamiento pedido por el grid validando columna y direccion.
+     *
+     * Ambos llegan del cliente y antes se pasaban crudos al `orderBy`: una
+     * columna inexistente provocaba `1054 Unknown column ... in 'ORDER BY'` y
+     * una direccion distinta de asc/desc un `InvalidArgumentException`, los dos
+     * como error 500. Ahora se rechazan con 422.
+     *
+     * `$aliases` mapea nombres virtuales que el cliente conoce porque los ve en
+     * la respuesta pero que no son columnas (`color`, `size`) al callback que
+     * aplica su ordenamiento real.
+     *
+     * @param mixed $query
+     * @param array<string, mixed> $filters
+     * @param array<string, callable(mixed, string): void> $aliases
+     */
+    protected function applyGridOrder($query, array $filters, string $table, array $aliases = []): void
+    {
+        $column    = (string) ($filters['o']['column'] ?? 'id');
+        $direction = strtolower((string) ($filters['o']['direction'] ?? 'asc'));
+
+        if (!in_array($direction, ['asc', 'desc'], true)) {
+            throw ValidationException::withMessages([
+                'o.direction' => "La direccion de ordenamiento '{$direction}' no es valida: usa 'asc' o 'desc'.",
+            ]);
+        }
+
+        if (isset($aliases[$column])) {
+            $aliases[$column]($query, $direction);
+
+            return;
+        }
+
+        if (!in_array($column, $this->gridSortableColumns($table), true)) {
+            throw ValidationException::withMessages([
+                'o.column' => "No se puede ordenar por '{$column}': no es una columna de '{$table}'.",
+            ]);
+        }
+
+        $query->orderBy($column, $direction);
+    }
+
+    /**
+     * Columnas de la tabla, memorizadas por proceso: el listado no cambia en
+     * caliente y `getColumnListing` consulta el information_schema.
+     *
+     * @return array<int, string>
+     */
+    private function gridSortableColumns(string $table): array
+    {
+        static $cache = [];
+
+        return $cache[$table] ??= Schema::getColumnListing($table);
+    }
+
     /**
      * Aplica la lista de condiciones agrupando los bloques OR en closures para
      * respetar la precedencia de operadores SQL. Si se proporciona un callback

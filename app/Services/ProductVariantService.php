@@ -58,7 +58,13 @@ class ProductVariantService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            // `color` y `size` no son columnas de product_variants, pero el
+            // frontend las ve en la respuesta y es por ahi por donde querria
+            // ordenar la matriz. Se resuelven igual que en los filtros `w`.
+            $this->applyGridOrder($query, $filters, 'product_variants', [
+                'color' => fn($q, string $direction) => $q->orderByColor($direction),
+                'size'  => fn($q, string $direction) => $q->orderBySize($direction),
+            ]);
         } else {
             // Sin `o` explicito la matriz llega en orden de presentacion, no en
             // el que decida el planificador.

@@ -828,7 +828,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -991,7 +991,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -1009,7 +1009,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1181,7 +1181,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1346,7 +1346,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1759,7 +1759,7 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-14T11:59:47'
+                  example: '2026-10-14T12:15:54'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
@@ -2194,7 +2194,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2590,7 +2590,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2833,7 +2833,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3233,7 +3233,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3389,7 +3389,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3558,7 +3558,7 @@ paths:
     post:
       summary: 'Query product variants (POST)'
       operationId: queryProductVariantsPOST
-      description: 'Same payload formats as `POST /products/query`.'
+      description: "Same payload formats as `POST /products/query`.\n\n`o[column]` acepta columnas de `product_variants` mas dos alias: `color`\n(por nombre de color, luego talla) y `size` (por `sizes.sort_order`, luego\ncolor). Cualquier otro valor devuelve 422. Sin `o`, el orden por defecto\nes por color y luego talla."
       parameters: []
       responses:
         200:
@@ -4738,7 +4738,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -5033,7 +5033,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -5041,7 +5041,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -5615,7 +5615,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

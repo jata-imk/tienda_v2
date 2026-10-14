@@ -33,20 +33,48 @@ class ProductVariant extends Model
 
     /**
      * Orden de presentacion de la matriz talla x color: por color alfabetico y,
-     * dentro de cada color, por `sizes.sort_order` — la misma convencion que
-     * CatalogService y SizeService. `colors` no tiene columna de orden, asi que
-     * se ordena por nombre.
-     *
-     * Se ordena con subconsultas correlacionadas y no con JOIN a proposito: los
-     * filtros de variante (ProductVariantService::applyVariantCondition) usan
-     * columnas sin calificar como `status` e `id`, que un join a `colors`/`sizes`
-     * volveria ambiguas.
+     * dentro de cada color, por talla. Es el orden por defecto de las respuestas
+     * que incluyen variantes.
      */
     public function scopeOrderedForDisplay(Builder $query): Builder
     {
+        return $query->orderByColor();
+    }
+
+    /** Por color y, dentro de cada color, por talla. */
+    public function scopeOrderByColor(Builder $query, string $direction = 'asc'): Builder
+    {
         return $query
-            ->orderBy(Color::select('name')->whereColumn('colors.id', 'product_variants.id_color')->take(1))
-            ->orderBy(Size::select('sort_order')->whereColumn('sizes.id', 'product_variants.id_size')->take(1));
+            ->orderBy(self::colorNameForOrdering(), $direction)
+            ->orderBy(self::sizeOrderForOrdering());
+    }
+
+    /** Por talla y, dentro de cada talla, por color. */
+    public function scopeOrderBySize(Builder $query, string $direction = 'asc'): Builder
+    {
+        return $query
+            ->orderBy(self::sizeOrderForOrdering(), $direction)
+            ->orderBy(self::colorNameForOrdering());
+    }
+
+    /**
+     * Subconsultas correlacionadas, no JOIN, a proposito: los filtros de variante
+     * (ProductVariantService::applyVariantCondition y applyGridCondition) usan
+     * columnas sin calificar como `status` e `id`, que un join a `colors`/`sizes`
+     * volveria ambiguas.
+     *
+     * `colors` no tiene columna de orden, asi que se ordena por nombre. La talla
+     * usa `sizes.sort_order` — la misma convencion que CatalogService y
+     * SizeService— para que las tallas por letra (CH, M, G, XG) salgan bien.
+     */
+    private static function colorNameForOrdering()
+    {
+        return Color::select('name')->whereColumn('colors.id', 'product_variants.id_color')->take(1);
+    }
+
+    private static function sizeOrderForOrdering()
+    {
+        return Size::select('sort_order')->whereColumn('sizes.id', 'product_variants.id_size')->take(1);
     }
 
     public function product()

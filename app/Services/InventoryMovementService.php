@@ -47,7 +47,7 @@ class InventoryMovementService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'inventory_movements');
         } else {
             $query->orderByDesc('id');
         }

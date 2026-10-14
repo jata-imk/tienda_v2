@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "9770b64f-c99d-46ff-97c3-11b77452dd02",
+        "_postman_id": "f4297cec-8649-4bce-9dee-f46ca29ca918",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -398,7 +398,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -487,7 +487,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T11:59:47\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T12:15:54\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -892,7 +892,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1132,7 +1132,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1283,7 +1283,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1523,7 +1523,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1612,7 +1612,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1741,7 +1741,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Same payload formats as `POST \/products\/query`."
+                        "description": "Same payload formats as `POST \/products\/query`.\n\n`o[column]` acepta columnas de `product_variants` mas dos alias: `color`\n(por nombre de color, luego talla) y `size` (por `sizes.sort_order`, luego\ncolor). Cualquier otro valor devuelve 422. Sin `o`, el orden por defecto\nes por color y luego talla."
                     },
                     "response": [
                         {
@@ -2353,7 +2353,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada)."
                     },
@@ -2442,7 +2442,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
                         },
                         "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca."
                     },
@@ -2704,7 +2704,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

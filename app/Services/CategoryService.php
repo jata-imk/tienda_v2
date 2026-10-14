@@ -49,9 +49,7 @@ class CategoryService
 
         // ordering
         if (!empty($filters['o'])) {
-            $column    = $filters['o']['column'] ?? 'id';
-            $direction = $filters['o']['direction'] ?? 'asc';
-            $query->orderBy($column, $direction);
+            $this->applyGridOrder($query, $filters, 'categories');
         }
 
         $totalCount = isset($filters['totalCount'])

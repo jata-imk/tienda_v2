@@ -31,7 +31,7 @@ class ColorService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'colors');
         }
 
         $totalCount = isset($filters['totalCount'])

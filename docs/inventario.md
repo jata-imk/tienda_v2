@@ -11,6 +11,34 @@ Las respuestas usan el formato estándar `ApiResponse` (`{ ok, code, status, mes
 Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, `f[]`,
 `o[column]`, `o[direction]`, `w[column]`, `totalCount` (igual que `products`).
 
+### Ordenamiento de los listados (`o`)
+
+`o[column]` debe ser una **columna real de la tabla del recurso**; `o[direction]`, `asc` o
+`desc`. Cualquier otra cosa devuelve **422**, no 500:
+
+```json
+{
+  "message": "No se puede ordenar por 'sku': no es una columna de 'products'.",
+  "errors": { "o.column": ["No se puede ordenar por 'sku': no es una columna de 'products'."] }
+}
+```
+
+Aplica a los nueve recursos con grid: `products`, `products/{id}/variants`, `categories`,
+`colors`, `sizes`, `size-groups`, `currencies`, `users` e `inventory/movements`.
+
+Ojo con las llaves de la **respuesta** que no son columnas: en productos, `totalStock`,
+`sizeGroup`, `categories` y `variants` no son ordenables. Las dos excepciones son la matriz de
+variantes, donde se aceptan dos alias:
+
+| `o[column]` | Ordena por |
+|---|---|
+| `color` | nombre del color y, dentro de cada color, por talla |
+| `size` | `sizes.sort_order` y, dentro de cada talla, por color |
+
+`o[direction]` afecta al criterio principal; el secundario queda siempre ascendente. En el
+listado de productos, `o` ordena los productos y nunca las variantes (ver
+[Orden de las variantes](#orden-de-las-variantes)).
+
 ### Operadores de `POST /{recurso}/query`
 
 El `w` en formato array (`{f, ao, v, lo}`) es el que manda el `filterRow` de DevExtreme.

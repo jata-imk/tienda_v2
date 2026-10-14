@@ -51,6 +51,11 @@ class ProductVariantController extends Controller
      *
      * Same payload formats as `POST /products/query`.
      *
+     * `o[column]` acepta columnas de `product_variants` mas dos alias: `color`
+     * (por nombre de color, luego talla) y `size` (por `sizes.sort_order`, luego
+     * color). Cualquier otro valor devuelve 422. Sin `o`, el orden por defecto
+     * es por color y luego talla.
+     *
      * @urlParam product integer required Product ID. Example: 1
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Variants retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
