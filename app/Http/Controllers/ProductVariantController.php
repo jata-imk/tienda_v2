@@ -75,6 +75,9 @@ class ProductVariantController extends Controller
      * ejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento
      * de inventario por cada variante con existencia inicial mayor a cero.
      *
+     * Si el producto esta inactivo, las variantes nuevas nacen `inactive` aunque el
+     * payload las mande como `active`: un producto inactivo no tiene variantes activas.
+     *
      * @urlParam product integer required Product ID. Example: 1
      *
      * @bodyParam variants object[] required Variantes a agregar.
@@ -113,6 +116,9 @@ class ProductVariantController extends Controller
      * Solo se editan `sku`, `codeBar` y `status`. La talla y el color son fijos
      * (identifican la variante) y el `stock` se mueve por `POST /api/inventory/movements`.
      *
+     * No se puede poner `status: active` si el producto esta inactivo: responde 422.
+     * Hay que reactivar el producto primero, lo que de paso reactiva sus variantes.
+     *
      * @urlParam product integer required Product ID. Example: 1
      * @urlParam variant integer required Product variant ID. Example: 1
      *
@@ -122,6 +128,7 @@ class ProductVariantController extends Controller
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Variant updated.","data":{}}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Variant not found for this product.","data":null}
+     * @response 422 {"message":"No se puede activar una variante de un producto inactivo: reactiva primero el producto.","errors":{"status":["No se puede activar una variante de un producto inactivo: reactiva primero el producto."]}}
      */
     public function update(UpdateProductVariantRequest $request, int $product, int $variant): JsonResponse
     {
@@ -143,6 +150,8 @@ class ProductVariantController extends Controller
      *
      * Pone `status` en `inactive`. No borra la fila ni sus movimientos; la variante
      * deja de sumar en el `totalStock` del producto.
+     *
+     * No afecta al producto: la cascada de status es solo de producto a variantes.
      *
      * @urlParam product integer required Product ID. Example: 1
      * @urlParam variant integer required Product variant ID. Example: 1

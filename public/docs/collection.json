@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "8c377d7b-f237-4a66-9ce0-cd71ecdd9b2b",
+        "_postman_id": "9770b64f-c99d-46ff-97c3-11b77452dd02",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -487,7 +487,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-09-04T13:24:54\",\"dateTo\":\"2052-09-27\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T11:59:47\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -892,7 +892,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1132,7 +1132,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1836,7 +1836,7 @@
                             "mode": "raw",
                             "raw": "{\"variants\":[{\"idSize\":2,\"idColor\":3,\"sku\":\"CAM-001-34-BEI\",\"codeBar\":\"7500000000011\",\"stock\":3,\"status\":\"active\"}],\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"b\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":1}}"
                         },
-                        "description": "Agrega una o varias variantes (talla x color) a un producto existente, por\nejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento\nde inventario por cada variante con existencia inicial mayor a cero."
+                        "description": "Agrega una o varias variantes (talla x color) a un producto existente, por\nejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento\nde inventario por cada variante con existencia inicial mayor a cero.\n\nSi el producto esta inactivo, las variantes nuevas nacen `inactive` aunque el\npayload las mande como `active`: un producto inactivo no tiene variantes activas."
                     },
                     "response": [
                         {
@@ -1891,7 +1891,7 @@
                             "mode": "raw",
                             "raw": "{\"sku\":\"CAM-001-34-BEI\",\"codeBar\":\"7500000000011\",\"status\":\"active\"}"
                         },
-                        "description": "Solo se editan `sku`, `codeBar` y `status`. La talla y el color son fijos\n(identifican la variante) y el `stock` se mueve por `POST \/api\/inventory\/movements`."
+                        "description": "Solo se editan `sku`, `codeBar` y `status`. La talla y el color son fijos\n(identifican la variante) y el `stock` se mueve por `POST \/api\/inventory\/movements`.\n\nNo se puede poner `status: active` si el producto esta inactivo: responde 422.\nHay que reactivar el producto primero, lo que de paso reactiva sus variantes."
                     },
                     "response": [
                         {
@@ -1904,6 +1904,12 @@
                             "header": [],
                             "code": 404,
                             "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Variant not found for this product.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"No se puede activar una variante de un producto inactivo: reactiva primero el producto.\",\"errors\":{\"status\":[\"No se puede activar una variante de un producto inactivo: reactiva primero el producto.\"]}}",
                             "name": ""
                         }
                     ]
@@ -1943,7 +1949,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Pone `status` en `inactive`. No borra la fila ni sus movimientos; la variante\ndeja de sumar en el `totalStock` del producto."
+                        "description": "Pone `status` en `inactive`. No borra la fila ni sus movimientos; la variante\ndeja de sumar en el `totalStock` del producto.\n\nNo afecta al producto: la cascada de status es solo de producto a variantes."
                     },
                     "response": [
                         {
@@ -2314,7 +2320,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`."
+                        "description": "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.\n\nCada producto incluye sus variantes en `variants`, ordenadas por color\nalfabetico y, dentro de cada color, por talla (`sizes.sort_order`). `o` ordena\nlos productos, no las variantes: el orden de estas no es configurable aqui.\nPara ordenarlas a gusto, `POST \/api\/products\/{id}\/variants\/query` con `o`."
                     },
                     "response": [
                         {
@@ -2347,9 +2353,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"cancel\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
-                        "description": ""
+                        "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada)."
                     },
                     "response": [
                         {
@@ -2436,9 +2442,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
                         },
-                        "description": ""
+                        "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca."
                     },
                     "response": [
                         {
@@ -2484,7 +2490,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Sets status to `inactive`. Does not delete the record."
+                        "description": "Sets status to `inactive`. Does not delete the record.\n\nCascadea: todas las variantes del producto pasan tambien a `inactive`, por lo\nque su `totalStock` queda en 0. Reactivar el producto con\n`PUT \/api\/products\/{id}` y `status: active` las reactiva todas."
                     },
                     "response": [
                         {
