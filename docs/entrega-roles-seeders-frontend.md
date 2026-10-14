@@ -34,12 +34,16 @@ hasta que se agregue explícitamente a la ruta correspondiente.
 | Categorías, tallas y colores | Sí | Sí | Sí |
 | Productos, variantes e imágenes | Sí | Sí | Sí |
 | Inventario y movimientos | Sí | Sí | Sí |
+| Pedidos de compra: consultar, PDF y recibir | Sí | No | Sí |
+| Pedidos de compra: crear, editar, confirmar y cancelar | Sí | No | No |
 | Dashboard | Sí | No | No |
 | Usuarios | Sí | No | No |
 | Empresa y monedas | Sí | No | No |
 
 La restricción cubre todas las operaciones del área. Por ejemplo, Vendedor y
 Almacén no pueden listar, crear, actualizar ni desactivar usuarios o monedas.
+Pedidos de compra es la única área partida por operación: Almacén recibe la
+mercancía pero no arma ni autoriza pedidos (ver [pedidos.md](pedidos.md)).
 
 ## 3. Autenticación y sesiones
 

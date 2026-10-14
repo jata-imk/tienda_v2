@@ -23,8 +23,8 @@ Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, 
 }
 ```
 
-Aplica a los nueve recursos con grid: `products`, `products/{id}/variants`, `categories`,
-`colors`, `sizes`, `size-groups`, `currencies`, `users` e `inventory/movements`.
+Aplica a los diez recursos con grid: `products`, `products/{id}/variants`, `categories`,
+`colors`, `sizes`, `size-groups`, `currencies`, `users`, `inventory/movements` y `orders`.
 
 Ojo con las llaves de la **respuesta** que no son columnas: en productos, `totalStock`,
 `sizeGroup`, `categories` y `variants` no son ordenables. Las dos excepciones son la matriz de
@@ -114,7 +114,9 @@ el mismo grupo OR sobre campos clave del recurso. Disponible en:
 - `sizes`: `name` y nombre del grupo de tallas.
 - `size-groups`: `name` y `description`.
 - `users`: nombre, apellidos, usuario y email.
-- `inventory/movements`: `notes`, `reference_type`, SKU de variante y nombre/clave del producto.
+- `inventory/movements`: `notes`, `reference_type`, SKU de variante, nombre/clave del producto y
+  folio del pedido de compra (`PED-12` o `12`).
+- `orders`: folio (`PED-12` o `12`), `notes`, proveedor y usuario (ver [pedidos.md](pedidos.md)).
 
 Un término vacío o sólo con espacios se ignora.
 
@@ -132,7 +134,7 @@ Un término vacío o sólo con espacios se ignora.
 | `colors` | Colores reutilizables (`hex_color`). Catálogo. |
 | `product_variants` | Existencia real por `producto + talla + color`. Único `id_product+id_size+id_color`. |
 | `product_images` | Galería de imágenes por `producto + color` (varias filas por combinación). |
-| `inventory_movements` | Historial de cada entrada/venta/ajuste/devolución/cancelación. |
+| `inventory_movements` | Historial de cada entrada/venta/ajuste/devolución/cancelación/compra. |
 
 `products` ya **no** guarda `size` ni `stock`: la existencia vive en `product_variants.stock`
 y la existencia total del producto es la suma de variantes activas (`totalStock`).
@@ -510,12 +512,16 @@ producto. Al agregar la variante del color nuevo, su galería queda habilitada d
 Soportan paginación (`p`), selección de campos (`f`), ordenación (`o`), filtros (`w`) y `totalCount`.
 
 Filtros soportados en `w`:
-- `movement_type`: `entry`, `sale`, `adjustment`, `return`, `cancel` (o array con `in`)
+- `movement_type`: `entry`, `sale`, `adjustment`, `return`, `cancel`, `purchase` (o array con `in`)
 - `id_product`: ID del producto (resuelto a través de la variante)
 - `sku`: SKU puntual de la variante
+- `id_order`: pedido de compra que originó el movimiento (resuelto a través de su línea)
 - `id_user`: usuario que generó el movimiento
 - `created_at`: filtros de fecha / rango
-- `search`: búsqueda de texto sobre notas, origen, usuario, SKU o nombre del producto
+- `search`: búsqueda de texto sobre notas, origen, usuario, SKU, nombre del producto o folio del pedido
+
+Cada movimiento trae además `idOrder` y `orderFolio` (`"PED-12"`) cuando viene de la recepción de
+un pedido de compra; en cualquier otro caso van en `null`.
 
 Respuesta estándar (`ApiResponse::query`):
 ```json
@@ -544,7 +550,9 @@ Respuesta estándar (`ApiResponse::query`):
         "productKey": "CAM-001",
         "sku": "CAM-001-34-BLA",
         "size": "34",
-        "color": "Blanco"
+        "color": "Blanco",
+        "idOrder": null,
+        "orderFolio": null
       }
     ],
     "totalCount": 1,
@@ -565,7 +573,7 @@ aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo f
 |---|---|---|---|
 | `idProduct` | int | sí | Producto al que pertenecen todas las variantes. |
 | `idUser` | int | sí | Usuario que genera los movimientos. **Debe coincidir con el usuario de la sesión** (se valida contra el JWT); si no coincide, `422`. |
-| `referenceType` | string | no | Origen (ej. `manual_adjustment`, `sales_note`) |
+| `referenceType` | string | no | Origen (ej. `manual_adjustment`, `sales_note`). `order_detail` está reservado a las recepciones de pedidos: enviarlo responde `422`. |
 | `referenceId` | int | no | Documento origen |
 | `notes` | string/null | no | Comentario general, se aplica a cada movimiento generado |
 | `movements` | array | sí | Uno o más movimientos (1 a 200 por petición) |
@@ -581,6 +589,12 @@ aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo f
 **Efecto sobre el stock:** `entry`, `return`, `cancel` **incrementan**; `sale`, `adjustment`
 **disminuyen**. Si el resultado de cualquier variante quedara negativo, responde `422` y no se
 aplica ningún movimiento del lote.
+
+**Tipo `purchase` (compra):** también incrementa, pero **solo lo genera la recepción de un pedido
+de compra** (`POST /api/orders/{id}/receive`, ver [pedidos.md](pedidos.md)). Este endpoint y el
+`initialMovement` de productos/variantes lo rechazan con `422`, así que una entrada `purchase`
+siempre corresponde a mercancía recibida contra un pedido. Cada una lleva
+`referenceType = order_detail` y `referenceId` = id de la línea del pedido.
 
 **Validaciones adicionales:** todas las variantes deben existir y pertenecer a `idProduct`; el
 producto debe tener `stockControl=true`. Se permiten movimientos sobre variantes con

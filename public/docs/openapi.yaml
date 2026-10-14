@@ -23,6 +23,9 @@ tags:
     name: Inventory
     description: ''
   -
+    name: Orders
+    description: "\nPedidos de compra a proveedor. Estatus: `draft` → `confirmed` →\n`partially_received` → `received`; `draft` y `confirmed` (sin recepciones)\npueden pasar a `cancelled`. Recibir mercancia genera movimientos de\ninventario tipo `purchase`."
+  -
     name: Users
     description: ''
 components:
@@ -846,7 +849,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -991,7 +994,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -1759,7 +1762,7 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-14T12:15:54'
+                  example: '2026-10-14T12:55:59'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
@@ -2038,7 +2041,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2434,7 +2437,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2833,7 +2836,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4738,7 +4741,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -4768,7 +4771,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4820,7 +4823,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: sale
+                      example: entry
                       enum:
                         - entry
                         - sale
@@ -5068,7 +5071,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -5439,6 +5442,1201 @@ paths:
                           type: integer
       tags:
         - Inventory
+  /api/orders/query:
+    post:
+      summary: 'Query purchase orders (POST)'
+      operationId: queryPurchaseOrdersPOST
+      description: "Same payload formats as `POST /products/query`. Campos virtuales en `w`:\n`search` (folio `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Orders retrieved.'
+                  data:
+                    items: []
+                    totalCount: 0
+                    summary:
+                      - 0
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Orders retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: []
+                      totalCount:
+                        type: integer
+                        example: 0
+                      summary:
+                        type: array
+                        example:
+                          - 0
+                        items:
+                          type: integer
+      tags:
+        - Orders
+  '/api/orders/{order}/history':
+    get:
+      summary: 'Status history of a purchase order'
+      operationId: statusHistoryOfAPurchaseOrder
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order history retrieved.'
+                  data:
+                    -
+                      id: 1
+                      idOrder: 1
+                      previousStatus: null
+                      newStatus: draft
+                      notes: null
+                      idUser: 1
+                      userName: admin
+                      createdAt: '2026-10-15 10:00:00'
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order history retrieved.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        idOrder: 1
+                        previousStatus: null
+                        newStatus: draft
+                        notes: null
+                        idUser: 1
+                        userName: admin
+                        createdAt: '2026-10-15 10:00:00'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        idOrder:
+                          type: integer
+                          example: 1
+                        previousStatus:
+                          type: string
+                          example: null
+                          nullable: true
+                        newStatus:
+                          type: string
+                          example: draft
+                        notes:
+                          type: string
+                          example: null
+                          nullable: true
+                        idUser:
+                          type: integer
+                          example: 1
+                        userName:
+                          type: string
+                          example: admin
+                        createdAt:
+                          type: string
+                          example: '2026-10-15 10:00:00'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Order not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Order not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Orders
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/orders/{order}/pdf':
+    get:
+      summary: 'Purchase order PDF'
+      operationId: purchaseOrderPDF
+      description: "Devuelve el PDF (`application/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-n.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
+      parameters:
+        -
+          in: query
+          name: download
+          description: 'Descargar en lugar de mostrar.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Descargar en lugar de mostrar.'
+            example: true
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 401
+                  status: Unauthorized
+                  message: 'Token inválido o malformado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 401
+                  status:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Token inválido o malformado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Order not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Order not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Orders
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/orders/{order}/receive':
+    post:
+      summary: 'Receive goods for a purchase order'
+      operationId: receiveGoodsForAPurchaseOrder
+      description: "Solo en `confirmed` o `partially_received`. Suma `quantity` a cada linea y\nal stock de su variante con un movimiento `purchase`\n(`referenceType = order_detail`, `referenceId` = id de la linea). Si todas\nlas lineas quedan completas el pedido pasa a `received`; si no, a\n`partially_received`. Atomico: si una linea falla no se aplica nada."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order received.'
+                  data:
+                    order:
+                      id: 1
+                      status: partially_received
+                    movements:
+                      -
+                        id: 10
+                        idProductVariant: 1
+                        movementType: purchase
+                        quantity: 4
+                        previousStock: 3
+                        newStock: 7
+                        referenceType: order_detail
+                        referenceId: 1
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order received.'
+                  data:
+                    type: object
+                    properties:
+                      order:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          status:
+                            type: string
+                            example: partially_received
+                      movements:
+                        type: array
+                        example:
+                          -
+                            id: 10
+                            idProductVariant: 1
+                            movementType: purchase
+                            quantity: 4
+                            previousStock: 3
+                            newStock: 7
+                            referenceType: order_detail
+                            referenceId: 1
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 10
+                            idProductVariant:
+                              type: integer
+                              example: 1
+                            movementType:
+                              type: string
+                              example: purchase
+                            quantity:
+                              type: integer
+                              example: 4
+                            previousStock:
+                              type: integer
+                              example: 3
+                            newStock:
+                              type: integer
+                              example: 7
+                            referenceType:
+                              type: string
+                              example: order_detail
+                            referenceId:
+                              type: integer
+                              example: 1
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Solo se puede recibir un pedido confirmado o parcialmente recibido.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Solo se puede recibir un pedido confirmado o parcialmente recibido.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 422
+                  status: 'Unprocessable Entity'
+                  message: 'La cantidad recibida excede lo pendiente de la linea.'
+                  data:
+                    detailId: 1
+                    quantityOrdered: 10
+                    quantityReceived: 7
+                    requestedQuantity: 5
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: 'Unprocessable Entity'
+                  message:
+                    type: string
+                    example: 'La cantidad recibida excede lo pendiente de la linea.'
+                  data:
+                    type: object
+                    properties:
+                      detailId:
+                        type: integer
+                        example: 1
+                      quantityOrdered:
+                        type: integer
+                        example: 10
+                      quantityReceived:
+                        type: integer
+                        example: 7
+                      requestedQuantity:
+                        type: integer
+                        example: 5
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Comentario de la recepcion.'
+                  example: 'Remesa 1'
+                  nullable: true
+                lines:
+                  type: array
+                  description: 'Lineas recibidas (1 a 200).'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+              required:
+                - lines
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/orders/{order}':
+    get:
+      summary: 'Show a purchase order'
+      operationId: showAPurchaseOrder
+      description: 'Incluye las lineas con los datos de su variante.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order retrieved.'
+                  data:
+                    id: 1
+                    key: PED
+                    folio: 1
+                    folioLabel: PED-1
+                    status: draft
+                    idCurrency: 1
+                    currencyCode: MXN
+                    exchangeRate: 1
+                    totalItems: 10
+                    totalAmount: 6000
+                    supplierName: 'Telas del Sureste'
+                    supplierDetails: null
+                    shippingAddress: null
+                    notes: null
+                    dateOrder: '2026-10-15'
+                    dateExpected: '2026-10-30'
+                    dateReceived: null
+                    idUser: 1
+                    userName: admin
+                    createdAt: '2026-10-15 10:00:00'
+                    updatedAt: null
+                    details:
+                      -
+                        id: 1
+                        idOrder: 1
+                        idProductVariant: 1
+                        quantityOrdered: 10
+                        quantityReceived: 0
+                        quantityPending: 10
+                        unitCost: 600
+                        subtotal: 6000
+                        notes: null
+                        idProduct: 1
+                        productKey: CAM-001
+                        productName: 'Camisa lino caballero'
+                        sku: CAM-001-34-BLA
+                        size: '34'
+                        color: Blanco
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      key:
+                        type: string
+                        example: PED
+                      folio:
+                        type: integer
+                        example: 1
+                      folioLabel:
+                        type: string
+                        example: PED-1
+                      status:
+                        type: string
+                        example: draft
+                      idCurrency:
+                        type: integer
+                        example: 1
+                      currencyCode:
+                        type: string
+                        example: MXN
+                      exchangeRate:
+                        type: integer
+                        example: 1
+                      totalItems:
+                        type: integer
+                        example: 10
+                      totalAmount:
+                        type: integer
+                        example: 6000
+                      supplierName:
+                        type: string
+                        example: 'Telas del Sureste'
+                      supplierDetails:
+                        type: string
+                        example: null
+                        nullable: true
+                      shippingAddress:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      dateOrder:
+                        type: string
+                        example: '2026-10-15'
+                      dateExpected:
+                        type: string
+                        example: '2026-10-30'
+                      dateReceived:
+                        type: string
+                        example: null
+                        nullable: true
+                      idUser:
+                        type: integer
+                        example: 1
+                      userName:
+                        type: string
+                        example: admin
+                      createdAt:
+                        type: string
+                        example: '2026-10-15 10:00:00'
+                      updatedAt:
+                        type: string
+                        example: null
+                        nullable: true
+                      details:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            idOrder: 1
+                            idProductVariant: 1
+                            quantityOrdered: 10
+                            quantityReceived: 0
+                            quantityPending: 10
+                            unitCost: 600
+                            subtotal: 6000
+                            notes: null
+                            idProduct: 1
+                            productKey: CAM-001
+                            productName: 'Camisa lino caballero'
+                            sku: CAM-001-34-BLA
+                            size: '34'
+                            color: Blanco
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            idOrder:
+                              type: integer
+                              example: 1
+                            idProductVariant:
+                              type: integer
+                              example: 1
+                            quantityOrdered:
+                              type: integer
+                              example: 10
+                            quantityReceived:
+                              type: integer
+                              example: 0
+                            quantityPending:
+                              type: integer
+                              example: 10
+                            unitCost:
+                              type: integer
+                              example: 600
+                            subtotal:
+                              type: integer
+                              example: 6000
+                            notes:
+                              type: string
+                              example: null
+                              nullable: true
+                            idProduct:
+                              type: integer
+                              example: 1
+                            productKey:
+                              type: string
+                              example: CAM-001
+                            productName:
+                              type: string
+                              example: 'Camisa lino caballero'
+                            sku:
+                              type: string
+                              example: CAM-001-34-BLA
+                            size:
+                              type: string
+                              example: '34'
+                            color:
+                              type: string
+                              example: Blanco
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Order not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Order not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Orders
+    put:
+      summary: 'Update a draft purchase order'
+      operationId: updateADraftPurchaseOrder
+      description: "Solo en `draft` (409 en cualquier otro estatus). Los campos omitidos no se\ntocan. Si se envia `details`, reemplaza todas las lineas (se identifican\npor `idProductVariant`). Mismos campos que el alta."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order updated.'
+                  data:
+                    id: 1
+                    status: draft
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order updated.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: draft
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Solo se puede editar un pedido en borrador.'
+                  data:
+                    status: confirmed
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Solo se puede editar un pedido en borrador.'
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        example: confirmed
+      tags:
+        - Orders
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idCurrency:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the currencies table.'
+                  example: 16
+                  nullable: true
+                exchangeRate:
+                  type: number
+                  description: 'Must not be greater than 999999999999.'
+                  example: 22
+                  nullable: true
+                dateOrder:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-10-14T12:55:59'
+                dateExpected:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-10-14T12:55:59'
+                  nullable: true
+                supplierName:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                supplierDetails:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: z
+                  nullable: true
+                shippingAddress:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: m
+                  nullable: true
+                notes:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: i
+                  nullable: true
+                details:
+                  type: array
+                  description: 'Must have at least 1 items. Must not have more than 200 items.'
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      idProductVariant:
+                        type: integer
+                        description: 'The <code>id</code> of an existing record in the product_variants table.'
+                        example: 16
+                      quantityOrdered:
+                        type: number
+                        description: 'Must not be greater than 9999999.999.'
+                        example: 22
+                      unitCost:
+                        type: number
+                        description: 'Must be at least 0. Must not be greater than 99999999.99.'
+                        example: 7
+                        nullable: true
+                      notes:
+                        type: string
+                        description: 'Must not be greater than 500 characters.'
+                        example: z
+                        nullable: true
+                    required:
+                      - idProductVariant
+                      - quantityOrdered
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/orders:
+    post:
+      summary: 'Create a purchase order'
+      operationId: createAPurchaseOrder
+      description: "Crea el pedido en `draft` con folio consecutivo `PED-n`. Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 201
+                  status: Created
+                  message: 'Order created.'
+                  data:
+                    id: 1
+                    folioLabel: PED-1
+                    status: draft
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: Created
+                  message:
+                    type: string
+                    example: 'Order created.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      folioLabel:
+                        type: string
+                        example: PED-1
+                      status:
+                        type: string
+                        example: draft
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 422
+                  status: 'Unprocessable Entity'
+                  message: 'El producto de la variante SERV-001-U no maneja existencias.'
+                  data:
+                    idProductVariant: 9
+                    sku: SERV-001-U
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: 'Unprocessable Entity'
+                  message:
+                    type: string
+                    example: 'El producto de la variante SERV-001-U no maneja existencias.'
+                  data:
+                    type: object
+                    properties:
+                      idProductVariant:
+                        type: integer
+                        example: 9
+                      sku:
+                        type: string
+                        example: SERV-001-U
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idCurrency:
+                  type: integer
+                  description: 'Moneda del pedido. Default: moneda base.'
+                  example: 1
+                  nullable: true
+                exchangeRate:
+                  type: number
+                  description: 'Tipo de cambio; se congela al confirmar. Default: el de la moneda.'
+                  example: null
+                  nullable: true
+                dateOrder:
+                  type: date
+                  description: 'Fecha del pedido. Default: hoy.'
+                  example: '2026-10-15'
+                  nullable: true
+                dateExpected:
+                  type: date
+                  description: 'Fecha de entrega esperada (≥ dateOrder).'
+                  example: '2026-10-30'
+                  nullable: true
+                supplierName:
+                  type: string
+                  description: 'Proveedor (texto libre).'
+                  example: 'Telas del Sureste'
+                  nullable: true
+                supplierDetails:
+                  type: string
+                  description: 'Direccion, RFC o contacto del proveedor.'
+                  example: null
+                  nullable: true
+                shippingAddress:
+                  type: string
+                  description: 'Direccion de envio. Default en PDF: la de la empresa.'
+                  example: null
+                  nullable: true
+                notes:
+                  type: string
+                  description: Comentarios.
+                  example: null
+                  nullable: true
+                details:
+                  type: array
+                  description: 'Lineas del pedido (1 a 200).'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+              required:
+                - details
+  '/api/orders/{order}/confirm':
+    post:
+      summary: 'Confirm a purchase order'
+      operationId: confirmAPurchaseOrder
+      description: '`draft` → `confirmed`. Congela el tipo de cambio. No afecta existencias.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order confirmed.'
+                  data:
+                    id: 1
+                    status: confirmed
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order confirmed.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: confirmed
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Solo se puede confirmar un pedido en borrador.'
+                  data:
+                    status: confirmed
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Solo se puede confirmar un pedido en borrador.'
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        example: confirmed
+      tags:
+        - Orders
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Comentario para el historial.'
+                  example: 'Enviado al proveedor'
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/orders/{order}/cancel':
+    post:
+      summary: 'Cancel a purchase order'
+      operationId: cancelAPurchaseOrder
+      description: "Solo desde `draft` o `confirmed`. Un pedido con recepciones\n(`partially_received`) nunca se cancela."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: true
+                  code: 200
+                  status: OK
+                  message: 'Order cancelled.'
+                  data:
+                    id: 1
+                    status: cancelled
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  message:
+                    type: string
+                    example: 'Order cancelled.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: cancelled
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 409
+                  status: Conflict
+                  message: 'Un pedido con recepciones parciales no se puede cancelar.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 409
+                  status:
+                    type: string
+                    example: Conflict
+                  message:
+                    type: string
+                    example: 'Un pedido con recepciones parciales no se puede cancelar.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Orders
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Motivo de la cancelacion.'
+                  example: 'Proveedor sin existencia'
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: order
+        description: 'Order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/users/query:
     post:
       summary: 'Query users (POST)'
@@ -5615,7 +6813,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive

@@ -137,3 +137,7 @@ accessor `Product::totalStock` (provocaría N+1).
 
 Cuando exista el módulo de ventas, `topProducts` deberá migrar de `inventory_movements` a la
 tabla de ventas real.
+
+Las recepciones de pedidos de compra ([pedidos.md](pedidos.md)) generan movimientos `purchase`:
+suben `totalStock`, `inventoryValue` e `inventorySaleValue` como cualquier entrada, y cuentan como
+historial para el criterio de "inventario inicializado", pero **no** entran en `topProducts`.

@@ -87,6 +87,74 @@ Relación activa entre un usuario y su token JWT.
 | `date_start` | timestamp | Inicio de sesión |
 | `date_end` | timestamp nullable | Fin de sesión (null si sigue activa) |
 
+## Pedidos de compra
+
+```
+currencies (1) ──< orders (N) ──< order_details (N) >── (1) product_variants
+users (1) ──< orders            orders (1) ──< order_status_history (N)
+order_details (1) ──< inventory_movements (N)   (reference_type = 'order_detail', reference_id)
+```
+
+Reglas de negocio y endpoints en [pedidos.md](pedidos.md).
+
+### `orders`
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | bigint PK | Auto-incremental |
+| `key` | varchar(10) | Serie del folio. Default `PED` |
+| `folio` | int unsigned | Consecutivo por `key`. **Unique (`key`, `folio`)** |
+| `status` | enum | `draft`, `confirmed`, `partially_received`, `received`, `cancelled` |
+| `id_currency` | bigint FK | → `currencies.id` |
+| `exchange_rate` | decimal(18,6) nullable | Null en draft (usa la de `currencies`); se congela al confirmar |
+| `total_items` | decimal(12,3) | Σ `quantity_ordered` |
+| `total_amount` | decimal(14,2) | Σ `subtotal` (sin impuestos) |
+| `supplier_name` | varchar nullable | Proveedor, texto libre (no hay tabla `suppliers`) |
+| `supplier_details` | text nullable | Dirección / RFC / contacto del proveedor |
+| `shipping_address` | text nullable | Dirección de envío; null → la de `company_info` |
+| `notes` | text nullable | Comentarios |
+| `date_order` | date | Fecha del pedido |
+| `date_expected` | date nullable | Fecha de entrega esperada |
+| `date_received` | datetime nullable | Cuándo quedó `received` |
+| `id_user` | bigint FK | → `users.id`, quien lo creó |
+| `created_at` / `updated_at` | timestamp | `updated_at` null hasta la primera edición |
+
+Índices: `status`, `date_order`.
+
+### `order_details`
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | bigint PK | Auto-incremental |
+| `id_order` | bigint FK | → `orders.id` (cascade on delete) |
+| `id_product_variant` | bigint FK | → `product_variants.id` |
+| `quantity_ordered` | decimal(10,3) | Cantidad pedida |
+| `quantity_received` | decimal(10,3) | Acumulado recibido. Default 0 |
+| `unit_cost` | decimal(10,2) | Costo unitario en la moneda del pedido |
+| `subtotal` | decimal(12,2) | `quantity_ordered × unit_cost` |
+| `notes` | text nullable | Comentario de la línea |
+| `created_at` / `updated_at` | timestamp | |
+
+Unique (`id_order`, `id_product_variant`); índice `id_product_variant`. En MariaDB, CHECK
+`quantity_received BETWEEN 0 AND quantity_ordered` (en SQLite lo valida solo el Service).
+
+### `order_status_history`
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | bigint PK | Auto-incremental |
+| `id_order` | bigint FK | → `orders.id` (cascade on delete) |
+| `previous_status` | varchar(20) nullable | Null en la creación |
+| `new_status` | varchar(20) | |
+| `id_user` | bigint FK | → `users.id` |
+| `notes` | text nullable | Comentario de la transición |
+| `created_at` | timestamp | |
+
+### Cambio en `inventory_movements`
+
+`movement_type` agrega `purchase` (entrada por recepción de pedido) e índice compuesto
+(`reference_type`, `reference_id`).
+
 ## Seeders
 
 Las migraciones crean y transforman estructura, pero no insertan el baseline

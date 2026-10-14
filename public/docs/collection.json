@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "f4297cec-8649-4bce-9dee-f46ca29ca918",
+        "_postman_id": "05f427d6-8d7b-4d5f-861e-e063f107e535",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T12:15:54\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T12:55:59\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -803,7 +803,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1043,7 +1043,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1283,7 +1283,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2353,7 +2353,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"sale\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada)."
                     },
@@ -2442,7 +2442,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca."
                     },
@@ -2615,6 +2615,445 @@
             ]
         },
         {
+            "name": "Orders",
+            "description": "\nPedidos de compra a proveedor. Estatus: `draft` \u2192 `confirmed` \u2192\n`partially_received` \u2192 `received`; `draft` y `confirmed` (sin recepciones)\npueden pasar a `cancelled`. Recibir mercancia genera movimientos de\ninventario tipo `purchase`.",
+            "item": [
+                {
+                    "name": "Query purchase orders (POST)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/query",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/query"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Same payload formats as `POST \/products\/query`. Campos virtuales en `w`:\n`search` (folio `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Orders retrieved.\",\"data\":{\"items\":[],\"totalCount\":0,\"summary\":[0]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Status history of a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order\/history",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order\/history",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order history retrieved.\",\"data\":[{\"id\":1,\"idOrder\":1,\"previousStatus\":null,\"newStatus\":\"draft\",\"notes\":null,\"idUser\":1,\"userName\":\"admin\",\"createdAt\":\"2026-10-15 10:00:00\"}]}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Order not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Purchase order PDF",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order\/pdf",
+                            "query": [
+                                {
+                                    "key": "download",
+                                    "value": "1",
+                                    "description": "Descargar en lugar de mostrar.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order\/pdf?download=1",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Devuelve el PDF (`application\/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-n.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"ok\":false,\"code\":401,\"status\":\"Unauthorized\",\"message\":\"Token inv\\u00e1lido o malformado.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Order not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Receive goods for a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order\/receive",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order\/receive",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"Remesa 1\",\"lines\":[\"architecto\"]}"
+                        },
+                        "description": "Solo en `confirmed` o `partially_received`. Suma `quantity` a cada linea y\nal stock de su variante con un movimiento `purchase`\n(`referenceType = order_detail`, `referenceId` = id de la linea). Si todas\nlas lineas quedan completas el pedido pasa a `received`; si no, a\n`partially_received`. Atomico: si una linea falla no se aplica nada."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order received.\",\"data\":{\"order\":{\"id\":1,\"status\":\"partially_received\"},\"movements\":[{\"id\":10,\"idProductVariant\":1,\"movementType\":\"purchase\",\"quantity\":4,\"previousStock\":3,\"newStock\":7,\"referenceType\":\"order_detail\",\"referenceId\":1}]}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\"ok\":false,\"code\":409,\"status\":\"Conflict\",\"message\":\"Solo se puede recibir un pedido confirmado o parcialmente recibido.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"ok\":false,\"code\":422,\"status\":\"Unprocessable Entity\",\"message\":\"La cantidad recibida excede lo pendiente de la linea.\",\"data\":{\"detailId\":1,\"quantityOrdered\":10,\"quantityReceived\":7,\"requestedQuantity\":5}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Show a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Incluye las lineas con los datos de su variante."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order retrieved.\",\"data\":{\"id\":1,\"key\":\"PED\",\"folio\":1,\"folioLabel\":\"PED-1\",\"status\":\"draft\",\"idCurrency\":1,\"currencyCode\":\"MXN\",\"exchangeRate\":1,\"totalItems\":10,\"totalAmount\":6000,\"supplierName\":\"Telas del Sureste\",\"supplierDetails\":null,\"shippingAddress\":null,\"notes\":null,\"dateOrder\":\"2026-10-15\",\"dateExpected\":\"2026-10-30\",\"dateReceived\":null,\"idUser\":1,\"userName\":\"admin\",\"createdAt\":\"2026-10-15 10:00:00\",\"updatedAt\":null,\"details\":[{\"id\":1,\"idOrder\":1,\"idProductVariant\":1,\"quantityOrdered\":10,\"quantityReceived\":0,\"quantityPending\":10,\"unitCost\":600,\"subtotal\":6000,\"notes\":null,\"idProduct\":1,\"productKey\":\"CAM-001\",\"productName\":\"Camisa lino caballero\",\"sku\":\"CAM-001-34-BLA\",\"size\":\"34\",\"color\":\"Blanco\"}]}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Order not found.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idCurrency\":1,\"exchangeRate\":null,\"dateOrder\":\"2026-10-15\",\"dateExpected\":\"2026-10-30\",\"supplierName\":\"Telas del Sureste\",\"supplierDetails\":null,\"shippingAddress\":null,\"notes\":null,\"details\":[\"architecto\"]}"
+                        },
+                        "description": "Crea el pedido en `draft` con folio consecutivo `PED-n`. Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Order created.\",\"data\":{\"id\":1,\"folioLabel\":\"PED-1\",\"status\":\"draft\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"ok\":false,\"code\":422,\"status\":\"Unprocessable Entity\",\"message\":\"El producto de la variante SERV-001-U no maneja existencias.\",\"data\":{\"idProductVariant\":9,\"sku\":\"SERV-001-U\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a draft purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-10-14T12:55:59\",\"dateExpected\":\"2026-10-14T12:55:59\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
+                        },
+                        "description": "Solo en `draft` (409 en cualquier otro estatus). Los campos omitidos no se\ntocan. Si se envia `details`, reemplaza todas las lineas (se identifican\npor `idProductVariant`). Mismos campos que el alta."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order updated.\",\"data\":{\"id\":1,\"status\":\"draft\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\"ok\":false,\"code\":409,\"status\":\"Conflict\",\"message\":\"Solo se puede editar un pedido en borrador.\",\"data\":{\"status\":\"confirmed\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Confirm a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order\/confirm",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order\/confirm",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"Enviado al proveedor\"}"
+                        },
+                        "description": "`draft` \u2192 `confirmed`. Congela el tipo de cambio. No afecta existencias."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order confirmed.\",\"data\":{\"id\":1,\"status\":\"confirmed\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\"ok\":false,\"code\":409,\"status\":\"Conflict\",\"message\":\"Solo se puede confirmar un pedido en borrador.\",\"data\":{\"status\":\"confirmed\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel a purchase order",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:order\/cancel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:order\/cancel",
+                            "variable": [
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "1",
+                                    "description": "Order ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"Proveedor sin existencia\"}"
+                        },
+                        "description": "Solo desde `draft` o `confirmed`. Un pedido con recepciones\n(`partially_received`) nunca se cancela."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order cancelled.\",\"data\":{\"id\":1,\"status\":\"cancelled\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\"ok\":false,\"code\":409,\"status\":\"Conflict\",\"message\":\"Un pedido con recepciones parciales no se puede cancelar.\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "Users",
             "description": "",
             "item": [
@@ -2704,7 +3143,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
