@@ -385,6 +385,34 @@ sumar en `totalStock`. Se reactiva con `PUT ... { "status": "active" }`.
 
 Desactivar una variante **no** afecta al producto: la cascada de status es solo hacia abajo.
 
+### Orden de las variantes
+
+Las variantes llegan ordenadas **por color alfabético y, dentro de cada color, por talla**
+(`sizes.sort_order`). Aplica en todas las respuestas que las incluyen: `GET /api/products`,
+`POST /api/products/query`, `GET /api/products/{id}` y `GET /api/products/{id}/variants`.
+
+Ejemplo (producto `CAM-001`, colores Azul marino y Blanco, tallas 34/36/38):
+
+```
+CAM-001-34-AZM
+CAM-001-36-AZM
+CAM-001-38-AZM
+CAM-001-34-BLA
+CAM-001-36-BLA
+CAM-001-38-BLA
+```
+
+El orden de las tallas sale de `sizes.sort_order`, no de su nombre ni de su `id`, así que
+las tallas por letra (CH, M, G, XG) también salen bien siempre que su `sortOrder` esté bien
+capturado. Los colores van por nombre porque `colors` no tiene columna de orden.
+
+En `POST /api/products/{id}/variants/query` este es el orden **por defecto**: si mandas `o`
+explícito, el tuyo gana.
+
+> Antes de esto no había `ORDER BY` alguno y el orden lo decidía el índice que eligiera el
+> planificador — salía agrupado por talla y no era un contrato estable. El frontend puede
+> ahora confiar en el orden que recibe y no necesita reordenar.
+
 ### Cascada de status: producto → variantes
 
 El status de un producto y el de sus variantes nunca quedan en desacuerdo. Cambiar el status del

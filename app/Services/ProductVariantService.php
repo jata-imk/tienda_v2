@@ -23,6 +23,7 @@ class ProductVariantService
     {
         return ProductVariant::with(['size', 'color'])
             ->where('id_product', $productId)
+            ->orderedForDisplay()
             ->get();
     }
 
@@ -58,6 +59,10 @@ class ProductVariantService
 
         if (!empty($filters['o'])) {
             $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+        } else {
+            // Sin `o` explicito la matriz llega en orden de presentacion, no en
+            // el que decida el planificador.
+            $query->orderedForDisplay();
         }
 
         $totalCount = isset($filters['totalCount'])

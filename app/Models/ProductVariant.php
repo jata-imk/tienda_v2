@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\NullsUpdatedAtOnCreate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
@@ -18,6 +19,24 @@ class ProductVariant extends Model
     protected $casts = [
         'stock' => 'decimal:3',
     ];
+
+    /**
+     * Orden de presentacion de la matriz talla x color: por color alfabetico y,
+     * dentro de cada color, por `sizes.sort_order` — la misma convencion que
+     * CatalogService y SizeService. `colors` no tiene columna de orden, asi que
+     * se ordena por nombre.
+     *
+     * Se ordena con subconsultas correlacionadas y no con JOIN a proposito: los
+     * filtros de variante (ProductVariantService::applyVariantCondition) usan
+     * columnas sin calificar como `status` e `id`, que un join a `colors`/`sizes`
+     * volveria ambiguas.
+     */
+    public function scopeOrderedForDisplay(Builder $query): Builder
+    {
+        return $query
+            ->orderBy(Color::select('name')->whereColumn('colors.id', 'product_variants.id_color')->take(1))
+            ->orderBy(Size::select('sort_order')->whereColumn('sizes.id', 'product_variants.id_size')->take(1));
+    }
 
     public function product()
     {
