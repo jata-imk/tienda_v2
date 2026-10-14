@@ -62,6 +62,7 @@ git config core.hooksPath .githooks
 | Auth (interno) | `docs/auth.md` |
 | Roles (interno) | `docs/roles.md` |
 | Entrega backend/frontend | `docs/entrega-roles-seeders-frontend.md` |
+| Entrega status y orden de variantes | `docs/entrega-status-variantes-frontend.md` |
 | Base de datos (interno) | `docs/database.md` |
 
 Para regenerar manualmente:
