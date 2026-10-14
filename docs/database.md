@@ -150,6 +150,19 @@ Unique (`id_order`, `id_product_variant`); índice `id_product_variant`. En Mari
 | `notes` | text nullable | Comentario de la transición |
 | `created_at` | timestamp | |
 
+### `document_sequences`
+
+Último folio emitido por serie (`PED` para pedidos). `OrderService` bloquea la fila
+(`SELECT … FOR UPDATE`) para sacar el siguiente folio: las altas concurrentes esperan su turno
+en lugar de chocar. Calcular el folio con `MAX(folio) … FOR UPDATE` sobre `orders` producía
+deadlocks en MariaDB con altas simultáneas (verificado: 3 de 6 fallaban). La fila de cada serie
+se crea en la migración, no al vuelo.
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `key` | varchar(10) PK | Serie (`PED`) |
+| `last_folio` | int unsigned | Último folio emitido |
+
 ### Cambio en `inventory_movements`
 
 `movement_type` agrega `purchase` (entrada por recepción de pedido) e índice compuesto

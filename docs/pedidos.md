@@ -35,7 +35,7 @@ draft ──confirm──▶ confirmed ──receive──▶ partially_received
 
 | Desde | Hacia | Cómo | Efecto |
 |---|---|---|---|
-| — | `draft` | `POST /orders` | Folio `PED-n`. Editable. No toca stock. |
+| — | `draft` | `POST /orders` | Folio `PED-n` consecutivo (si el alta falla, el folio no se consume). Editable. No toca stock. |
 | `draft` | `confirmed` | `POST /orders/{id}/confirm` | Bloquea las líneas y congela el tipo de cambio. No toca stock. |
 | `draft` / `confirmed` | `cancelled` | `POST /orders/{id}/cancel` | Solo si no hay recepciones. Final. |
 | `confirmed` / `partially_received` | `partially_received` | `POST /orders/{id}/receive` | Quedan líneas con pendiente. |
@@ -288,4 +288,5 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 
 ## Modelo de datos
 
-Ver [database.md](database.md#pedidos-de-compra): `orders`, `order_details`, `order_status_history`.
+Ver [database.md](database.md#pedidos-de-compra): `orders`, `order_details`, `order_status_history`
+y `document_sequences` (contador de folios).

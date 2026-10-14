@@ -215,7 +215,12 @@ class OrderLifecycleTest extends TestCase
             ->assertStatus(422)
             ->assertJsonPath('data.sku', 'SERV-001-U');
 
-        $this->assertSame(0, Order::count(), 'El folio no se consume si el alta falla.');
+        $this->assertSame(0, Order::count());
+
+        // El folio no se consume si el alta falla: el siguiente sigue siendo 1.
+        $this->createOrder([['idProductVariant' => $base->id, 'quantityOrdered' => 1]])
+            ->assertCreated()
+            ->assertJsonPath('data.folio', 1);
     }
 
     public function test_inactive_variants_and_products_are_rejected(): void

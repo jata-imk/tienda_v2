@@ -182,10 +182,7 @@ class OrderService
         $order = DB::transaction(function () use ($dto, $userId) {
             $currency = $this->resolveCurrency($dto->currencyId);
 
-            // MAX bajo FOR UPDATE: una segunda alta concurrente espera a que
-            // esta termine. Si aun asi chocan (gap locks con la tabla vacia),
-            // el unique (key, folio) lo detecta y la transaccion se reintenta.
-            $folio = (int) Order::where('key', Order::DEFAULT_KEY)->lockForUpdate()->max('folio') + 1;
+            $folio = $this->nextFolio(Order::DEFAULT_KEY);
 
             $order = Order::create([
                 'key'              => Order::DEFAULT_KEY,
@@ -491,6 +488,27 @@ class OrderService
         }
 
         return $currency;
+    }
+
+    /**
+     * Siguiente folio de la serie. La fila de `document_sequences` queda
+     * bloqueada hasta el commit, asi que las altas concurrentes esperan su turno
+     * en lugar de chocar; si la transaccion se revierte, el folio no se consume.
+     * El unique (key, folio) de `orders` sigue como red de seguridad.
+     */
+    private function nextFolio(string $key): int
+    {
+        $last = DB::table('document_sequences')->where('key', $key)->lockForUpdate()->value('last_folio');
+
+        if ($last === null) {
+            throw new \RuntimeException("No existe la serie de folios {$key} en document_sequences.");
+        }
+
+        $folio = (int) $last + 1;
+
+        DB::table('document_sequences')->where('key', $key)->update(['last_folio' => $folio]);
+
+        return $folio;
     }
 
     private function assertDraft(Order $order, string $message): void
