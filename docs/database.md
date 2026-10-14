@@ -6,8 +6,12 @@ Motor: **MariaDB**. Configurar en `.env` con `DB_CONNECTION=mysql`.
 
 ```
 user_types (1) ──< users (N) ──< user_sessions (N)
-company_info       (independiente — datos de la empresa)
+currencies (1) ──< company_info      (una sola fila: datos de la empresa y moneda base)
 ```
+
+Las tablas de inventario (`products`, `product_variants`, `inventory_movements`, catálogos de
+tallas/colores/categorías) se documentan en [inventario.md](inventario.md); `currencies` en
+[config.md](config.md); las de pedidos de compra, abajo.
 
 ## Tablas
 
@@ -18,74 +22,60 @@ Catálogo de roles de usuario.
 |---|---|---|
 | `id` | bigint PK | Auto-incremental |
 | `name` | varchar | Etiqueta visible del rol |
-| `code` | varchar unique | Código estable usado para autorización |
+| `code` | varchar(50) unique | Código estable usado para autorización (`administrator`, `seller`, `warehouse`) |
 | `status` | enum | `active` / `inactive` |
 | `created_at` | timestamp | Fecha de creación |
 | `updated_at` | timestamp nullable | Fecha de actualización |
 
-### `companies`
-Datos de la empresa. Se retorna en cada login.
+### `company_info`
+Datos de la empresa. Se retorna en cada login y alimenta el PDF de pedidos.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
 | `id` | bigint PK | Auto-incremental |
-| `status` | enum | `Active` / `Inactive` |
-| `company_name` | varchar | Nombre comercial |
+| `name` | varchar | Nombre comercial |
 | `rfc` | varchar nullable | RFC fiscal |
-| `razon_social` | varchar nullable | Razón social |
-| `regimen_fiscal` | varchar nullable | Régimen fiscal |
-| `img` | text nullable | Logo en base64 |
-| `street` | varchar nullable | Calle |
-| `num_ext` | varchar nullable | Número exterior |
-| `cross_one` | varchar nullable | Entre calle 1 |
-| `cross_two` | varchar nullable | Entre calle 2 |
-| `cp` | varchar nullable | Código postal |
-| `colony` | varchar nullable | Colonia |
-| `city` | varchar nullable | Ciudad |
+| `legal_name` | varchar nullable | Razón social |
+| `tax_regime` | varchar nullable | Régimen fiscal |
+| `id_currency` | bigint FK nullable | → `currencies.id`. **Moneda base** del negocio |
+| `logo` | longtext nullable | Logo en base64 (con o sin prefijo data-URI) |
+| `street` / `external_number` | varchar nullable | Calle y número exterior |
+| `cross_street_one` / `cross_street_two` | varchar nullable | Entre calles |
+| `postal_code` / `neighborhood` / `city` | varchar nullable | CP, colonia y ciudad |
 | `stock_control` | boolean | Control de inventario (default: true) |
-| `integers_q` | tinyint | Dígitos enteros en cantidades (default: 9) |
-| `decimals_q` | tinyint | Decimales en cantidades (default: 3) |
-| `date_creation` | timestamp | Fecha de creación |
+| `quantity_integers` | tinyint | Dígitos enteros en cantidades (default: 9) |
+| `quantity_decimals` | tinyint | Decimales en cantidades (default: 3) |
+| `grid_settings` | json nullable | Preferencias de grids |
+| `status` | enum | `active` / `inactive` |
+| `created_at` / `updated_at` | timestamp | |
 
-### `tokens`
-JWT emitidos. Permite invalidar tokens sin esperar expiración.
-
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | bigint PK | Auto-incremental |
-| `status` | enum | `vigente` / `caducado` |
-| `token` | text | String JWT completo |
-| `date_start` | timestamp | Fecha de emisión |
-| `date_expiration` | timestamp | Fecha de expiración (24h después de emisión) |
-
-### `usuarios`
+### `users`
 Credenciales y datos personales del usuario.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
 | `id` | bigint PK | Auto-incremental |
-| `user_type_id` | bigint FK | → `tipos_usuario.id` |
-| `name` | varchar | Nombre |
-| `first_name` | varchar | Primer apellido |
-| `last_name` | varchar | Segundo apellido |
-| `username` | varchar unique | Nombre de usuario para login |
+| `id_user_type` | bigint FK | → `user_types.id` |
+| `first_name` | varchar | Nombre |
+| `last_name` | varchar | Apellidos |
+| `user_name` | varchar unique | Nombre de usuario para login |
 | `email` | varchar unique | Correo electrónico |
 | `password` | varchar | Hash bcrypt |
-| `status` | enum | `activo` / `inactivo` |
-| `date_creation` | timestamp | Fecha de creación |
+| `status` | enum | `active` / `inactive` |
+| `created_at` / `updated_at` | timestamp | |
 
-### `sesiones`
-Relación activa entre un usuario y su token JWT.
+### `user_sessions`
+JWT emitidos por sesión. Permite revocar tokens (logout, cambio de rol o de contraseña,
+desactivación) sin esperar a que expiren.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
 | `id` | bigint PK | Auto-incremental |
-| `session` | json nullable | Datos adicionales de sesión |
-| `user_id` | bigint FK | → `usuarios.id` |
-| `token_id` | bigint FK | → `tokens.id` |
-| `status` | enum | `vigente` / `finalizado` |
-| `date_start` | timestamp | Inicio de sesión |
-| `date_end` | timestamp nullable | Fin de sesión (null si sigue activa) |
+| `id_user` | bigint FK | → `users.id` |
+| `token_hash` | text | Token de la sesión |
+| `expires_at` | timestamp | Expiración |
+| `revoked_at` | timestamp nullable | Cuándo se revocó (null = vigente) |
+| `created_at` / `updated_at` | timestamp | |
 
 ## Pedidos de compra
 
@@ -175,7 +165,7 @@ operativo. `DatabaseSeeder` selecciona uno de estos orquestadores según `APP_EN
 
 | Seeder | Entorno | Datos |
 |---|---|---|
-| `ProductionSeeder` | `production` | Roles, MXN/USD, empresa, grupos, tallas y primer `admin` si no hay usuarios |
+| `ProductionSeeder` | `production` | Roles, MXN/USD, empresa (con logo), grupos, tallas y primer `admin` si no hay usuarios |
 | `DevelopmentSeeder` | Otros | Todo producción más categorías, colores, productos e inventario demo |
 
 Los seeders de catálogos son idempotentes: una segunda ejecución no duplica ni

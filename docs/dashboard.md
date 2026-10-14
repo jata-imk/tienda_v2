@@ -4,7 +4,7 @@ Métricas agregadas de inventario y ventas en un solo endpoint.
 
 Requiere:
 - Header `Authorization: Bearer <JWT>`
-- Usuario con tipo `administrador`
+- Usuario con rol `administrator` (código de `user_types.code`)
 
 ---
 
@@ -129,8 +129,9 @@ bajo el umbral: pueden incluir productos por encima del umbral si hay pocos prod
 incluyen productos sin control de existencias.
 
 `inventoryValue` es la valuación **a costo** e `inventorySaleValue` la valuación al **precio de
-lista vigente**. Ninguna lleva moneda: el modelo de datos no la tiene (`products.cost` y
-`products.price` no referencian `currencies`, y `company_info` no define una moneda por defecto).
+lista vigente**. Ninguna lleva moneda en la respuesta: `products.cost` y `products.price` no
+referencian `currencies`. Se entienden en la **moneda base** de la empresa
+(`company_info.id_currency`, MXN en el seeder; ver [config.md](config.md)).
 
 Todo se resuelve en SQL agregado (`DashboardService`); no se cargan colecciones ni se usa el
 accessor `Product::totalStock` (provocaría N+1).

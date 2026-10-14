@@ -4,7 +4,7 @@ Catálogos y parámetros de configuración del sistema.
 
 Todos los endpoints requieren:
 - Header `Authorization: Bearer <JWT>`
-- Usuario con tipo `administrador`
+- Usuario con rol `administrator` (código de `user_types.code`)
 
 ---
 
@@ -179,6 +179,11 @@ El tipo de cambio **no se edita desde aquí**: se cambia en `PUT /api/currencies
 `LONGTEXT`: antes era `TEXT` (64 KB) y truncaba los logos.
 
 A diferencia de la imagen de producto, aquí no se guarda archivo en disco — es una sola imagen.
+
+El logo también se imprime en el PDF de los pedidos de compra ([pedidos.md](pedidos.md)), junto
+con la razón social, la dirección y el RFC. `CompanySeeder` carga el logo de la empresa demo
+(`database/seeders/assets/company-logo.jpg`) al crearla, o en una empresa existente que no tenga
+logo; nunca reemplaza uno ya subido.
 
 ```json
 { "name": "Mi Tienda SA", "logo": "data:image/png;base64,iVBORw0KGgo...", "stockControl": true }

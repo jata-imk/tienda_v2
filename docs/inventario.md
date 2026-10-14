@@ -5,7 +5,7 @@ Modelo de inventario con **producto base** separado de sus **existencias por var
 
 Todos los endpoints requieren:
 - Header `Authorization: Bearer <JWT>`
-- Usuario con tipo `administrador`
+- Usuario con rol `administrator`, `seller` o `warehouse` (ver [matriz de acceso](entrega-roles-seeders-frontend.md#2-matriz-de-acceso-vigente))
 
 Las respuestas usan el formato estándar `ApiResponse` (`{ ok, code, status, message, data }`).
 Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, `f[]`,
