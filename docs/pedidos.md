@@ -269,7 +269,7 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 | Información | Folio, `dateOrder`, comprador (usuario), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
 | Dirección envío | `shippingAddress`; vacía → nombre y dirección de la empresa |
 | Notas | `notes` |
-| Líneas | **Un renglón por producto + color** (no por variante): artículo (10, 20, 30…), clave y nombre del producto, color y su **corrida de tallas** (mini tabla Talla / Cant., en el orden de `sizes.sortOrder`). Luego cantidad total, UM (`PZA`), costo unitario y monto neto. Si ya hubo recepciones, se agregan la fila **Rec.** en la corrida y la columna **Recibido**. Si las tallas tienen costos distintos, el precio dice "Por talla" y la corrida agrega la fila **Costo**. Las notas de línea salen como `Talla 36: …` |
+| Líneas | Agrupadas por **producto + color**: un renglón por talla (columna **Talla**, en el orden de `sizes.sortOrder`) con su cantidad, UM (`PZA`), costo unitario y monto neto. El artículo (10, 20, 30…), la clave y el nombre + color se escriben **una sola vez** por grupo, en sus primeros renglones. Columna **Recibido** si ya hubo recepciones. Las notas de línea salen bajo la descripción como `Talla 34: …` |
 | Totales | Total de piezas y total neto en la moneda del pedido |
 | Pie | `PED-0000001 · Página X de Y` |
 

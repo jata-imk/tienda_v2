@@ -77,7 +77,7 @@ class OrderPdfTest extends TestCase
         $this->assertStringNotContainsString('BORRADOR', $html);
     }
 
-    public function test_lines_are_grouped_by_product_and_color_with_a_size_run(): void
+    public function test_lines_are_grouped_by_product_and_color_with_one_row_per_size(): void
     {
         $id = $this->createOrder([
             ['idProductVariant' => $this->variant('CAM-001-38-AZM')->id, 'quantityOrdered' => 6],
@@ -96,18 +96,20 @@ class OrderPdfTest extends TestCase
         $this->assertSame(['34', '36', '38'], array_column($azul['sizes'], 'size'), 'Tallas en orden de sort_order.');
         $this->assertSame([3.0, 6.0, 6.0], array_column($azul['sizes'], 'ordered'));
         $this->assertSame(15.0, $azul['ordered']);
-        $this->assertSame(600.0, $azul['unitCost']);
         $this->assertEquals(9000, $azul['subtotal']);
 
         $this->assertSame('Blanco', $blanco['color']);
-        $this->assertNull($blanco['unitCost'], 'Costos distintos por talla: no hay costo unico.');
-        $this->assertEquals(2 * 550 + 2 * 600, $blanco['subtotal']);
+        $this->assertSame([550.0, 600.0], array_column($blanco['sizes'], 'unitCost'), 'Cada talla conserva su costo.');
+        $this->assertEquals([1100, 1200], array_column($blanco['sizes'], 'subtotal'));
 
         $html = $this->renderView($id);
-        $this->assertSame(2, substr_count($html, '<table class="run">'));
-        $this->assertStringContainsString('Por talla', $html);
+        // El producto + color se escribe una vez por grupo, no una por talla.
+        $this->assertSame(1, substr_count($html, 'Camisa lino caballero · Azul marino'));
+        $this->assertSame(1, substr_count($html, 'Camisa lino caballero · Blanco'));
+        $this->assertSame(5, substr_count($html, '<td class="size">'), 'Un renglon por talla.');
         $this->assertStringContainsString('Talla 36: Bordado', $html);
-        $this->assertStringContainsString('9,000.00 MXN', $html);
+        $this->assertStringContainsString('550.00 MXN', $html);
+        $this->assertStringContainsString('3,600.00 MXN', $html);
     }
 
     private function draftOrder(): int

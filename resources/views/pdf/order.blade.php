@@ -24,14 +24,11 @@
         .info .label { width: 105px; }
         .lines { margin-top: 10px; border: 1px solid #888; }
         .lines thead th { border-bottom: 1px solid #888; padding: 5px 6px; font-size: 9px; text-align: left; }
-        .lines tbody td { padding: 6px 6px 2px 6px; }
-        .lines tbody td { padding-bottom: 6px; }
-        .run { width: auto; margin-top: 4px; border-collapse: collapse; }
-        /* `.lines .run` para ganarle en especificidad a `.lines tbody td`. */
-        .lines .run th, .lines .run td { border: 1px solid #c8c8c8; padding: 1px 5px; font-size: 7.5px; text-align: center; min-width: 18px; }
-        .lines .run th { background: #f2f2f2; font-weight: bold; color: #444; }
-        .lines .run tr th:first-child { text-align: left; }
-        .line-note { margin-top: 3px; font-size: 8px; color: #2b4a8b; }
+        .lines tbody td { padding: 2px 6px; }
+        .lines tbody tr.first td { padding-top: 6px; }
+        .lines tbody tr.last td { padding-bottom: 6px; }
+        .lines .size { text-align: center; font-weight: bold; }
+        .lines .note { font-size: 8px; color: #2b4a8b; }
         .lines .sep td { border-bottom: 1px solid #ddd; padding: 0; }
         .num { text-align: right; white-space: nowrap; }
         .sku { font-weight: bold; }
@@ -131,6 +128,7 @@
         <tr>
             <th style="width: 38px;">Artículo</th>
             <th>Artículo/Descripción</th>
+            <th style="width: 40px; text-align: center;">Talla</th>
             <th class="num" style="width: 48px;">Cantidad</th>
             @if ($showReceived)
                 <th class="num" style="width: 48px;">Recibido</th>
@@ -141,63 +139,43 @@
         </tr>
     </thead>
     <tbody>
-        {{-- Un renglon por producto + color; las tallas van en su corrida. --}}
+        {{-- Un renglon por talla; el articulo y la descripcion (producto +
+             color) solo se escriben en el primer renglon de cada grupo. --}}
+        @php $columns = $showReceived ? 8 : 7; @endphp
         @foreach ($groups as $index => $group)
-            @php
-                $notes = array_filter($group['sizes'], fn ($s) => $s['notes']);
-            @endphp
-            <tr>
-                <td>{{ ($index + 1) * 10 }}</td>
-                <td>
-                    <div class="sku">{{ $group['productKey'] }}</div>
-                    <div style="text-transform: uppercase;">{{ $group['productName'] }} · {{ $group['color'] }}</div>
-                    {{-- Tallas por fila de corrida: con la fila de costos cada celda
-                         es mas ancha y hay que partir antes para no desbordar. --}}
-                    @foreach (array_chunk($group['sizes'], $group['unitCost'] === null ? 6 : 10) as $chunk)
-                        <table class="run">
-                            <tr>
-                                <th>Talla</th>
-                                @foreach ($chunk as $size)
-                                    <th>{{ $size['size'] }}</th>
-                                @endforeach
-                            </tr>
-                            <tr>
-                                <th>Cant.</th>
-                                @foreach ($chunk as $size)
-                                    <td>{{ $qty($size['ordered']) }}</td>
-                                @endforeach
-                            </tr>
-                            @if ($showReceived)
-                                <tr>
-                                    <th>Rec.</th>
-                                    @foreach ($chunk as $size)
-                                        <td>{{ $qty($size['received']) }}</td>
-                                    @endforeach
-                                </tr>
-                            @endif
-                            @if ($group['unitCost'] === null)
-                                <tr>
-                                    <th>Costo</th>
-                                    @foreach ($chunk as $size)
-                                        <td>{{ number_format($size['unitCost'], 2) }}</td>
-                                    @endforeach
-                                </tr>
-                            @endif
-                        </table>
-                    @endforeach
-                    @foreach ($notes as $size)
-                        <div class="line-note">Talla {{ $size['size'] }}: {{ $size['notes'] }}</div>
-                    @endforeach
-                </td>
-                <td class="num">{{ $qty($group['ordered']) }}</td>
-                @if ($showReceived)
-                    <td class="num">{{ $qty($group['received']) }}</td>
-                @endif
-                <td>PZA</td>
-                <td class="num">{{ $group['unitCost'] === null ? 'Por talla' : $money($group['unitCost']) }}</td>
-                <td class="num">{{ $money($group['subtotal']) }}</td>
-            </tr>
-            <tr class="sep"><td colspan="{{ $showReceived ? 7 : 6 }}"></td></tr>
+            @foreach ($group['sizes'] as $position => $size)
+                @php
+                    $isFirst = $position === 0;
+                    $isLast  = $position === count($group['sizes']) - 1;
+                @endphp
+                <tr class="{{ $isFirst ? 'first' : '' }} {{ $isLast ? 'last' : '' }}">
+                    <td>{{ $isFirst ? ($index + 1) * 10 : '' }}</td>
+                    {{-- La clave va en el renglon de la primera talla y el nombre +
+                         color en el de la segunda, para que cada renglon tenga
+                         una sola linea y las tallas queden parejas. --}}
+                    <td>
+                        @if ($isFirst)
+                            <span class="sku">{{ $group['productKey'] }}</span>
+                        @endif
+                        @if ($position === 1 || ($isFirst && count($group['sizes']) === 1))
+                            @if ($isFirst)<br>@endif
+                            <span style="text-transform: uppercase;">{{ $group['productName'] }} · {{ $group['color'] }}</span>
+                        @endif
+                        @if ($size['notes'])
+                            <div class="note">Talla {{ $size['size'] }}: {{ $size['notes'] }}</div>
+                        @endif
+                    </td>
+                    <td class="size">{{ $size['size'] }}</td>
+                    <td class="num">{{ $qty($size['ordered']) }}</td>
+                    @if ($showReceived)
+                        <td class="num">{{ $qty($size['received']) }}</td>
+                    @endif
+                    <td>PZA</td>
+                    <td class="num">{{ $money($size['unitCost']) }}</td>
+                    <td class="num">{{ $money($size['subtotal']) }}</td>
+                </tr>
+            @endforeach
+            <tr class="sep"><td colspan="{{ $columns }}"></td></tr>
         @endforeach
     </tbody>
 </table>

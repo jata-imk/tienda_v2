@@ -91,9 +91,9 @@ class OrderPdfService
     }
 
     /**
-     * Agrupa las lineas por producto + color: cada grupo es un renglon del PDF
-     * con su corrida de tallas (ordenadas por `sizes.sort_order`), en lugar de
-     * un renglon por variante.
+     * Agrupa las lineas por producto + color, con las tallas ordenadas por
+     * `sizes.sort_order`. En el PDF cada talla es un renglon, pero el producto y
+     * el color solo se escriben en el primero del grupo.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -104,7 +104,6 @@ class OrderPdfService
             ->map(function ($lines) {
                 $lines   = $lines->sortBy(fn ($d) => [(int) $d->variant->size?->sort_order, $d->variant->size?->name])->values();
                 $variant = $lines->first()->variant;
-                $costs   = $lines->map(fn ($d) => (float) $d->unit_cost)->unique();
 
                 return [
                     'productKey'  => $variant->product?->key,
@@ -115,13 +114,10 @@ class OrderPdfService
                         'ordered'  => (float) $d->quantity_ordered,
                         'received' => (float) $d->quantity_received,
                         'unitCost' => (float) $d->unit_cost,
+                        'subtotal' => (float) $d->subtotal,
                         'notes'    => $d->notes,
                     ])->all(),
                     'ordered'     => $lines->sum(fn ($d) => (float) $d->quantity_ordered),
-                    'received'    => $lines->sum(fn ($d) => (float) $d->quantity_received),
-                    // Un solo costo si todas las tallas cuestan igual; si no, el
-                    // costo va por talla dentro de la corrida.
-                    'unitCost'    => $costs->count() === 1 ? $costs->first() : null,
                     'subtotal'    => $lines->sum(fn ($d) => (float) $d->subtotal),
                 ];
             })
