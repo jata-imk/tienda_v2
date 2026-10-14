@@ -4,7 +4,7 @@ Métricas agregadas de inventario y ventas en un solo endpoint.
 
 Requiere:
 - Header `Authorization: Bearer <JWT>`
-- Usuario con tipo `administrador`
+- Usuario con rol `administrator` (código de `user_types.code`)
 
 ---
 
@@ -102,7 +102,7 @@ GET /api/dashboard?limit=10&dateFrom=2026-01-01&dateTo=2026-07-21&lowStockThresh
 | `topProducts` | `SUM(quantity)` de `inventory_movements` con `movement_type = 'sale'`, agrupado por producto (join `product_variants` → `products`). Hoy es la **única** fuente de ventas: no hay tabla de tickets. |
 | `lowestStock` / `highestStock` | `SUM(product_variants.stock)` de variantes **activas** por producto activo, ordenado asc/desc. `lowestStock` excluye los ceros nunca abastecidos; `highestStock` conserva todos los productos activos. |
 | `totalProducts` / `activeProducts` | `COUNT` sobre `products`. |
-| `totalVariants` / `totalStock` | `COUNT` y `SUM(stock)` de variantes activas. |
+| `totalVariants` / `totalStock` | `COUNT` y `SUM(stock)` de variantes activas **de productos activos**. Un producto dado de baja no suma, ni siquiera si alguna variante quedara activa por datos historicos. |
 | `inventoryValue` | `SUM(product_variants.stock * products.cost)` — valuación a costo. |
 | `inventorySaleValue` | `SUM(product_variants.stock * products.price)` — valuación al precio de lista, sin descuentos ni impuestos. |
 | `lowStockCount` | Productos activos **con `stockControl = true`**, con inventario inicializado y cuya existencia total ≤ `lowStockThreshold`. |
@@ -129,11 +129,16 @@ bajo el umbral: pueden incluir productos por encima del umbral si hay pocos prod
 incluyen productos sin control de existencias.
 
 `inventoryValue` es la valuación **a costo** e `inventorySaleValue` la valuación al **precio de
-lista vigente**. Ninguna lleva moneda: el modelo de datos no la tiene (`products.cost` y
-`products.price` no referencian `currencies`, y `company_info` no define una moneda por defecto).
+lista vigente**. Ninguna lleva moneda en la respuesta: `products.cost` y `products.price` no
+referencian `currencies`. Se entienden en la **moneda base** de la empresa
+(`company_info.id_currency`, MXN en el seeder; ver [config.md](config.md)).
 
 Todo se resuelve en SQL agregado (`DashboardService`); no se cargan colecciones ni se usa el
 accessor `Product::totalStock` (provocaría N+1).
 
 Cuando exista el módulo de ventas, `topProducts` deberá migrar de `inventory_movements` a la
 tabla de ventas real.
+
+Las recepciones de pedidos de compra ([pedidos.md](pedidos.md)) generan movimientos `purchase`:
+suben `totalStock`, `inventoryValue` e `inventorySaleValue` como cualquier entrada, y cuentan como
+historial para el criterio de "inventario inicializado", pero **no** entran en `topProducts`.

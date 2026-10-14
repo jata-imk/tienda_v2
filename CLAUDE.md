@@ -33,6 +33,7 @@ php artisan storage:link       # Requerido una vez: expone las imágenes de prod
 - [Autenticación](docs/auth.md)
 - [Usuarios](docs/usuarios.md)
 - [Inventario](docs/inventario.md) — Categorías, productos, imágenes
+- [Pedidos de compra](docs/pedidos.md) — Pedidos a proveedor, recepción (movimientos `purchase`) y PDF
 - [Dashboard](docs/dashboard.md) — Métricas de ventas e inventario
 - [Configuración](docs/config.md) — Tipos IVA, impuestos base, tipos de moneda
 - [Base de datos](docs/database.md)

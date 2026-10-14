@@ -29,6 +29,11 @@ class ProductController extends Controller
      *
      * Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.
      *
+     * Cada producto incluye sus variantes en `variants`, ordenadas por color
+     * alfabetico y, dentro de cada color, por talla (`sizes.sort_order`). `o` ordena
+     * los productos, no las variantes: el orden de estas no es configurable aqui.
+     * Para ordenarlas a gusto, `POST /api/products/{id}/variants/query` con `o`.
+     *
      * @queryParam p[page] integer Page number. Example: 1
      * @queryParam p[per_page] integer Items per page. Example: 15
      * @queryParam f[] string[] Fields to return. Example: ["id","name"]
@@ -91,6 +96,10 @@ class ProductController extends Controller
     /**
      * Create product
      *
+     * Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el
+     * payload las mande como `active`. Lo inverso si se respeta: en un producto
+     * activo puede haber variantes `inactive` (por ejemplo una talla descontinuada).
+     *
      * @bodyParam categories integer[] required Category IDs. Example: [1,2]
      * @bodyParam key string required Internal unique key. Example: 000001
      * @bodyParam typeIva integer required IVA type (1=general/16%, 2=rate, 3=quota, 4=N/A). Example: 1
@@ -104,6 +113,10 @@ class ProductController extends Controller
 
     /**
      * Update product
+     *
+     * Cambiar `status` cascadea a todas las variantes del producto: `inactive` las
+     * desactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que
+     * reenviar el formulario completo con el mismo `status` no las toca.
      *
      * @urlParam id integer required Product ID. Example: 1
      *
@@ -168,6 +181,10 @@ class ProductController extends Controller
      * Deactivate product
      *
      * Sets status to `inactive`. Does not delete the record.
+     *
+     * Cascadea: todas las variantes del producto pasan tambien a `inactive`, por lo
+     * que su `totalStock` queda en 0. Reactivar el producto con
+     * `PUT /api/products/{id}` y `status: active` las reactiva todas.
      *
      * @urlParam id integer required Product ID. Example: 1
      *

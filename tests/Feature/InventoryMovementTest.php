@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\DTOs\InventoryMovement\MovementLineDTO;
+use App\DTOs\InventoryMovement\RegisterMovementsDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
+use App\Services\InventoryMovementService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -238,5 +241,94 @@ class InventoryMovementTest extends TestCase
                 ['idProductVariant' => $variant->id, 'movementType' => 'entry', 'quantity' => 1],
             ],
         ])->assertUnprocessable()->assertJsonValidationErrors(['idUser']);
+    }
+
+    public function test_a_line_reference_id_overrides_the_batch_reference_id(): void
+    {
+        $product  = Product::where('key', 'CAM-001')->firstOrFail();
+        $blanco34 = ProductVariant::where('sku', 'CAM-001-34-BLA')->firstOrFail();
+        $azul34   = ProductVariant::where('sku', 'CAM-001-34-AZM')->firstOrFail();
+
+        $result = app(InventoryMovementService::class)->register(new RegisterMovementsDTO(
+            productId:     $product->id,
+            userId:        $this->user->id,
+            referenceType: 'test',
+            referenceId:   99,
+            notes:         null,
+            lines:         [
+                new MovementLineDTO($blanco34->id, 'entry', 1, referenceId: 7),
+                new MovementLineDTO($azul34->id, 'entry', 1),
+            ],
+        ));
+
+        $this->assertSame(7, (int) $result['movements'][0]->reference_id);
+        $this->assertSame(99, (int) $result['movements'][1]->reference_id);
+    }
+
+    public function test_purchase_movements_cannot_be_registered_by_hand(): void
+    {
+        $product = Product::where('key', 'CAM-001')->firstOrFail();
+        $variant = ProductVariant::where('sku', 'CAM-001-34-BLA')->firstOrFail();
+
+        $this->asUser()->withoutMiddleware()->postJson('/api/inventory/movements', [
+            'idProduct' => $product->id,
+            'idUser'    => $this->user->id,
+            'movements' => [
+                ['idProductVariant' => $variant->id, 'movementType' => 'purchase', 'quantity' => 1],
+            ],
+        ])->assertUnprocessable()->assertJsonValidationErrors(['movements.0.movementType']);
+
+        $this->asUser()->withoutMiddleware()->postJson('/api/inventory/movements', [
+            'idProduct'     => $product->id,
+            'idUser'        => $this->user->id,
+            'referenceType' => 'order_detail',
+            'movements'     => [
+                ['idProductVariant' => $variant->id, 'movementType' => 'entry', 'quantity' => 1],
+            ],
+        ])->assertUnprocessable()->assertJsonValidationErrors(['referenceType']);
+
+        $this->asUser()->withoutMiddleware()->postJson("/api/products/{$product->id}/variants", [
+            'variants'        => [],
+            'initialMovement' => ['movementType' => 'purchase', 'idUser' => $this->user->id],
+        ])->assertUnprocessable()->assertJsonValidationErrors(['initialMovement.movementType']);
+
+        $this->asUser()->withoutMiddleware()->postJson('/api/products', [
+            'key'             => 'TMP-001',
+            'initialMovement' => ['movementType' => 'purchase', 'idUser' => $this->user->id],
+        ])->assertUnprocessable()->assertJsonValidationErrors(['initialMovement.movementType']);
+
+        $this->assertSame(0, InventoryMovement::where('movement_type', 'purchase')->count());
+    }
+
+    public function test_a_manual_reference_id_that_matches_an_order_line_is_not_linked_to_the_order(): void
+    {
+        $product = Product::where('key', 'CAM-001')->firstOrFail();
+        $variant = ProductVariant::where('sku', 'CAM-001-34-BLA')->firstOrFail();
+
+        $order = $this->asUser()->withoutMiddleware()->postJson('/api/orders', [
+            'details' => [['idProductVariant' => $variant->id, 'quantityOrdered' => 1]],
+        ])->assertCreated()->json('data');
+
+        $this->asUser()->withoutMiddleware()->postJson('/api/inventory/movements', [
+            'idProduct'     => $product->id,
+            'idUser'        => $this->user->id,
+            'referenceType' => 'manual_adjustment',
+            'referenceId'   => $order['details'][0]['id'],
+            'movements'     => [
+                ['idProductVariant' => $variant->id, 'movementType' => 'entry', 'quantity' => 1],
+            ],
+        ])->assertCreated();
+
+        $items = $this->asUser()->withoutMiddleware()->postJson('/api/inventory/movements/query', [
+            'w' => [['f' => 'referenceType', 'ao' => '==', 'v' => 'manual_adjustment']],
+        ])->assertOk()->json('data.items');
+
+        $this->assertCount(1, $items);
+        $this->assertNull($items[0]['idOrder']);
+        $this->assertNull($items[0]['orderFolio']);
+
+        $this->asUser()->withoutMiddleware()->postJson('/api/inventory/movements/query', [
+            'w' => [['f' => 'idOrder', 'ao' => '==', 'v' => $order['id']]],
+        ])->assertOk()->assertJsonPath('data.totalCount', 0);
     }
 }

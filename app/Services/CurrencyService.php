@@ -32,7 +32,7 @@ class CurrencyService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'currencies');
         }
 
         $totalCount = isset($filters['totalCount'])

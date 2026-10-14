@@ -5,11 +5,39 @@ Modelo de inventario con **producto base** separado de sus **existencias por var
 
 Todos los endpoints requieren:
 - Header `Authorization: Bearer <JWT>`
-- Usuario con tipo `administrador`
+- Usuario con rol `administrator`, `seller` o `warehouse` (ver [matriz de acceso](entrega-roles-seeders-frontend.md#2-matriz-de-acceso-vigente))
 
 Las respuestas usan el formato estándar `ApiResponse` (`{ ok, code, status, message, data }`).
 Los listados (`index` / `query`) soportan los filtros `p[page]`, `p[per_page]`, `f[]`,
 `o[column]`, `o[direction]`, `w[column]`, `totalCount` (igual que `products`).
+
+### Ordenamiento de los listados (`o`)
+
+`o[column]` debe ser una **columna real de la tabla del recurso**; `o[direction]`, `asc` o
+`desc`. Cualquier otra cosa devuelve **422**, no 500:
+
+```json
+{
+  "message": "No se puede ordenar por 'sku': no es una columna de 'products'.",
+  "errors": { "o.column": ["No se puede ordenar por 'sku': no es una columna de 'products'."] }
+}
+```
+
+Aplica a los diez recursos con grid: `products`, `products/{id}/variants`, `categories`,
+`colors`, `sizes`, `size-groups`, `currencies`, `users`, `inventory/movements` y `orders`.
+
+Ojo con las llaves de la **respuesta** que no son columnas: en productos, `totalStock`,
+`sizeGroup`, `categories` y `variants` no son ordenables. Las dos excepciones son la matriz de
+variantes, donde se aceptan dos alias:
+
+| `o[column]` | Ordena por |
+|---|---|
+| `color` | nombre del color y, dentro de cada color, por talla |
+| `size` | `sizes.sort_order` y, dentro de cada talla, por color |
+
+`o[direction]` afecta al criterio principal; el secundario queda siempre ascendente. En el
+listado de productos, `o` ordena los productos y nunca las variantes (ver
+[Orden de las variantes](#orden-de-las-variantes)).
 
 ### Operadores de `POST /{recurso}/query`
 
@@ -86,7 +114,9 @@ el mismo grupo OR sobre campos clave del recurso. Disponible en:
 - `sizes`: `name` y nombre del grupo de tallas.
 - `size-groups`: `name` y `description`.
 - `users`: nombre, apellidos, usuario y email.
-- `inventory/movements`: `notes`, `reference_type`, SKU de variante y nombre/clave del producto.
+- `inventory/movements`: `notes`, `reference_type`, SKU de variante, nombre/clave del producto y
+  folio del pedido de compra (`PED-0000012`, `PED-12` o `12`).
+- `orders`: folio (`PED-0000012`, `PED-12` o `12`), `notes`, proveedor y usuario (ver [pedidos.md](pedidos.md)).
 
 Un término vacío o sólo con espacios se ignora.
 
@@ -104,7 +134,7 @@ Un término vacío o sólo con espacios se ignora.
 | `colors` | Colores reutilizables (`hex_color`). Catálogo. |
 | `product_variants` | Existencia real por `producto + talla + color`. Único `id_product+id_size+id_color`. |
 | `product_images` | Galería de imágenes por `producto + color` (varias filas por combinación). |
-| `inventory_movements` | Historial de cada entrada/venta/ajuste/devolución/cancelación. |
+| `inventory_movements` | Historial de cada entrada/venta/ajuste/devolución/cancelación/compra. |
 
 `products` ya **no** guarda `size` ni `stock`: la existencia vive en `product_variants.stock`
 y la existencia total del producto es la suma de variantes activas (`totalStock`).
@@ -162,7 +192,7 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products/{id}/colors/{colorId}/images` | Listar imágenes de un color |
 | `POST` | `/api/products/{id}/colors/{colorId}/images` | Agregar una o varias imágenes a un color (multipart) |
 | `DELETE` | `/api/products/{id}/colors/{colorId}/images/{imageId}` | Borrar una imagen puntual del color |
-| `DELETE` | `/api/products/{id}` | Desactivar (status → inactive) |
+| `DELETE` | `/api/products/{id}` | Desactivar producto **y todas sus variantes** (status → inactive) |
 
 ### Campos del producto base
 | Campo | Tipo | Req. | Descripción |
@@ -383,6 +413,85 @@ Si la variante no pertenece al producto de la URL → `404 Variant not found for
 Baja lógica: pone `status = inactive`. La fila y sus movimientos se conservan; la variante deja de
 sumar en `totalStock`. Se reactiva con `PUT ... { "status": "active" }`.
 
+Desactivar una variante **no** afecta al producto: la cascada de status es solo hacia abajo.
+
+### Coherencia de status producto / variante
+
+Regla: **un producto inactivo no puede tener variantes activas.** Se sostiene en tres puntos,
+no solo en la cascada:
+
+| Camino | Comportamiento |
+|---|---|
+| `PUT`/`DELETE` del producto | cascada a todas las variantes (ver seccion siguiente) |
+| `POST /api/products` con `status: "inactive"` | las variantes nacen `inactive`, aunque el payload las mande `active` |
+| `POST /api/products/{id}/variants` sobre un producto inactivo | las variantes nuevas nacen `inactive` |
+| `PUT /api/products/{id}/variants/{variantId}` con `status: "active"` sobre un producto inactivo | **422** |
+
+El 422 devuelve el error bajo la llave `status`:
+
+```json
+{
+  "message": "No se puede activar una variante de un producto inactivo: reactiva primero el producto.",
+  "errors": {
+    "status": ["No se puede activar una variante de un producto inactivo: reactiva primero el producto."]
+  }
+}
+```
+
+Lo que **si** se permite: editar `sku` o `codeBar` de una variante de un producto inactivo, y
+desactivar una variante de un producto inactivo (es idempotente). Tambien es legitimo el caso
+inverso —una variante `inactive` en un producto `active`, por ejemplo una talla descontinuada—,
+asi que al crear un producto activo se respeta un `status: "inactive"` explicito en sus variantes.
+
+### Orden de las variantes
+
+Las variantes llegan ordenadas **por color alfabético y, dentro de cada color, por talla**
+(`sizes.sort_order`). Aplica en todas las respuestas que las incluyen: `GET /api/products`,
+`POST /api/products/query`, `GET /api/products/{id}` y `GET /api/products/{id}/variants`.
+
+Ejemplo (producto `CAM-001`, colores Azul marino y Blanco, tallas 34/36/38):
+
+```
+CAM-001-34-AZM
+CAM-001-36-AZM
+CAM-001-38-AZM
+CAM-001-34-BLA
+CAM-001-36-BLA
+CAM-001-38-BLA
+```
+
+El orden de las tallas sale de `sizes.sort_order`, no de su nombre ni de su `id`, así que
+las tallas por letra (CH, M, G, XG) también salen bien siempre que su `sortOrder` esté bien
+capturado. Los colores van por nombre porque `colors` no tiene columna de orden.
+
+En `POST /api/products/{id}/variants/query` este es el orden **por defecto**: si mandas `o`
+explícito, el tuyo gana.
+
+> Antes de esto no había `ORDER BY` alguno y el orden lo decidía el índice que eligiera el
+> planificador — salía agrupado por talla y no era un contrato estable. El frontend puede
+> ahora confiar en el orden que recibe y no necesita reordenar.
+
+### Cascada de status: producto → variantes
+
+El status de un producto y el de sus variantes nunca quedan en desacuerdo. Cambiar el status del
+producto lo propaga a **todas** sus variantes, por cualquiera de las dos vías:
+
+| Acción | Efecto en las variantes |
+|---|---|
+| `DELETE /api/products/{id}` | todas pasan a `inactive` |
+| `PUT /api/products/{id}` con `{"status": "inactive"}` | todas pasan a `inactive` |
+| `PUT /api/products/{id}` con `{"status": "active"}` | todas vuelven a `active` |
+| `PUT /api/products/{id}` sin cambio de `status` | sin efecto |
+
+La cascada solo se dispara cuando el valor de `status` **cambia**: un `PUT` que reenvía el
+formulario completo con el mismo status deja las variantes intactas. Por eso una variante
+desactivada individualmente sobrevive a cualquier edición del producto que no toque su status —
+pero sí se reactiva si el producto pasa de `inactive` a `active`.
+
+Consecuencia para la UI: tras dar de baja un producto, su `totalStock` queda en `0` y todas las
+variantes se devuelven con `status: "inactive"`. No hace falta que el frontend recorra las
+variantes desactivándolas una por una.
+
 ### Imágenes del color nuevo
 
 `POST /api/products/{id}/colors/{colorId}/images` exige que el color exista en alguna variante del
@@ -403,12 +512,16 @@ producto. Al agregar la variante del color nuevo, su galería queda habilitada d
 Soportan paginación (`p`), selección de campos (`f`), ordenación (`o`), filtros (`w`) y `totalCount`.
 
 Filtros soportados en `w`:
-- `movement_type`: `entry`, `sale`, `adjustment`, `return`, `cancel` (o array con `in`)
+- `movement_type`: `entry`, `sale`, `adjustment`, `return`, `cancel`, `purchase` (o array con `in`)
 - `id_product`: ID del producto (resuelto a través de la variante)
 - `sku`: SKU puntual de la variante
+- `id_order`: pedido de compra que originó el movimiento (resuelto a través de su línea)
 - `id_user`: usuario que generó el movimiento
 - `created_at`: filtros de fecha / rango
-- `search`: búsqueda de texto sobre notas, origen, usuario, SKU o nombre del producto
+- `search`: búsqueda de texto sobre notas, origen, usuario, SKU, nombre del producto o folio del pedido
+
+Cada movimiento trae además `idOrder` y `orderFolio` (`"PED-0000012"`) cuando viene de la recepción de
+un pedido de compra; en cualquier otro caso van en `null`.
 
 Respuesta estándar (`ApiResponse::query`):
 ```json
@@ -437,7 +550,9 @@ Respuesta estándar (`ApiResponse::query`):
         "productKey": "CAM-001",
         "sku": "CAM-001-34-BLA",
         "size": "34",
-        "color": "Blanco"
+        "color": "Blanco",
+        "idOrder": null,
+        "orderFolio": null
       }
     ],
     "totalCount": 1,
@@ -458,7 +573,7 @@ aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo f
 |---|---|---|---|
 | `idProduct` | int | sí | Producto al que pertenecen todas las variantes. |
 | `idUser` | int | sí | Usuario que genera los movimientos. **Debe coincidir con el usuario de la sesión** (se valida contra el JWT); si no coincide, `422`. |
-| `referenceType` | string | no | Origen (ej. `manual_adjustment`, `sales_note`) |
+| `referenceType` | string | no | Origen (ej. `manual_adjustment`, `sales_note`). `order_detail` está reservado a las recepciones de pedidos: enviarlo responde `422`. |
 | `referenceId` | int | no | Documento origen |
 | `notes` | string/null | no | Comentario general, se aplica a cada movimiento generado |
 | `movements` | array | sí | Uno o más movimientos (1 a 200 por petición) |
@@ -474,6 +589,12 @@ aplica ninguno. Sirve tanto para ajustar una sola variante como para un conteo f
 **Efecto sobre el stock:** `entry`, `return`, `cancel` **incrementan**; `sale`, `adjustment`
 **disminuyen**. Si el resultado de cualquier variante quedara negativo, responde `422` y no se
 aplica ningún movimiento del lote.
+
+**Tipo `purchase` (compra):** también incrementa, pero **solo lo genera la recepción de un pedido
+de compra** (`POST /api/orders/{id}/receive`, ver [pedidos.md](pedidos.md)). Este endpoint y el
+`initialMovement` de productos/variantes lo rechazan con `422`, así que una entrada `purchase`
+siempre corresponde a mercancía recibida contra un pedido. Cada una lleva
+`referenceType = order_detail` y `referenceId` = id de la línea del pedido.
 
 **Validaciones adicionales:** todas las variantes deben existir y pertenecer a `idProduct`; el
 producto debe tener `stockControl=true`. Se permiten movimientos sobre variantes con

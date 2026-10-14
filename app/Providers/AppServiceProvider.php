@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\OrderService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Una instancia por peticion: OrderService memoriza la moneda base, que
+        // OrderResource consulta por cada pedido del listado.
+        $this->app->scoped(OrderService::class);
     }
 
     /**

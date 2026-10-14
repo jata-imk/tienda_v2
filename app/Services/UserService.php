@@ -34,7 +34,7 @@ class UserService
         }
 
         if (! empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'users');
         }
 
         $totalCount = isset($filters['totalCount'])

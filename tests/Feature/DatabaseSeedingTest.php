@@ -51,6 +51,7 @@ class DatabaseSeedingTest extends TestCase
         $company = CompanyInfo::with('currency')->sole();
         $this->assertSame('Guayaberas Lopez Silva', $company->name);
         $this->assertSame('MXN', $company->currency->code);
+        $this->assertStringStartsWith('data:image/jpeg;base64,', $company->logo);
 
         $administrator = User::with('userType')->sole();
         $this->assertSame('admin', $administrator->user_name);
@@ -71,6 +72,7 @@ class DatabaseSeedingTest extends TestCase
         CompanyInfo::firstOrFail()->update([
             'name' => 'Empresa personalizada',
             'id_currency' => null,
+            'logo' => 'data:image/png;base64,iVBORw0KGgo=',
         ]);
         UserType::where('code', UserRole::Warehouse->value)->firstOrFail()
             ->update(['name' => 'Bodega', 'status' => 'inactive']);
@@ -87,6 +89,7 @@ class DatabaseSeedingTest extends TestCase
         $this->assertSame(23, Size::count());
         $this->assertSame(20.50, Currency::where('code', 'USD')->value('exchange_rate'));
         $this->assertSame('Empresa personalizada', CompanyInfo::firstOrFail()->name);
+        $this->assertSame('data:image/png;base64,iVBORw0KGgo=', CompanyInfo::firstOrFail()->logo, 'No reemplaza un logo ya subido.');
         $this->assertSame(
             'MXN',
             CompanyInfo::with('currency')->firstOrFail()->currency->code,

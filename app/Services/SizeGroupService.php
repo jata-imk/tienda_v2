@@ -31,7 +31,7 @@ class SizeGroupService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'size_groups');
         }
 
         $totalCount = isset($filters['totalCount'])

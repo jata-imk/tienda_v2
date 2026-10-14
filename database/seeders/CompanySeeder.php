@@ -18,6 +18,12 @@ class CompanySeeder extends Seeder
                 $company->update(['id_currency' => $mxn->id]);
             }
 
+            // Igual que la moneda: solo se llena si falta, nunca se reemplaza
+            // un logo que el usuario ya haya subido.
+            if ($company->logo === null) {
+                $company->update(['logo' => self::defaultLogo()]);
+            }
+
             return;
         }
 
@@ -27,7 +33,7 @@ class CompanySeeder extends Seeder
             'legal_name' => 'Guayaberas Lopez Silva S.A. de C.V.',
             'tax_regime' => '601',
             'id_currency' => $mxn->id,
-            'logo' => null,
+            'logo' => self::defaultLogo(),
             'street' => 'Calle 15',
             'external_number' => '94 A',
             'cross_street_one' => 'Calle 16',
@@ -41,5 +47,14 @@ class CompanySeeder extends Seeder
             'grid_settings' => null,
             'status' => 'active',
         ]);
+    }
+
+    /**
+     * Logo de la empresa en el formato de `company_info.logo` (base64 con
+     * prefijo data-URI). Lo usan el login y el PDF de pedidos.
+     */
+    private static function defaultLogo(): string
+    {
+        return 'data:image/jpeg;base64,'.base64_encode(file_get_contents(__DIR__.'/assets/company-logo.jpg'));
     }
 }

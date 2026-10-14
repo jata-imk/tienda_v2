@@ -19,6 +19,23 @@ class ProductService
     private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color', 'colorImages'];
 
     /**
+     * Relaciones a precargar en cualquier respuesta de producto. Las variantes
+     * llevan orden explicito: sin el, el motor las devuelve en el orden del
+     * indice que elija el planificador, que no es estable ni significativo.
+     *
+     * La llave `variants` va al final para que su closure sobrescriba el
+     * eager load implicito que generan `variants.size` y `variants.color`.
+     *
+     * @return array<int|string, mixed>
+     */
+    private static function variantRelations(): array
+    {
+        return array_merge(self::VARIANT_RELATIONS, [
+            'variants' => fn($query) => $query->orderedForDisplay(),
+        ]);
+    }
+
+    /**
      * Nombres con los que el frontend puede filtrar por categoria. Ninguno es
      * columna de `products`: todos se resuelven contra la pivote.
      */
@@ -28,7 +45,7 @@ class ProductService
 
     public function index(array $filters = []): array|Collection
     {
-        $query = Product::with(self::VARIANT_RELATIONS);
+        $query = Product::with(self::variantRelations());
 
         // where filters — `categories` ya no es columna: se resuelve por la pivote
         if (!empty($filters['w'])) {
@@ -74,9 +91,7 @@ class ProductService
 
         // ordering
         if (!empty($filters['o'])) {
-            $column    = $filters['o']['column'] ?? 'id';
-            $direction = $filters['o']['direction'] ?? 'asc';
-            $query->orderBy($column, $direction);
+            $this->applyGridOrder($query, $filters, 'products');
         }
 
         $totalCount = isset($filters['totalCount'])
@@ -241,7 +256,7 @@ class ProductService
 
     public function show(int $id): ?Product
     {
-        return Product::with(self::VARIANT_RELATIONS)->find($id);
+        return Product::with(self::variantRelations())->find($id);
     }
 
     public function store(CreateProductDTO $dto): Product
@@ -275,7 +290,7 @@ class ProductService
                     'sku'        => $variantInput->sku,
                     'code_bar'   => $variantInput->codeBar,
                     'stock'      => $variantInput->stock,
-                    'status'     => $variantInput->status,
+                    'status'     => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
                 // Movimiento inicial por cada variante con existencia > 0.
@@ -294,7 +309,7 @@ class ProductService
                 }
             }
 
-            return $product->fresh(self::VARIANT_RELATIONS);
+            return $product->fresh(self::variantRelations());
         });
     }
 
@@ -327,6 +342,12 @@ class ProductService
         DB::transaction(function () use ($product, $fields, $dto) {
             if ($fields !== []) {
                 $product->update($fields);
+
+                // Solo un cambio real de valor cascadea: el frontend reenvia el
+                // formulario completo y el status suele venir sin cambiar.
+                if ($product->wasChanged('status')) {
+                    $this->cascadeStatusToVariants($product);
+                }
             }
 
             if ($dto->categoryIds !== null) {
@@ -334,7 +355,7 @@ class ProductService
             }
         });
 
-        return $product->fresh(self::VARIANT_RELATIONS);
+        return $product->fresh(self::variantRelations());
     }
 
     /**
@@ -358,7 +379,7 @@ class ProductService
 
         $this->imageService->delete(...$previous);
 
-        return $product->fresh(self::VARIANT_RELATIONS);
+        return $product->fresh(self::variantRelations());
     }
 
     public function clearImage(int $id): ?Product
@@ -373,7 +394,7 @@ class ProductService
 
         $product->update(['image' => null, 'image_thumb' => null]);
 
-        return $product->fresh(self::VARIANT_RELATIONS);
+        return $product->fresh(self::variantRelations());
     }
 
     public function destroy(int $id): bool
@@ -384,8 +405,28 @@ class ProductService
             return false;
         }
 
-        $product->update(['status' => 'inactive']);
+        DB::transaction(function () use ($product) {
+            $product->update(['status' => 'inactive']);
+
+            // Incondicional: repetir el DELETE sobre un producto ya inactivo
+            // realinea sus variantes si quedaron desincronizadas.
+            $this->cascadeStatusToVariants($product);
+        });
 
         return true;
+    }
+
+    /**
+     * Propaga el status del producto a todas sus variantes: la baja del producto
+     * da de baja sus variantes y reactivarlo las reactiva.
+     *
+     * Esto cubre los dos caminos por los que cambia el status del producto, pero
+     * no es el unico guardian del invariante "un producto inactivo no tiene
+     * variantes activas": el alta lo resuelve ProductVariant::statusUnder() y la
+     * edicion de una variante suelta, UpdateProductVariantRequest.
+     */
+    private function cascadeStatusToVariants(Product $product): void
+    {
+        $product->variants()->update(['status' => $product->status]);
     }
 }

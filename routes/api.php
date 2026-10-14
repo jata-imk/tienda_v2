@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryMovementController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductColorImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
@@ -56,7 +57,22 @@ Route::middleware('jwt.authenticate')->group(function () {
         Route::post('inventory/movements', [InventoryMovementController::class, 'store']);
     });
 
+    Route::middleware('role:'.UserRole::Administrator->value.','.UserRole::Warehouse->value)->group(function () {
+        // Purchase orders: consulta y recepcion (almacen recibe la mercancia)
+        Route::post('orders/query', [OrderController::class, 'query']);
+        Route::get('orders/{order}/history', [OrderController::class, 'history'])->whereNumber('order');
+        Route::get('orders/{order}/pdf', [OrderController::class, 'pdf'])->whereNumber('order');
+        Route::post('orders/{order}/receive', [OrderController::class, 'receive'])->whereNumber('order');
+        Route::get('orders/{order}', [OrderController::class, 'show'])->whereNumber('order');
+    });
+
     Route::middleware('role:'.UserRole::Administrator->value)->group(function () {
+        // Purchase orders: alta, edicion y transiciones
+        Route::post('orders', [OrderController::class, 'store']);
+        Route::put('orders/{order}', [OrderController::class, 'update'])->whereNumber('order');
+        Route::post('orders/{order}/confirm', [OrderController::class, 'confirm'])->whereNumber('order');
+        Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->whereNumber('order');
+
         // Dashboard
         Route::post('dashboard/query', [DashboardController::class, 'query']);
         Route::get('dashboard', [DashboardController::class, 'index']);

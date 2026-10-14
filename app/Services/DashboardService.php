@@ -158,8 +158,13 @@ class DashboardService
             ->selectRaw("COUNT(*) as total, SUM(status = 'active') as active")
             ->first();
 
+        // `products.status` tambien se filtra, igual que en stockByProduct() y
+        // lowStock(): una variante activa bajo un producto inactivo no debe sumar
+        // en el inventario. Normalmente no existe (la cascada lo evita), pero si
+        // en los datos historicos previos a la cascada.
         $variants = ProductVariant::query()
             ->join('products', 'products.id', '=', 'product_variants.id_product')
+            ->where('products.status', 'active')
             ->where('product_variants.status', 'active')
             ->selectRaw('COUNT(*) as total')
             ->selectRaw('COALESCE(SUM(product_variants.stock), 0) as stock')

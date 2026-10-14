@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\InventoryMovement\RegisterMovementsDTO;
 use App\Exceptions\InventoryDomainException;
 use App\Models\InventoryMovement;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
@@ -15,7 +16,7 @@ class InventoryMovementService
 {
     use AppliesGridConditions;
 
-    private const MOVEMENT_RELATIONS = ['variant.product', 'variant.size', 'variant.color', 'user'];
+    private const MOVEMENT_RELATIONS = ['variant.product', 'variant.size', 'variant.color', 'user', 'orderDetail.order'];
 
     /**
      * Listado o consulta paginada del historial de movimientos (Kardex).
@@ -47,7 +48,7 @@ class InventoryMovementService
         }
 
         if (!empty($filters['o'])) {
-            $query->orderBy($filters['o']['column'] ?? 'id', $filters['o']['direction'] ?? 'asc');
+            $this->applyGridOrder($query, $filters, 'inventory_movements');
         } else {
             $query->orderByDesc('id');
         }
@@ -98,9 +99,14 @@ class InventoryMovementService
             $likeVal = '%' . addcslashes($value, '%_\\') . '%';
             $method  = $or ? 'orWhere' : 'where';
 
-            $query->$method(function ($q) use ($likeVal) {
+            $folio = OrderService::parseFolio($value);
+
+            $query->$method(function ($q) use ($likeVal, $folio) {
                 $q->where('notes', 'like', $likeVal)
                   ->orWhere('reference_type', 'like', $likeVal)
+                  ->when($folio !== null, fn($fq) => $fq->orWhere(
+                      fn($oq) => $this->whereFromOrder($oq, fn($dq) => $dq->whereHas('order', fn($o) => $o->where('folio', $folio))),
+                  ))
                   ->orWhereHas('user', fn($uq) => $uq->where('user_name', 'like', $likeVal))
                   ->orWhereHas('variant', function ($vq) use ($likeVal) {
                       $vq->where('sku', 'like', $likeVal)
@@ -139,14 +145,42 @@ class InventoryMovementService
             return;
         }
 
+        if ($column === 'id_order') {
+            $operator = $cond['operator'] ?? '=';
+            $value    = $cond['value'] ?? null;
+            $method   = $or ? 'orWhere' : 'where';
+
+            $query->$method(fn($q) => $this->whereFromOrder($q, function ($dq) use ($operator, $value) {
+                if ($operator === 'in' || is_array($value)) {
+                    $dq->whereIn('id_order', (array) $value);
+                } else {
+                    $dq->where('id_order', $operator, $value);
+                }
+            }));
+
+            return;
+        }
+
         $this->applyGridCondition($query, $cond, $boolean);
     }
 
     /**
-     * Tipos de movimiento que incrementan la existencia.
-     * Los demas (sale, adjustment) la disminuyen.
+     * Movimientos generados por una linea de pedido que cumple `$detailScope`.
+     * El filtro por `reference_type` va primero: sin el, un `reference_id`
+     * manual que coincida con el id de una linea se colaria.
      */
-    private const INCREASE_TYPES = ['entry', 'return', 'cancel'];
+    private function whereFromOrder($query, callable $detailScope): void
+    {
+        $query->where('reference_type', OrderDetail::REFERENCE_TYPE)
+              ->whereHas('orderDetail', $detailScope);
+    }
+
+    /**
+     * Tipos de movimiento que incrementan la existencia.
+     * Los demas (sale, adjustment) la disminuyen. `purchase` solo lo genera
+     * OrderService al recibir un pedido: los requests manuales no lo aceptan.
+     */
+    private const INCREASE_TYPES = ['entry', 'return', 'cancel', 'purchase'];
 
     /**
      * Registra uno o varios movimientos sobre variantes de un mismo producto
@@ -229,7 +263,7 @@ class InventoryMovementService
                     'previous_stock'     => $previousStock,
                     'new_stock'          => $newStock,
                     'reference_type'     => $dto->referenceType,
-                    'reference_id'       => $dto->referenceId,
+                    'reference_id'       => $line->referenceId ?? $dto->referenceId,
                     'notes'              => $dto->notes,
                     'id_user'            => $dto->userId,
                 ]);
