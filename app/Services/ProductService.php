@@ -327,6 +327,12 @@ class ProductService
         DB::transaction(function () use ($product, $fields, $dto) {
             if ($fields !== []) {
                 $product->update($fields);
+
+                // Solo un cambio real de valor cascadea: el frontend reenvia el
+                // formulario completo y el status suele venir sin cambiar.
+                if ($product->wasChanged('status')) {
+                    $this->cascadeStatusToVariants($product);
+                }
             }
 
             if ($dto->categoryIds !== null) {
@@ -384,8 +390,24 @@ class ProductService
             return false;
         }
 
-        $product->update(['status' => 'inactive']);
+        DB::transaction(function () use ($product) {
+            $product->update(['status' => 'inactive']);
+
+            // Incondicional: repetir el DELETE sobre un producto ya inactivo
+            // realinea sus variantes si quedaron desincronizadas.
+            $this->cascadeStatusToVariants($product);
+        });
 
         return true;
+    }
+
+    /**
+     * Propaga el status del producto a todas sus variantes. El status de un
+     * producto y el de sus variantes nunca quedan en desacuerdo: la baja del
+     * producto da de baja sus variantes y reactivarlo las reactiva.
+     */
+    private function cascadeStatusToVariants(Product $product): void
+    {
+        $product->variants()->update(['status' => $product->status]);
     }
 }

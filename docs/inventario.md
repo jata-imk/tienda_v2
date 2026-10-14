@@ -162,7 +162,7 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | `GET` | `/api/products/{id}/colors/{colorId}/images` | Listar imágenes de un color |
 | `POST` | `/api/products/{id}/colors/{colorId}/images` | Agregar una o varias imágenes a un color (multipart) |
 | `DELETE` | `/api/products/{id}/colors/{colorId}/images/{imageId}` | Borrar una imagen puntual del color |
-| `DELETE` | `/api/products/{id}` | Desactivar (status → inactive) |
+| `DELETE` | `/api/products/{id}` | Desactivar producto **y todas sus variantes** (status → inactive) |
 
 ### Campos del producto base
 | Campo | Tipo | Req. | Descripción |
@@ -382,6 +382,29 @@ Si la variante no pertenece al producto de la URL → `404 Variant not found for
 
 Baja lógica: pone `status = inactive`. La fila y sus movimientos se conservan; la variante deja de
 sumar en `totalStock`. Se reactiva con `PUT ... { "status": "active" }`.
+
+Desactivar una variante **no** afecta al producto: la cascada de status es solo hacia abajo.
+
+### Cascada de status: producto → variantes
+
+El status de un producto y el de sus variantes nunca quedan en desacuerdo. Cambiar el status del
+producto lo propaga a **todas** sus variantes, por cualquiera de las dos vías:
+
+| Acción | Efecto en las variantes |
+|---|---|
+| `DELETE /api/products/{id}` | todas pasan a `inactive` |
+| `PUT /api/products/{id}` con `{"status": "inactive"}` | todas pasan a `inactive` |
+| `PUT /api/products/{id}` con `{"status": "active"}` | todas vuelven a `active` |
+| `PUT /api/products/{id}` sin cambio de `status` | sin efecto |
+
+La cascada solo se dispara cuando el valor de `status` **cambia**: un `PUT` que reenvía el
+formulario completo con el mismo status deja las variantes intactas. Por eso una variante
+desactivada individualmente sobrevive a cualquier edición del producto que no toque su status —
+pero sí se reactiva si el producto pasa de `inactive` a `active`.
+
+Consecuencia para la UI: tras dar de baja un producto, su `totalStock` queda en `0` y todas las
+variantes se devuelven con `status: "inactive"`. No hace falta que el frontend recorra las
+variantes desactivándolas una por una.
 
 ### Imágenes del color nuevo
 
