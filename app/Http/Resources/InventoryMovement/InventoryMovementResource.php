@@ -28,6 +28,8 @@ class InventoryMovementResource extends JsonResource
             'sku'              => $this->whenLoaded('variant', fn() => $this->variant?->sku),
             'size'             => $this->whenLoaded('variant', fn() => $this->variant?->size?->name),
             'color'            => $this->whenLoaded('variant', fn() => $this->variant?->color?->name),
+            'idOrder'          => $this->whenLoaded('orderDetail', fn() => $this->isFromOrder() ? $this->orderDetail?->id_order : null),
+            'orderFolio'       => $this->whenLoaded('orderDetail', fn() => $this->isFromOrder() ? $this->orderDetail?->order?->folio_label : null),
         ];
     }
 }

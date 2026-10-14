@@ -33,4 +33,20 @@ class InventoryMovement extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+
+    /**
+     * Linea de pedido que origino el movimiento. Solo tiene sentido cuando
+     * `reference_type = order_detail`: con otro `reference_type` el id puede
+     * coincidir por casualidad con una linea ajena, asi que quien la consuma
+     * debe revisar `isFromOrder()` antes.
+     */
+    public function orderDetail()
+    {
+        return $this->belongsTo(OrderDetail::class, 'reference_id');
+    }
+
+    public function isFromOrder(): bool
+    {
+        return $this->reference_type === OrderDetail::REFERENCE_TYPE;
+    }
 }

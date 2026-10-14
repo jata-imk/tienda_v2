@@ -19,7 +19,8 @@ class CreateMovementRequest extends FormRequest
         return [
             'idProduct'                    => 'required|integer|exists:products,id',
             'idUser'                       => 'required|integer|exists:users,id',
-            'referenceType'                => 'nullable|string|max:50',
+            // `order_detail` esta reservado a las recepciones de pedidos.
+            'referenceType'                => 'nullable|string|max:50|not_in:order_detail',
             'referenceId'                  => 'nullable|integer',
             'notes'                        => 'nullable|string',
             'movements'                    => 'required|array|min:1|max:200',
