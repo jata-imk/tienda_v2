@@ -39,7 +39,7 @@ class OrderLifecycleTest extends TestCase
             ->assertJsonPath('data.status', 'draft')
             ->assertJsonPath('data.key', 'PED')
             ->assertJsonPath('data.folio', 1)
-            ->assertJsonPath('data.folioLabel', 'PED-1')
+            ->assertJsonPath('data.folioLabel', 'PED-0000001')
             ->assertJsonPath('data.currencyCode', 'MXN')
             ->assertJsonPath('data.supplierName', 'Telas del Sureste')
             ->assertJsonPath('data.dateOrder', now()->toDateString())

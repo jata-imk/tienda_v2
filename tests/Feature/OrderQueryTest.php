@@ -47,7 +47,7 @@ class OrderQueryTest extends TestCase
 
     public function test_search_matches_folio_supplier_and_notes(): void
     {
-        foreach (['PED-2' => $this->ids[1], '2' => $this->ids[1], 'sureste' => $this->ids[0], 'urgente' => $this->ids[1]] as $term => $expected) {
+        foreach (['PED-0000002' => $this->ids[1], 'PED-2' => $this->ids[1], '2' => $this->ids[1], 'sureste' => $this->ids[0], 'urgente' => $this->ids[1]] as $term => $expected) {
             $response = $this->asAdmin()->postJson('/api/orders/query', [
                 'w' => [['f' => 'search', 'ao' => 'contains', 'v' => $term]],
             ])->assertOk();

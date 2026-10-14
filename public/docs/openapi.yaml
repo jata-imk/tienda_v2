@@ -668,7 +668,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -831,7 +831,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -849,7 +849,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1012,7 +1012,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1762,7 +1762,7 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-14T12:55:59'
+                  example: '2026-10-14T14:01:09'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
@@ -2041,7 +2041,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2437,7 +2437,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2836,7 +2836,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3236,7 +3236,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3392,7 +3392,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -4823,7 +4823,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: entry
+                      example: return
                       enum:
                         - entry
                         - sale
@@ -5044,7 +5044,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -5446,7 +5446,7 @@ paths:
     post:
       summary: 'Query purchase orders (POST)'
       operationId: queryPurchaseOrdersPOST
-      description: "Same payload formats as `POST /products/query`. Campos virtuales en `w`:\n`search` (folio `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
+      description: "Same payload formats as `POST /products/query`. Campos virtuales en `w`:\n`search` (folio `PED-0000012`, `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
       parameters: []
       responses:
         200:
@@ -5621,7 +5621,7 @@ paths:
     get:
       summary: 'Purchase order PDF'
       operationId: purchaseOrderPDF
-      description: "Devuelve el PDF (`application/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-n.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
+      description: "Devuelve el PDF (`application/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-0000001.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
       parameters:
         -
           in: query
@@ -5926,7 +5926,7 @@ paths:
                     id: 1
                     key: PED
                     folio: 1
-                    folioLabel: PED-1
+                    folioLabel: PED-0000001
                     status: draft
                     idCurrency: 1
                     currencyCode: MXN
@@ -5988,7 +5988,7 @@ paths:
                         example: 1
                       folioLabel:
                         type: string
-                        example: PED-1
+                        example: PED-0000001
                       status:
                         type: string
                         example: draft
@@ -6240,11 +6240,11 @@ paths:
                 dateOrder:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-14T12:55:59'
+                  example: '2026-10-14T14:01:09'
                 dateExpected:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-14T12:55:59'
+                  example: '2026-10-14T14:01:09'
                   nullable: true
                 supplierName:
                   type: string
@@ -6307,7 +6307,7 @@ paths:
     post:
       summary: 'Create a purchase order'
       operationId: createAPurchaseOrder
-      description: "Crea el pedido en `draft` con folio consecutivo `PED-n`. Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
+      description: "Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
       parameters: []
       responses:
         201:
@@ -6323,7 +6323,7 @@ paths:
                   message: 'Order created.'
                   data:
                     id: 1
-                    folioLabel: PED-1
+                    folioLabel: PED-0000001
                     status: draft
                 properties:
                   ok:
@@ -6346,7 +6346,7 @@ paths:
                         example: 1
                       folioLabel:
                         type: string
-                        example: PED-1
+                        example: PED-0000001
                       status:
                         type: string
                         example: draft

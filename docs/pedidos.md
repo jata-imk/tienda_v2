@@ -35,7 +35,7 @@ draft ──confirm──▶ confirmed ──receive──▶ partially_received
 
 | Desde | Hacia | Cómo | Efecto |
 |---|---|---|---|
-| — | `draft` | `POST /orders` | Folio `PED-n` consecutivo (si el alta falla, el folio no se consume). Editable. No toca stock. |
+| — | `draft` | `POST /orders` | Folio consecutivo con 7 dígitos (`PED-0000001`) (si el alta falla, el folio no se consume). Editable. No toca stock. |
 | `draft` | `confirmed` | `POST /orders/{id}/confirm` | Bloquea las líneas y congela el tipo de cambio. No toca stock. |
 | `draft` / `confirmed` | `cancelled` | `POST /orders/{id}/cancel` | Solo si no hay recepciones. Final. |
 | `confirmed` / `partially_received` | `partially_received` | `POST /orders/{id}/receive` | Quedan líneas con pendiente. |
@@ -91,7 +91,7 @@ Campos virtuales en `w`:
 
 | Campo | Se resuelve como |
 |---|---|
-| `search` | Folio (`PED-12` o `12`), `notes`, `supplierName`, usuario |
+| `search` | Folio (`PED-0000012`, `PED-12` o `12`), `notes`, `supplierName`, usuario |
 | `idProduct` | Pedidos con alguna línea de ese producto |
 | `sku` | Pedidos con alguna línea de esa variante |
 
@@ -137,7 +137,7 @@ Reglas de negocio (`422`, no se crea nada):
 {
   "ok": true, "code": 201, "status": "Created", "message": "Order created.",
   "data": {
-    "id": 1, "key": "PED", "folio": 1, "folioLabel": "PED-1", "status": "draft",
+    "id": 1, "key": "PED", "folio": 1, "folioLabel": "PED-0000001", "status": "draft",
     "idCurrency": 1, "currencyCode": "MXN", "exchangeRate": 1,
     "totalItems": 15, "totalAmount": 8750,
     "supplierName": "Textiles Peninsulares", "supplierDetails": null, "shippingAddress": null,
@@ -184,7 +184,7 @@ Solo en `confirmed` o `partially_received` (si no, `409`).
 Por cada línea recibida:
 - `quantityReceived` aumenta.
 - El stock de la variante sube con un movimiento **`purchase`**, `referenceType = "order_detail"`,
-  `referenceId` = `detailId`, nota `"Recepción PED-n. <notes>"`.
+  `referenceId` = `detailId`, nota `"Recepción PED-0000001. <notes>"`.
 
 Es **atómico**: si una línea excede su pendiente, no pertenece al pedido o el inventario rechaza
 el movimiento, responde `422` y no se aplica nada de la recepción.
@@ -249,7 +249,7 @@ Las entradas por compra se distinguen de las manuales por **tipo** y por **refer
 ## PDF (`GET /api/orders/{id}/pdf`)
 
 Devuelve `application/pdf` (no JSON). Por defecto `inline`; con `?download=1` como descarga
-`PED-n.pdf`. Disponible en cualquier estatus; en `draft` lleva marca de agua **BORRADOR** y en
+`PED-0000001.pdf`. Disponible en cualquier estatus; en `draft` lleva marca de agua **BORRADOR** y en
 `cancelled` **CANCELADO**. Si el pedido no existe responde el JSON `404` estándar.
 
 Desde el frontend se pide con el JWT y se abre como blob:
@@ -269,9 +269,9 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 | Información | Folio, `dateOrder`, comprador (usuario), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
 | Dirección envío | `shippingAddress`; vacía → nombre y dirección de la empresa |
 | Notas | `notes` |
-| Líneas | Artículo (10, 20, 30…), SKU, producto + color + talla, cantidad, UM (`PZA`), costo unitario, monto neto. Columna **Recibido** si ya hubo recepciones |
+| Líneas | **Un renglón por producto + color** (no por variante): artículo (10, 20, 30…), clave y nombre del producto, color y su **corrida de tallas** (mini tabla Talla / Cant., en el orden de `sizes.sortOrder`). Luego cantidad total, UM (`PZA`), costo unitario y monto neto. Si ya hubo recepciones, se agregan la fila **Rec.** en la corrida y la columna **Recibido**. Si las tallas tienen costos distintos, el precio dice "Por talla" y la corrida agrega la fila **Costo**. Las notas de línea salen como `Talla 36: …` |
 | Totales | Total de piezas y total neto en la moneda del pedido |
-| Pie | `PED-n · Página X de Y` |
+| Pie | `PED-0000001 · Página X de Y` |
 
 ---
 

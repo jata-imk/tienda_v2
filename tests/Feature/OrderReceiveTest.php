@@ -49,7 +49,7 @@ class OrderReceiveTest extends TestCase
         $this->assertSame($detail['id'], (int) $movement->reference_id);
         $this->assertSame(3.0, (float) $movement->previous_stock);
         $this->assertSame(7.0, (float) $movement->new_stock);
-        $this->assertStringContainsString('PED-1', $movement->notes);
+        $this->assertStringContainsString('PED-0000001', $movement->notes);
         $this->assertStringContainsString('Remesa 1', $movement->notes);
 
         $history = $this->asAdmin()->getJson("/api/orders/{$order['id']}/history")->json('data');
@@ -250,10 +250,10 @@ class OrderReceiveTest extends TestCase
         $byOrder->assertJsonPath('data.totalCount', 1)
             ->assertJsonPath('data.items.0.movementType', 'purchase')
             ->assertJsonPath('data.items.0.idOrder', $order['id'])
-            ->assertJsonPath('data.items.0.orderFolio', 'PED-1');
+            ->assertJsonPath('data.items.0.orderFolio', 'PED-0000001');
 
         $bySearch = $this->asAdmin()->postJson('/api/inventory/movements/query', [
-            'w' => [['f' => 'search', 'ao' => 'contains', 'v' => 'PED-2']],
+            'w' => [['f' => 'search', 'ao' => 'contains', 'v' => 'PED-0000002']],
         ])->assertOk();
 
         $this->assertSame([$other['id']], array_values(array_unique(array_column($bySearch->json('data.items'), 'idOrder'))));

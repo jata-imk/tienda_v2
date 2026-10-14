@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "05f427d6-8d7b-4d5f-861e-e063f107e535",
+        "_postman_id": "e74597de-9af2-42bf-b12f-170f0e06d262",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -211,7 +211,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
                     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -293,7 +293,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T12:55:59\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T14:01:09\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -803,7 +803,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1043,7 +1043,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1283,7 +1283,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1523,7 +1523,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1612,7 +1612,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -2353,7 +2353,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"return\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada)."
                     },
@@ -2442,7 +2442,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
+                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
                         },
                         "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca."
                     },
@@ -2639,7 +2639,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Same payload formats as `POST \/products\/query`. Campos virtuales en `w`:\n`search` (folio `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
+                        "description": "Same payload formats as `POST \/products\/query`. Campos virtuales en `w`:\n`search` (folio `PED-0000012`, `PED-12` o `12`, notas, proveedor, usuario), `id_product`\ny `sku` (pedidos que incluyen ese producto o variante)."
                     },
                     "response": [
                         {
@@ -2732,7 +2732,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Devuelve el PDF (`application\/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-n.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
+                        "description": "Devuelve el PDF (`application\/pdf`), no JSON. Por defecto inline; con\n`?download=1` como descarga `PED-0000001.pdf`. Disponible en cualquier\nestatus; en `draft` y `cancelled` lleva marca de agua."
                     },
                     "response": [
                         {
@@ -2852,7 +2852,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order retrieved.\",\"data\":{\"id\":1,\"key\":\"PED\",\"folio\":1,\"folioLabel\":\"PED-1\",\"status\":\"draft\",\"idCurrency\":1,\"currencyCode\":\"MXN\",\"exchangeRate\":1,\"totalItems\":10,\"totalAmount\":6000,\"supplierName\":\"Telas del Sureste\",\"supplierDetails\":null,\"shippingAddress\":null,\"notes\":null,\"dateOrder\":\"2026-10-15\",\"dateExpected\":\"2026-10-30\",\"dateReceived\":null,\"idUser\":1,\"userName\":\"admin\",\"createdAt\":\"2026-10-15 10:00:00\",\"updatedAt\":null,\"details\":[{\"id\":1,\"idOrder\":1,\"idProductVariant\":1,\"quantityOrdered\":10,\"quantityReceived\":0,\"quantityPending\":10,\"unitCost\":600,\"subtotal\":6000,\"notes\":null,\"idProduct\":1,\"productKey\":\"CAM-001\",\"productName\":\"Camisa lino caballero\",\"sku\":\"CAM-001-34-BLA\",\"size\":\"34\",\"color\":\"Blanco\"}]}}",
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Order retrieved.\",\"data\":{\"id\":1,\"key\":\"PED\",\"folio\":1,\"folioLabel\":\"PED-0000001\",\"status\":\"draft\",\"idCurrency\":1,\"currencyCode\":\"MXN\",\"exchangeRate\":1,\"totalItems\":10,\"totalAmount\":6000,\"supplierName\":\"Telas del Sureste\",\"supplierDetails\":null,\"shippingAddress\":null,\"notes\":null,\"dateOrder\":\"2026-10-15\",\"dateExpected\":\"2026-10-30\",\"dateReceived\":null,\"idUser\":1,\"userName\":\"admin\",\"createdAt\":\"2026-10-15 10:00:00\",\"updatedAt\":null,\"details\":[{\"id\":1,\"idOrder\":1,\"idProductVariant\":1,\"quantityOrdered\":10,\"quantityReceived\":0,\"quantityPending\":10,\"unitCost\":600,\"subtotal\":6000,\"notes\":null,\"idProduct\":1,\"productKey\":\"CAM-001\",\"productName\":\"Camisa lino caballero\",\"sku\":\"CAM-001-34-BLA\",\"size\":\"34\",\"color\":\"Blanco\"}]}}",
                             "name": ""
                         },
                         {
@@ -2887,13 +2887,13 @@
                             "mode": "raw",
                             "raw": "{\"idCurrency\":1,\"exchangeRate\":null,\"dateOrder\":\"2026-10-15\",\"dateExpected\":\"2026-10-30\",\"supplierName\":\"Telas del Sureste\",\"supplierDetails\":null,\"shippingAddress\":null,\"notes\":null,\"details\":[\"architecto\"]}"
                         },
-                        "description": "Crea el pedido en `draft` con folio consecutivo `PED-n`. Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
+                        "description": "Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Order created.\",\"data\":{\"id\":1,\"folioLabel\":\"PED-1\",\"status\":\"draft\"}}",
+                            "body": "{\"ok\":true,\"code\":201,\"status\":\"Created\",\"message\":\"Order created.\",\"data\":{\"id\":1,\"folioLabel\":\"PED-0000001\",\"status\":\"draft\"}}",
                             "name": ""
                         },
                         {
@@ -2934,7 +2934,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-10-14T12:55:59\",\"dateExpected\":\"2026-10-14T12:55:59\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
+                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-10-14T14:01:09\",\"dateExpected\":\"2026-10-14T14:01:09\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
                         },
                         "description": "Solo en `draft` (409 en cualquier otro estatus). Los campos omitidos no se\ntocan. Si se envia `details`, reemplaza todas las lineas (se identifican\npor `idProductVariant`). Mismos campos que el alta."
                     },

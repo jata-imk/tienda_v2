@@ -44,7 +44,7 @@ class OrderController extends Controller
      * Query purchase orders (POST)
      *
      * Same payload formats as `POST /products/query`. Campos virtuales en `w`:
-     * `search` (folio `PED-12` o `12`, notas, proveedor, usuario), `id_product`
+     * `search` (folio `PED-0000012`, `PED-12` o `12`, notas, proveedor, usuario), `id_product`
      * y `sku` (pedidos que incluyen ese producto o variante).
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Orders retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
@@ -63,7 +63,7 @@ class OrderController extends Controller
      *
      * @urlParam order integer required Order ID. Example: 1
      *
-     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Order retrieved.","data":{"id":1,"key":"PED","folio":1,"folioLabel":"PED-1","status":"draft","idCurrency":1,"currencyCode":"MXN","exchangeRate":1,"totalItems":10,"totalAmount":6000,"supplierName":"Telas del Sureste","supplierDetails":null,"shippingAddress":null,"notes":null,"dateOrder":"2026-10-15","dateExpected":"2026-10-30","dateReceived":null,"idUser":1,"userName":"admin","createdAt":"2026-10-15 10:00:00","updatedAt":null,"details":[{"id":1,"idOrder":1,"idProductVariant":1,"quantityOrdered":10,"quantityReceived":0,"quantityPending":10,"unitCost":600,"subtotal":6000,"notes":null,"idProduct":1,"productKey":"CAM-001","productName":"Camisa lino caballero","sku":"CAM-001-34-BLA","size":"34","color":"Blanco"}]}}
+     * @response 200 {"ok":true,"code":200,"status":"OK","message":"Order retrieved.","data":{"id":1,"key":"PED","folio":1,"folioLabel":"PED-0000001","status":"draft","idCurrency":1,"currencyCode":"MXN","exchangeRate":1,"totalItems":10,"totalAmount":6000,"supplierName":"Telas del Sureste","supplierDetails":null,"shippingAddress":null,"notes":null,"dateOrder":"2026-10-15","dateExpected":"2026-10-30","dateReceived":null,"idUser":1,"userName":"admin","createdAt":"2026-10-15 10:00:00","updatedAt":null,"details":[{"id":1,"idOrder":1,"idProductVariant":1,"quantityOrdered":10,"quantityReceived":0,"quantityPending":10,"unitCost":600,"subtotal":6000,"notes":null,"idProduct":1,"productKey":"CAM-001","productName":"Camisa lino caballero","sku":"CAM-001-34-BLA","size":"34","color":"Blanco"}]}}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Order not found.","data":null}
      */
     public function show(int $order): JsonResponse
@@ -80,7 +80,7 @@ class OrderController extends Controller
     /**
      * Create a purchase order
      *
-     * Crea el pedido en `draft` con folio consecutivo `PED-n`. Sin `idCurrency`
+     * Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`
      * toma la moneda base de la empresa. Sin `unitCost` la linea toma
      * `products.cost` (convertido a la moneda del pedido). Las variantes deben
      * estar activas y su producto debe manejar existencias.
@@ -99,7 +99,7 @@ class OrderController extends Controller
      * @bodyParam details[].unitCost number Costo unitario en la moneda del pedido. Example: 600
      * @bodyParam details[].notes string Comentario de la linea. Example: null
      *
-     * @response 201 {"ok":true,"code":201,"status":"Created","message":"Order created.","data":{"id":1,"folioLabel":"PED-1","status":"draft"}}
+     * @response 201 {"ok":true,"code":201,"status":"Created","message":"Order created.","data":{"id":1,"folioLabel":"PED-0000001","status":"draft"}}
      * @response 422 {"ok":false,"code":422,"status":"Unprocessable Entity","message":"El producto de la variante SERV-001-U no maneja existencias.","data":{"idProductVariant":9,"sku":"SERV-001-U"}}
      */
     public function store(CreateOrderRequest $request): JsonResponse
@@ -230,7 +230,7 @@ class OrderController extends Controller
      * Purchase order PDF
      *
      * Devuelve el PDF (`application/pdf`), no JSON. Por defecto inline; con
-     * `?download=1` como descarga `PED-n.pdf`. Disponible en cualquier
+     * `?download=1` como descarga `PED-0000001.pdf`. Disponible en cualquier
      * estatus; en `draft` y `cancelled` lleva marca de agua.
      *
      * @urlParam order integer required Order ID. Example: 1

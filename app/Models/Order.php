@@ -32,10 +32,13 @@ class Order extends Model
         'date_received' => 'datetime',
     ];
 
-    /** Folio visible: `PED-12`. */
+    /** Digitos del folio visible: alcanza hasta 9,999,999 pedidos por serie. */
+    public const FOLIO_DIGITS = 7;
+
+    /** Folio visible, relleno con ceros: `PED-0000012`. */
     public function getFolioLabelAttribute(): string
     {
-        return "{$this->key}-{$this->folio}";
+        return sprintf('%s-%0'.self::FOLIO_DIGITS.'d', $this->key, $this->folio);
     }
 
     public function details()

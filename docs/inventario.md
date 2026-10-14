@@ -115,8 +115,8 @@ el mismo grupo OR sobre campos clave del recurso. Disponible en:
 - `size-groups`: `name` y `description`.
 - `users`: nombre, apellidos, usuario y email.
 - `inventory/movements`: `notes`, `reference_type`, SKU de variante, nombre/clave del producto y
-  folio del pedido de compra (`PED-12` o `12`).
-- `orders`: folio (`PED-12` o `12`), `notes`, proveedor y usuario (ver [pedidos.md](pedidos.md)).
+  folio del pedido de compra (`PED-0000012`, `PED-12` o `12`).
+- `orders`: folio (`PED-0000012`, `PED-12` o `12`), `notes`, proveedor y usuario (ver [pedidos.md](pedidos.md)).
 
 Un término vacío o sólo con espacios se ignora.
 
@@ -520,7 +520,7 @@ Filtros soportados en `w`:
 - `created_at`: filtros de fecha / rango
 - `search`: búsqueda de texto sobre notas, origen, usuario, SKU, nombre del producto o folio del pedido
 
-Cada movimiento trae además `idOrder` y `orderFolio` (`"PED-12"`) cuando viene de la recepción de
+Cada movimiento trae además `idOrder` y `orderFolio` (`"PED-0000012"`) cuando viene de la recepción de
 un pedido de compra; en cualquier otro caso van en `null`.
 
 Respuesta estándar (`ApiResponse::query`):

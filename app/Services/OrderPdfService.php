@@ -86,7 +86,48 @@ class OrderPdfService
             'statusLabel'     => self::STATUS_LABELS[$order->status->value] ?? $order->status->value,
             'watermark'       => self::WATERMARKS[$order->status->value] ?? null,
             'showReceived'    => $order->details->contains(fn ($d) => (float) $d->quantity_received > 0),
+            'groups'          => $this->groupLines($order),
         ];
+    }
+
+    /**
+     * Agrupa las lineas por producto + color: cada grupo es un renglon del PDF
+     * con su corrida de tallas (ordenadas por `sizes.sort_order`), en lugar de
+     * un renglon por variante.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function groupLines(Order $order): array
+    {
+        return $order->details
+            ->groupBy(fn ($d) => $d->variant->id_product.'-'.$d->variant->id_color)
+            ->map(function ($lines) {
+                $lines   = $lines->sortBy(fn ($d) => [(int) $d->variant->size?->sort_order, $d->variant->size?->name])->values();
+                $variant = $lines->first()->variant;
+                $costs   = $lines->map(fn ($d) => (float) $d->unit_cost)->unique();
+
+                return [
+                    'productKey'  => $variant->product?->key,
+                    'productName' => $variant->product?->name,
+                    'color'       => $variant->color?->name,
+                    'sizes'       => $lines->map(fn ($d) => [
+                        'size'     => $d->variant->size?->name,
+                        'ordered'  => (float) $d->quantity_ordered,
+                        'received' => (float) $d->quantity_received,
+                        'unitCost' => (float) $d->unit_cost,
+                        'notes'    => $d->notes,
+                    ])->all(),
+                    'ordered'     => $lines->sum(fn ($d) => (float) $d->quantity_ordered),
+                    'received'    => $lines->sum(fn ($d) => (float) $d->quantity_received),
+                    // Un solo costo si todas las tallas cuestan igual; si no, el
+                    // costo va por talla dentro de la corrida.
+                    'unitCost'    => $costs->count() === 1 ? $costs->first() : null,
+                    'subtotal'    => $lines->sum(fn ($d) => (float) $d->subtotal),
+                ];
+            })
+            ->sortBy([['productName', 'asc'], ['color', 'asc']])
+            ->values()
+            ->all();
     }
 
     /**

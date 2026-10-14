@@ -1117,7 +1117,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"postalCode\": \"y\",
     \"neighborhood\": \"v\",
     \"city\": \"d\",
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
     \"status\": \"active\"
@@ -1150,7 +1150,7 @@ let body = {
     "postalCode": "y",
     "neighborhood": "v",
     "city": "d",
-    "stockControl": true,
+    "stockControl": false,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
     "status": "active"
@@ -1452,7 +1452,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -1538,10 +1538,10 @@ Must be one of:
     \"postalCode\": \"y\",
     \"neighborhood\": \"v\",
     \"city\": \"d\",
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1571,10 +1571,10 @@ let body = {
     "postalCode": "y",
     "neighborhood": "v",
     "city": "d",
-    "stockControl": false,
+    "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -1873,7 +1873,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -1918,10 +1918,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-company-info"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1962,7 +1962,7 @@ Must be one of:
     \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -1995,7 +1995,7 @@ let body = {
     "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -2339,10 +2339,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3703,7 +3703,7 @@ alerts omit zero-stock variants that have never had inventory movements.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-10-14T12:55:59\",
+    \"dateFrom\": \"2026-10-14T14:01:09\",
     \"dateTo\": \"2052-11-06\",
     \"lowStockThreshold\": 39
 }"
@@ -3732,7 +3732,7 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-10-14T12:55:59",
+    "dateFrom": "2026-10-14T14:01:09",
     "dateTo": "2052-11-06",
     "lowStockThreshold": 39
 };
@@ -3934,10 +3934,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-10-14T12:55:59"
+               value="2026-10-14T14:01:09"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T12:55:59</code></p>
+<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -4485,7 +4485,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -4504,7 +4504,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -4645,10 +4645,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-categories"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5515,7 +5515,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -5534,7 +5534,7 @@ const headers = {
 let body = {
     "name": "b",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -5675,10 +5675,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-size-groups"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -6547,7 +6547,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -6567,7 +6567,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -6720,10 +6720,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-sizes"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7604,7 +7604,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -7623,7 +7623,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -7764,10 +7764,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-colors"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7959,7 +7959,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -7978,7 +7978,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -8149,10 +8149,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-colors--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -9722,7 +9722,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php1C7B.tmp" </code></pre></div>
+    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\phpC927.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9894,7 +9894,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php1C7B.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\phpC927.tmp</code></p>
         </div>
         </form>
 
@@ -10277,7 +10277,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php1CAD.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\phpC949.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -10950,7 +10950,7 @@ activo puede haber variantes <code>inactive</code> (por ejemplo una talla descon
     \"impEsp\": 14,
     \"status\": \"active\",
     \"initialMovement\": {
-        \"movementType\": \"entry\",
+        \"movementType\": \"return\",
         \"referenceType\": \"w\",
         \"referenceId\": 16,
         \"notes\": \"architecto\",
@@ -11002,7 +11002,7 @@ let body = {
     "impEsp": 14,
     "status": "active",
     "initialMovement": {
-        "movementType": "entry",
+        "movementType": "return",
         "referenceType": "w",
         "referenceId": 16,
         "notes": "architecto",
@@ -11436,10 +11436,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="initialMovement.movementType"                data-endpoint="POSTapi-products"
-               value="entry"
+               value="return"
                data-component="body">
     <br>
-<p>This field is required when <code>initialMovement</code> is present. Example: <code>entry</code></p>
+<p>This field is required when <code>initialMovement</code> is present. Example: <code>return</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>sale</code></li> <li><code>adjustment</code></li> <li><code>return</code></li> <li><code>cancel</code></li></ul>
                     </div>
@@ -11693,7 +11693,7 @@ reenviar el formulario completo con el mismo <code>status</code> no las toca.</p
     \"cost\": 37,
     \"stockControl\": false,
     \"discount\": 19,
-    \"typeIva\": 3,
+    \"typeIva\": 1,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
@@ -11727,7 +11727,7 @@ let body = {
     "cost": 37,
     "stockControl": false,
     "discount": 19,
-    "typeIva": 3,
+    "typeIva": 1,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
@@ -12011,10 +12011,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="3"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>3</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -12861,7 +12861,7 @@ inventario tipo <code>purchase</code>.</p>
 </p>
 
 <p>Same payload formats as <code>POST /products/query</code>. Campos virtuales en <code>w</code>:
-<code>search</code> (folio <code>PED-12</code> o <code>12</code>, notas, proveedor, usuario), <code>id_product</code>
+<code>search</code> (folio <code>PED-0000012</code>, <code>PED-12</code> o <code>12</code>, notas, proveedor, usuario), <code>id_product</code>
 y <code>sku</code> (pedidos que incluyen ese producto o variante).</p>
 
 <span id="example-requests-POSTapi-orders-query">
@@ -13184,7 +13184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </p>
 
 <p>Devuelve el PDF (<code>application/pdf</code>), no JSON. Por defecto inline; con
-<code>?download=1</code> como descarga <code>PED-n.pdf</code>. Disponible en cualquier
+<code>?download=1</code> como descarga <code>PED-0000001.pdf</code>. Disponible en cualquier
 estatus; en <code>draft</code> y <code>cancelled</code> lleva marca de agua.</p>
 
 <span id="example-requests-GETapi-orders--order--pdf">
@@ -13701,7 +13701,7 @@ fetch(url, {
         &quot;id&quot;: 1,
         &quot;key&quot;: &quot;PED&quot;,
         &quot;folio&quot;: 1,
-        &quot;folioLabel&quot;: &quot;PED-1&quot;,
+        &quot;folioLabel&quot;: &quot;PED-0000001&quot;,
         &quot;status&quot;: &quot;draft&quot;,
         &quot;idCurrency&quot;: 1,
         &quot;currencyCode&quot;: &quot;MXN&quot;,
@@ -13859,7 +13859,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Crea el pedido en <code>draft</code> con folio consecutivo <code>PED-n</code>. Sin <code>idCurrency</code>
+<p>Crea el pedido en <code>draft</code> con folio consecutivo <code>PED-0000001</code> (7 digitos con ceros). Sin <code>idCurrency</code>
 toma la moneda base de la empresa. Sin <code>unitCost</code> la linea toma
 <code>products.cost</code> (convertido a la moneda del pedido). Las variantes deben
 estar activas y su producto debe manejar existencias.</p>
@@ -13936,7 +13936,7 @@ fetch(url, {
     &quot;message&quot;: &quot;Order created.&quot;,
     &quot;data&quot;: {
         &quot;id&quot;: 1,
-        &quot;folioLabel&quot;: &quot;PED-1&quot;,
+        &quot;folioLabel&quot;: &quot;PED-0000001&quot;,
         &quot;status&quot;: &quot;draft&quot;
     }
 }</code>
@@ -14223,8 +14223,8 @@ por <code>idProductVariant</code>). Mismos campos que el alta.</p>
     --data "{
     \"idCurrency\": 16,
     \"exchangeRate\": 22,
-    \"dateOrder\": \"2026-10-14T12:55:59\",
-    \"dateExpected\": \"2026-10-14T12:55:59\",
+    \"dateOrder\": \"2026-10-14T14:01:09\",
+    \"dateExpected\": \"2026-10-14T14:01:09\",
     \"supplierName\": \"g\",
     \"supplierDetails\": \"z\",
     \"shippingAddress\": \"m\",
@@ -14255,8 +14255,8 @@ const headers = {
 let body = {
     "idCurrency": 16,
     "exchangeRate": 22,
-    "dateOrder": "2026-10-14T12:55:59",
-    "dateExpected": "2026-10-14T12:55:59",
+    "dateOrder": "2026-10-14T14:01:09",
+    "dateExpected": "2026-10-14T14:01:09",
     "supplierName": "g",
     "supplierDetails": "z",
     "shippingAddress": "m",
@@ -14440,10 +14440,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateOrder"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-14T12:55:59"
+               value="2026-10-14T14:01:09"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T12:55:59</code></p>
+<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateExpected</code></b>&nbsp;&nbsp;
@@ -14452,10 +14452,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateExpected"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-14T12:55:59"
+               value="2026-10-14T14:01:09"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T12:55:59</code></p>
+<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>supplierName</code></b>&nbsp;&nbsp;

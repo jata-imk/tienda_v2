@@ -53,7 +53,8 @@ class OrderService
     public function __construct(private InventoryMovementService $movementService) {}
 
     /**
-     * Extrae el numero de folio de un texto `PED-12` o `12`. null si no lo es.
+     * Extrae el numero de folio de un texto `PED-0000012`, `PED-12`, `0000012`
+     * o `12`. null si no lo es.
      */
     public static function parseFolio(string $value): ?int
     {
