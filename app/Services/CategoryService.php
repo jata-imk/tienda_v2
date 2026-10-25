@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Category\CreateCategoryDTO;
 use App\DTOs\Category\UpdateCategoryDTO;
+use App\DTOs\Product\KeyRenamePlan;
 use App\Models\Category;
 use App\Services\Concerns\AppliesGridConditions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Collection;
 class CategoryService
 {
     use AppliesGridConditions;
+
+    public function __construct(private KeyRenameService $keyRenameService) {}
 
     public function index(array $filters = []): array|Collection
     {
@@ -114,7 +117,9 @@ class CategoryService
 
     public function store(CreateCategoryDTO $dto): Category
     {
+        // Sin clave, el hook `creating` del modelo la genera.
         return Category::create([
+            'key'         => $dto->key,
             'name'        => $dto->name,
             'description' => $dto->description,
             'status'      => $dto->status,
@@ -130,14 +135,37 @@ class CategoryService
         }
 
         $fields = array_filter([
+            'key'         => $dto->key,
             'name'        => $dto->name,
             'description' => $dto->description,
             'status'      => $dto->status,
         ], fn($v) => $v !== null);
 
-        $category->update($fields);
+        $this->keyRenameService->saveWithCascade(
+            $category,
+            $dto->cascadeKeys,
+            fn(Category $locked) => $this->keyRenamePlan($locked, $dto),
+            fn(Category $locked) => $locked->update($fields),
+        );
 
         return $category->fresh();
+    }
+
+    /**
+     * Vista previa (`dryRun`) del renombrado en cascada; null si no existe.
+     */
+    public function keyRenamePreview(int $id, UpdateCategoryDTO $dto): ?KeyRenamePlan
+    {
+        $category = Category::find($id);
+
+        return $category ? $this->keyRenamePlan($category, $dto) : null;
+    }
+
+    private function keyRenamePlan(Category $category, UpdateCategoryDTO $dto): KeyRenamePlan
+    {
+        return $dto->key !== null
+            ? $this->keyRenameService->forCategory($category, $dto->key)
+            : new KeyRenamePlan();
     }
 
     public function destroy(int $id): bool

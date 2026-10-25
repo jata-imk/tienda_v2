@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "e74597de-9af2-42bf-b12f-170f0e06d262",
+        "_postman_id": "f081f6ae-9c92-4063-8354-4343cb24e87b",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -211,7 +211,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
                     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -398,7 +398,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -646,7 +646,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-14T14:01:09\",\"dateTo\":\"2052-11-06\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-10-24T23:06:51\",\"dateTo\":\"2052-11-16\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -803,7 +803,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -892,9 +892,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\",\"cascadeKeys\":false,\"dryRun\":false}"
                         },
-                        "description": ""
+                        "description": "Con `cascadeKeys: true`, cambiar `key` renombra tambien sus productos (prefijo `CAT-`) y sus SKU\n(solo lo que sigue el patron automatico; todo o nada: si algo choca responde\n422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:\nresponde la vista previa `{ totals, products, variants, conflicts }`."
                     },
                     "response": [
                         {
@@ -1043,7 +1043,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\"}"
+                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1132,9 +1132,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\"}"
+                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\",\"cascadeKeys\":false,\"dryRun\":false}"
                         },
-                        "description": ""
+                        "description": "Con `cascadeKeys: true`, cambiar `key` renombra tambien el segmento en las claves de sus productos y sus SKU\n(solo lo que sigue el patron automatico; todo o nada: si algo choca responde\n422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:\nresponde la vista previa `{ totals, products, variants, conflicts }`."
                     },
                     "response": [
                         {
@@ -1283,7 +1283,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1372,7 +1372,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -1523,7 +1523,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1713,6 +1713,60 @@
                     ]
                 },
                 {
+                    "name": "Next product key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/next-key",
+                            "query": [
+                                {
+                                    "key": "idMainCategory",
+                                    "value": "1",
+                                    "description": "Main category ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "idSizeGroup",
+                                    "value": "2",
+                                    "description": "Size group ID (`NIN` for Ni\u00f1os).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "keySegment",
+                                    "value": "DAM",
+                                    "description": "Optional extra segment.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/products\/next-key?idMainCategory=1&idSizeGroup=2&keySegment=DAM"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"idMainCategory\":16,\"idSizeGroup\":16,\"keySegment\":\"n\"}"
+                        },
+                        "description": "Sugerencia de la siguiente clave para mostrarla en el formulario de alta:\n`CAT[-GRUPO][-SEGMENTO]-NNN`, a partir del maximo que ya exista para ese\nprefijo. No reserva nada: el alta sin `key` la vuelve a calcular."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"ok\":true,\"code\":200,\"status\":\"OK\",\"message\":\"Next product key.\",\"data\":{\"key\":\"GUA-NIN-022\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Query product variants (POST)",
                     "request": {
                         "url": {
@@ -1834,7 +1888,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"variants\":[{\"idSize\":2,\"idColor\":3,\"sku\":\"CAM-001-34-BEI\",\"codeBar\":\"7500000000011\",\"stock\":3,\"status\":\"active\"}],\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"b\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":1}}"
+                            "raw": "{\"variants\":[{\"idSize\":2,\"idColor\":3,\"sku\":\"CAM001-S2-C17\",\"codeBar\":\"7500000000011\",\"stock\":3,\"status\":\"active\"}],\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"b\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":1}}"
                         },
                         "description": "Agrega una o varias variantes (talla x color) a un producto existente, por\nejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento\nde inventario por cada variante con existencia inicial mayor a cero.\n\nSi el producto esta inactivo, las variantes nuevas nacen `inactive` aunque el\npayload las mande como `active`: un producto inactivo no tiene variantes activas."
                     },
@@ -2353,9 +2407,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idSizeGroup\":16,\"key\":\"000001\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"return\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idMainCategory\":1,\"idSizeGroup\":16,\"key\":\"CAM-043\",\"keySegment\":\"DAM\",\"name\":\"z\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"return\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
-                        "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada)."
+                        "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada).\n\n`key` y `variants[].sku` son opcionales: si no vienen se generan (ver\n`GET \/api\/products\/next-key` y la regla `CLAVE-S{idTalla}-C{idColor}`)."
                     },
                     "response": [
                         {
@@ -2442,9 +2496,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\"}"
+                            "raw": "{\"categories\":[16],\"idMainCategory\":16,\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"cascadeKeys\":false,\"dryRun\":false}"
                         },
-                        "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca."
+                        "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca.\n\nCon `cascadeKeys: true`, cambiar `key` renombra tambien los SKU de sus variantes\n(solo lo que sigue el patron automatico; todo o nada: si algo choca responde\n422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:\nresponde la vista previa `{ totals, products, variants, conflicts }`."
                     },
                     "response": [
                         {
@@ -2934,7 +2988,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-10-14T14:01:09\",\"dateExpected\":\"2026-10-14T14:01:09\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
+                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-10-24T23:06:51\",\"dateExpected\":\"2026-10-24T23:06:51\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
                         },
                         "description": "Solo en `draft` (409 en cualquier otro estatus). Los campos omitidos no se\ntocan. Si se envia `details`, reemplaza todas las lineas (se identifican\npor `idProductVariant`). Mismos campos que el alta."
                     },

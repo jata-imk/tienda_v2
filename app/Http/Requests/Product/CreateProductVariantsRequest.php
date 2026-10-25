@@ -5,6 +5,7 @@ namespace App\Http\Requests\Product;
 use App\DTOs\Product\CreateVariantsDTO;
 use App\DTOs\Product\InitialMovementDTO;
 use App\DTOs\Product\VariantInputDTO;
+use App\Http\Requests\Product\Concerns\UppercasesSkuInput;
 use App\Http\Requests\Product\Concerns\ValidatesVariantInput;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
@@ -16,6 +17,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CreateProductVariantsRequest extends FormRequest
 {
+    use UppercasesSkuInput;
     use ValidatesVariantInput;
 
     private ?Product $product = null;
@@ -25,13 +27,19 @@ class CreateProductVariantsRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->uppercaseSkus();
+    }
+
     public function rules(): array
     {
         return [
             'variants'           => 'required|array|min:1',
             'variants.*.idSize'  => 'required|integer|exists:sizes,id',
             'variants.*.idColor' => 'required|integer|exists:colors,id',
-            'variants.*.sku'     => 'required|string|max:80|distinct|unique:product_variants,sku',
+            // Sin SKU se genera con la clave actual del producto (ver VariantSku).
+            'variants.*.sku'     => 'nullable|string|max:80|distinct|unique:product_variants,sku',
             'variants.*.codeBar' => 'nullable|string|max:50',
             'variants.*.stock'   => 'required|numeric|min:0',
             'variants.*.status'  => 'sometimes|in:active,inactive',
@@ -88,7 +96,7 @@ class CreateProductVariantsRequest extends FormRequest
             fn(array $v) => new VariantInputDTO(
                 sizeId:  (int) $v['idSize'],
                 colorId: (int) $v['idColor'],
-                sku:     $v['sku'],
+                sku:     $v['sku'] ?? null,
                 codeBar: $v['codeBar'] ?? null,
                 stock:   (float) $v['stock'],
                 status:  $v['status'] ?? 'active',

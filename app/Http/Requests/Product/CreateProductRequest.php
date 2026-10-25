@@ -6,13 +6,17 @@ use App\DTOs\Product\CreateProductDTO;
 use App\DTOs\Product\InitialMovementDTO;
 use App\DTOs\Product\VariantInputDTO;
 use App\Http\Requests\Product\Concerns\NormalizesCategoriesInput;
+use App\Http\Requests\Product\Concerns\UppercasesSkuInput;
 use App\Http\Requests\Product\Concerns\ValidatesVariantInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateProductRequest extends FormRequest
 {
-    use NormalizesCategoriesInput;
+    use NormalizesCategoriesInput {
+        prepareForValidation as normalizeCategoriesInput;
+    }
+    use UppercasesSkuInput;
     use ValidatesVariantInput;
 
     public function authorize(): bool
@@ -20,13 +24,23 @@ class CreateProductRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeCategoriesInput();
+        $this->uppercaseSkus();
+    }
+
     public function rules(): array
     {
         return [
-            'categories'   => 'required|array|min:1',
+            'categories'   => 'required|array|list|min:1',
             'categories.*' => 'integer|distinct|exists:categories,id',
+            // Sin categoria principal se toma la primera de `categories`.
+            'idMainCategory' => 'nullable|integer|exists:categories,id',
             'idSizeGroup'  => 'required_if:stockControl,true|nullable|integer|exists:size_groups,id',
-            'key'          => 'required|string|max:50|unique:products,key',
+            // Sin clave se genera: `CAT[-GRUPO][-SEGMENTO]-NNN` (ver ProductKeyService).
+            'key'          => 'nullable|string|max:50|unique:products,key',
+            'keySegment'   => 'nullable|string|alpha:ascii|max:5',
             'name'         => 'required|string|max:200',
             'description'  => 'nullable|string',
             'codeBar'      => 'nullable|string|max:50',
@@ -45,7 +59,8 @@ class CreateProductRequest extends FormRequest
             'variants'              => 'required_if:stockControl,true|array',
             'variants.*.idSize'     => 'required|integer|exists:sizes,id',
             'variants.*.idColor'    => 'required|integer|exists:colors,id',
-            'variants.*.sku'        => 'required|string|max:80|distinct|unique:product_variants,sku',
+            // Sin SKU se genera: `CLAVE-S{idTalla}-C{idColor}` (ver VariantSku).
+            'variants.*.sku'        => 'nullable|string|max:80|distinct|unique:product_variants,sku',
             'variants.*.codeBar'    => 'nullable|string|max:50',
             'variants.*.stock'      => 'required|numeric|min:0',
             'variants.*.status'     => 'sometimes|in:active,inactive',
@@ -81,7 +96,7 @@ class CreateProductRequest extends FormRequest
             fn(array $v) => new VariantInputDTO(
                 sizeId:  (int) $v['idSize'],
                 colorId: (int) $v['idColor'],
-                sku:     $v['sku'],
+                sku:     $v['sku'] ?? null,
                 codeBar: $v['codeBar'] ?? null,
                 stock:   (float) $v['stock'],
                 status:  $v['status'] ?? 'active',
@@ -101,10 +116,15 @@ class CreateProductRequest extends FormRequest
             );
         }
 
+        $categoryIds = array_map('intval', $this->input('categories', []));
+
         return new CreateProductDTO(
-            categoryIds:     array_map('intval', $this->input('categories', [])),
+            categoryIds:     $categoryIds,
+            mainCategoryId:  $this->filled('idMainCategory') ? (int) $this->input('idMainCategory') : $categoryIds[0],
             sizeGroupId:     $this->filled('idSizeGroup') ? (int) $this->input('idSizeGroup') : null,
-            key:             $this->input('key'),
+            // Claves en mayusculas, como las generadas (`cam-050` -> `CAM-050`).
+            key:             $this->filled('key') ? strtoupper($this->input('key')) : null,
+            keySegment:      $this->filled('keySegment') ? $this->input('keySegment') : null,
             name:            $this->input('name'),
             description:     $this->input('description'),
             codeBar:         $this->input('codeBar'),

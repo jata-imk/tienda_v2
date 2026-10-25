@@ -40,6 +40,7 @@ Route::middleware('jwt.authenticate')->group(function () {
         Route::apiResource('colors', ColorController::class);
 
         Route::post('products/query', [ProductController::class, 'query']);
+        Route::get('products/next-key', [ProductController::class, 'nextKey']);
         Route::post('products/{product}/variants/query', [ProductVariantController::class, 'query']);
         Route::get('products/{product}/variants', [ProductVariantController::class, 'index']);
         Route::post('products/{product}/variants', [ProductVariantController::class, 'store']);

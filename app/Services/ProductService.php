@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\DTOs\Product\CreateProductDTO;
+use App\DTOs\Product\KeyRenamePlan;
 use App\DTOs\Product\UpdateProductDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,7 @@ class ProductService
 {
     use AppliesGridConditions;
 
-    private const VARIANT_RELATIONS = ['categories', 'sizeGroup', 'variants.size', 'variants.color', 'colorImages'];
+    private const VARIANT_RELATIONS = ['categories', 'mainCategory', 'sizeGroup', 'variants.size', 'variants.color', 'colorImages'];
 
     /**
      * Relaciones a precargar en cualquier respuesta de producto. Las variantes
@@ -41,7 +43,11 @@ class ProductService
      */
     private const CATEGORY_FILTER_KEYS = ['categories', 'id_category', 'category'];
 
-    public function __construct(private ImageService $imageService) {}
+    public function __construct(
+        private ImageService $imageService,
+        private ProductKeyService $productKeyService,
+        private KeyRenameService $keyRenameService,
+    ) {}
 
     public function index(array $filters = []): array|Collection
     {
@@ -262,32 +268,42 @@ class ProductService
     public function store(CreateProductDTO $dto): Product
     {
         return DB::transaction(function () use ($dto) {
+            // Primera lectura de la transaccion: ver ProductKeyService::nextForInsert().
+            $key = $dto->key ?? $this->productKeyService->nextForInsert(
+                $dto->mainCategoryId,
+                $dto->sizeGroupId,
+                $dto->keySegment,
+            );
+
             $product = Product::create([
-                'id_size_group' => $dto->sizeGroupId,
-                'key'           => $dto->key,
-                'name'          => $dto->name,
-                'description'   => $dto->description,
-                'code_bar'      => $dto->codeBar,
-                'price'         => $dto->price,
-                'cost'          => $dto->cost,
-                'stock_control' => $dto->stockControl,
-                'discount'      => $dto->discount,
-                'type_iva'      => $dto->typeIva,
-                'rate_iva'      => $dto->rateIva,
-                'quota_iva'     => $dto->quotaIva,
-                'isr'           => $dto->isr,
-                'imp_esp'       => $dto->impEsp,
-                'status'        => $dto->status,
+                'id_main_category' => $dto->mainCategoryId,
+                'id_size_group'    => $dto->sizeGroupId,
+                'key'              => $key,
+                'name'             => $dto->name,
+                'description'      => $dto->description,
+                'code_bar'         => $dto->codeBar,
+                'price'            => $dto->price,
+                'cost'             => $dto->cost,
+                'stock_control'    => $dto->stockControl,
+                'discount'         => $dto->discount,
+                'type_iva'         => $dto->typeIva,
+                'rate_iva'         => $dto->rateIva,
+                'quota_iva'        => $dto->quotaIva,
+                'isr'              => $dto->isr,
+                'imp_esp'          => $dto->impEsp,
+                'status'           => $dto->status,
             ]);
 
-            $product->categories()->sync($dto->categoryIds);
+            $product->categories()->sync(self::withMainCategory($dto->categoryIds, $dto->mainCategoryId));
 
-            foreach ($dto->variants as $variantInput) {
+            $skus = VariantSku::resolve($product->key, $dto->variants);
+
+            foreach ($dto->variants as $i => $variantInput) {
                 $variant = ProductVariant::create([
                     'id_product' => $product->id,
                     'id_size'    => $variantInput->sizeId,
                     'id_color'   => $variantInput->colorId,
-                    'sku'        => $variantInput->sku,
+                    'sku'        => $skus[$i],
                     'code_bar'   => $variantInput->codeBar,
                     'stock'      => $variantInput->stock,
                     'status'     => ProductVariant::statusUnder($product, $variantInput->status),
@@ -321,41 +337,91 @@ class ProductService
             return null;
         }
 
+        // Si se reemplazan las categorias sin indicar principal y la actual ya no
+        // viene en la lista, la principal pasa a ser la primera de la lista.
+        $mainCategoryId = $dto->mainCategoryId;
+
+        if ($mainCategoryId === null && $dto->categoryIds !== null
+            && !in_array($product->id_main_category, $dto->categoryIds, true)) {
+            $mainCategoryId = $dto->categoryIds[0];
+        }
+
         $fields = array_filter([
-            'id_size_group' => $dto->sizeGroupId,
-            'key'           => $dto->key,
-            'name'          => $dto->name,
-            'description'   => $dto->description,
-            'code_bar'      => $dto->codeBar,
-            'price'         => $dto->price,
-            'cost'          => $dto->cost,
-            'stock_control' => $dto->stockControl,
-            'discount'      => $dto->discount,
-            'type_iva'      => $dto->typeIva,
-            'rate_iva'      => $dto->rateIva,
-            'quota_iva'     => $dto->quotaIva,
-            'isr'           => $dto->isr,
-            'imp_esp'       => $dto->impEsp,
-            'status'        => $dto->status,
+            'id_main_category' => $mainCategoryId,
+            'id_size_group'    => $dto->sizeGroupId,
+            'key'              => $dto->key,
+            'name'             => $dto->name,
+            'description'      => $dto->description,
+            'code_bar'         => $dto->codeBar,
+            'price'            => $dto->price,
+            'cost'             => $dto->cost,
+            'stock_control'    => $dto->stockControl,
+            'discount'         => $dto->discount,
+            'type_iva'         => $dto->typeIva,
+            'rate_iva'         => $dto->rateIva,
+            'quota_iva'        => $dto->quotaIva,
+            'isr'              => $dto->isr,
+            'imp_esp'          => $dto->impEsp,
+            'status'           => $dto->status,
         ], fn($v) => $v !== null);
 
-        DB::transaction(function () use ($product, $fields, $dto) {
-            if ($fields !== []) {
-                $product->update($fields);
+        $this->keyRenameService->saveWithCascade(
+            $product,
+            $dto->cascadeKeys,
+            fn(Product $locked) => $this->keyRenamePlan($locked, $dto),
+            function (Product $locked) use ($fields, $dto) {
+                if ($fields !== []) {
+                    $locked->update($fields);
 
-                // Solo un cambio real de valor cascadea: el frontend reenvia el
-                // formulario completo y el status suele venir sin cambiar.
-                if ($product->wasChanged('status')) {
-                    $this->cascadeStatusToVariants($product);
+                    // Solo un cambio real de valor cascadea: el frontend reenvia el
+                    // formulario completo y el status suele venir sin cambiar.
+                    if ($locked->wasChanged('status')) {
+                        $this->cascadeStatusToVariants($locked);
+                    }
                 }
-            }
 
-            if ($dto->categoryIds !== null) {
-                $product->categories()->sync($dto->categoryIds);
-            }
-        });
+                if ($dto->categoryIds !== null) {
+                    $locked->categories()->sync(self::withMainCategory($dto->categoryIds, $locked->id_main_category));
+                } elseif ($dto->mainCategoryId !== null) {
+                    $locked->categories()->syncWithoutDetaching([$dto->mainCategoryId]);
+                }
+            },
+        );
 
         return $product->fresh(self::variantRelations());
+    }
+
+    /**
+     * Vista previa (`dryRun`) del renombrado en cascada; null si no existe.
+     */
+    public function keyRenamePreview(int $id, UpdateProductDTO $dto): ?KeyRenamePlan
+    {
+        $product = Product::find($id);
+
+        return $product ? $this->keyRenamePlan($product, $dto) : null;
+    }
+
+    private function keyRenamePlan(Product $product, UpdateProductDTO $dto): KeyRenamePlan
+    {
+        return $dto->key !== null
+            ? $this->keyRenameService->forProduct($product, $dto->key)
+            : new KeyRenamePlan();
+    }
+
+    /**
+     * La categoria principal siempre forma parte de la pivote: se agrega al
+     * final si el payload no la trae.
+     *
+     * @param int[] $categoryIds
+     * @return int[]
+     */
+    private static function withMainCategory(array $categoryIds, ?int $mainCategoryId): array
+    {
+        if ($mainCategoryId === null || in_array($mainCategoryId, $categoryIds, true)) {
+            return $categoryIds;
+        }
+
+        return [...$categoryIds, $mainCategoryId];
     }
 
     /**

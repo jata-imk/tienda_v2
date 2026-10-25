@@ -12,7 +12,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'id_size_group', 'key', 'name', 'description', 'code_bar',
+        'id_main_category', 'id_size_group', 'key', 'name', 'description', 'code_bar',
         'image', 'image_thumb',
         'price', 'cost', 'stock_control', 'discount',
         'type_iva', 'rate_iva', 'quota_iva', 'isr', 'imp_esp', 'status',
@@ -32,6 +32,11 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_product', 'id_product', 'id_category');
+    }
+
+    public function mainCategory()
+    {
+        return $this->belongsTo(Category::class, 'id_main_category');
     }
 
     public function sizeGroup()

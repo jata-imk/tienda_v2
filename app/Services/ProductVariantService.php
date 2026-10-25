@@ -8,6 +8,7 @@ use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -164,13 +165,14 @@ class ProductVariantService
     {
         return DB::transaction(function () use ($product, $dto) {
             $created = new Collection();
+            $skus    = VariantSku::resolve($product->key, $dto->variants);
 
-            foreach ($dto->variants as $variantInput) {
+            foreach ($dto->variants as $i => $variantInput) {
                 $variant = ProductVariant::create([
                     'id_product' => $product->id,
                     'id_size'    => $variantInput->sizeId,
                     'id_color'   => $variantInput->colorId,
-                    'sku'        => $variantInput->sku,
+                    'sku'        => $skus[$i],
                     'code_bar'   => $variantInput->codeBar,
                     'stock'      => $variantInput->stock,
                     'status'     => ProductVariant::statusUnder($product, $variantInput->status),

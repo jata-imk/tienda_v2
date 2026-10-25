@@ -18,6 +18,13 @@ class ProductResource extends JsonResource
                     ->map(fn($category) => ['id' => $category->id, 'desc' => $category->name])
                     ->values(),
             ),
+            'idMainCategory' => $this->id_main_category,
+            'mainCategory' => $this->whenLoaded(
+                'mainCategory',
+                fn() => $this->mainCategory
+                    ? ['id' => $this->mainCategory->id, 'desc' => $this->mainCategory->name, 'key' => $this->mainCategory->key]
+                    : null,
+            ),
             'idSizeGroup'  => $this->id_size_group,
             'sizeGroup'    => $this->sizeGroup?->name,
             'key'          => $this->key,

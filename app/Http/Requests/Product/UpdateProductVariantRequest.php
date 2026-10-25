@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Product;
 
 use App\DTOs\Product\UpdateVariantDTO;
+use App\Http\Requests\Product\Concerns\UppercasesSkuInput;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,9 +19,16 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateProductVariantRequest extends FormRequest
 {
+    use UppercasesSkuInput;
+
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->uppercaseSkus();
     }
 
     public function rules(): array

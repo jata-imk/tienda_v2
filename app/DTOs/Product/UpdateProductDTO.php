@@ -9,6 +9,7 @@ readonly class UpdateProductDTO
      */
     public function __construct(
         public ?array  $categoryIds,
+        public ?int    $mainCategoryId,
         public ?int    $sizeGroupId,
         public ?string $key,
         public ?string $name,
@@ -24,5 +25,7 @@ readonly class UpdateProductDTO
         public ?float  $isr,
         public ?float  $impEsp,
         public ?string $status,
+        /** Renombrar en cascada lo derivado de la clave (ver KeyRenameService). */
+        public bool    $cascadeKeys = false,
     ) {}
 }
