@@ -88,7 +88,7 @@ class ProductVariantController extends Controller
      * @bodyParam variants object[] required Variantes a agregar.
      * @bodyParam variants[].idSize integer required Size ID (debe pertenecer al grupo de tallas del producto). Example: 2
      * @bodyParam variants[].idColor integer required Color ID. Example: 3
-     * @bodyParam variants[].sku string required SKU unico de la variante. Example: CAM-001-34-BEI
+     * @bodyParam variants[].sku string SKU unico de la variante. Si no viene se genera como `CLAVE-S{idTalla}-C{idColor}` con la clave actual del producto. Example: CAM001-S2-C17
      * @bodyParam variants[].codeBar string Codigo de barras de la variante. Example: 7500000000011
      * @bodyParam variants[].stock number required Existencia inicial. Example: 3
      * @bodyParam variants[].status string active o inactive. Example: active

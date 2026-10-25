@@ -30,6 +30,7 @@ class ProductSeeder extends Seeder
             ->pluck('id', 'name');
 
         $product = Product::firstOrCreate(['key' => 'CAM-001'], [
+            'id_main_category' => $categories->get('Camisas lino'),
             'id_size_group' => $adultGroup->id,
             'name' => 'Camisa lino caballero',
             'description' => 'Camisa 100% lino manga larga',
@@ -85,6 +86,7 @@ class ProductSeeder extends Seeder
         }
 
         $service = Product::firstOrCreate(['key' => 'SERV-001'], [
+            'id_main_category' => $categories->get('Caballero'),
             'id_size_group' => null,
             'name' => 'Ajuste de prenda',
             'description' => 'Servicio de ajuste, sin inventario',

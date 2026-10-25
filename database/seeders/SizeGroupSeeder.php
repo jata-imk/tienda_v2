@@ -15,6 +15,7 @@ class SizeGroupSeeder extends Seeder
         ]);
 
         SizeGroup::firstOrCreate(['name' => 'Niños'], [
+            'key' => 'NIN',
             'description' => 'Tallas infantiles: 1 a 16',
             'status' => 'active',
         ]);

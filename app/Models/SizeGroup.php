@@ -11,7 +11,7 @@ class SizeGroup extends Model
 
     protected $table = 'size_groups';
 
-    protected $fillable = ['name', 'description', 'status'];
+    protected $fillable = ['key', 'name', 'description', 'status'];
 
     public function sizes()
     {

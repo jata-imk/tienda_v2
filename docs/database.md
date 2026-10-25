@@ -158,6 +158,26 @@ se crea en la migración, no al vuelo.
 `movement_type` agrega `purchase` (entrada por recepción de pedido) e índice compuesto
 (`reference_type`, `reference_id`).
 
+## Claves de producto
+
+Columnas para generar claves (reglas en [inventario.md](inventario.md#claves-automáticas)):
+
+| Tabla | Columna | Tipo | Descripción |
+|---|---|---|---|
+| `categories` | `key` | varchar(10) unique | Prefijo de la clave de producto (`CAM`) |
+| `size_groups` | `key` | varchar(10) unique nullable | Segmento de la clave (`NIN`) |
+| `products` | `id_main_category` | FK nullable → categories | Categoría principal; siempre está también en `category_product` |
+
+Backfill de las migraciones `2026_10_24_*` sobre datos existentes:
+
+- `products.key` pasa a mayúsculas (`FIl-004` → `FIL-004`).
+- Cada prefijo de clave ya capturado se asigna a la categoría de esos productos cuyo nombre
+  empieza con él (`CAM` → Camisa, `VEST` → Vestidos); el resto de categorías recibe clave
+  generada.
+- El grupo de tallas "Niños" recibe `NIN`.
+- `id_main_category` = categoría cuya clave es el prefijo de la clave del producto
+  (`GUA-NIN-003` → Guayabera); si ninguna coincide, la primera de la pivote.
+
 ## Seeders
 
 Las migraciones crean y transforman estructura, pero no insertan el baseline

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\NullsUpdatedAtOnCreate;
+use App\Support\CategoryKey;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -11,7 +12,17 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    protected $fillable = ['name', 'description', 'status'];
+    protected $fillable = ['key', 'name', 'description', 'status'];
+
+    protected static function booted(): void
+    {
+        // Sin clave capturada se deriva del nombre (`Camisa` -> `CAM`).
+        static::creating(function (Category $category) {
+            if (blank($category->key)) {
+                $category->key = CategoryKey::generate((string) $category->name);
+            }
+        });
+    }
 
     public function products()
     {

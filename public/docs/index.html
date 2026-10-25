@@ -219,6 +219,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="inventory-POSTapi-products-query">
                                 <a href="#inventory-POSTapi-products-query">Query products (POST)</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-GETapi-products-next-key">
+                                <a href="#inventory-GETapi-products-next-key">Next product key</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="inventory-POSTapi-products--product--variants-query">
                                 <a href="#inventory-POSTapi-products--product--variants-query">Query product variants (POST)</a>
                             </li>
@@ -343,7 +346,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: October 14, 2026</li>
+        <li>Last updated: October 24, 2026</li>
     </ul>
 </div>
 
@@ -1120,7 +1123,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"stockControl\": false,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -1153,7 +1156,7 @@ let body = {
     "stockControl": false,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -1497,10 +1500,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1541,7 +1544,7 @@ Must be one of:
     \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -1574,7 +1577,7 @@ let body = {
     "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -1918,10 +1921,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -2661,7 +2664,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
     \"exchangeRate\": 0,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -2682,7 +2685,7 @@ let body = {
     "code": "ngzmiy",
     "symbol": "vdljni",
     "exchangeRate": 0,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -2847,10 +2850,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-currencies"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3703,8 +3706,8 @@ alerts omit zero-stock variants that have never had inventory movements.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-10-14T14:01:09\",
-    \"dateTo\": \"2052-11-06\",
+    \"dateFrom\": \"2026-10-24T23:06:51\",
+    \"dateTo\": \"2052-11-16\",
     \"lowStockThreshold\": 39
 }"
 </code></pre></div>
@@ -3732,8 +3735,8 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-10-14T14:01:09",
-    "dateTo": "2052-11-06",
+    "dateFrom": "2026-10-24T23:06:51",
+    "dateTo": "2052-11-16",
     "lowStockThreshold": 39
 };
 
@@ -3934,10 +3937,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-10-14T14:01:09"
+               value="2026-10-24T23:06:51"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
+<p>Must be a valid date. Example: <code>2026-10-24T23:06:51</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -3946,10 +3949,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-dashboard"
-               value="2052-11-06"
+               value="2052-11-16"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-06</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>lowStockThreshold</code></b>&nbsp;&nbsp;
@@ -4483,7 +4486,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"b\",
+    \"key\": \"bngzmi\",
+    \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
     \"status\": \"inactive\"
 }"
@@ -4502,7 +4506,8 @@ const headers = {
 };
 
 let body = {
-    "name": "b",
+    "key": "bngzmi",
+    "name": "y",
     "description": "Eius et animi quos velit et.",
     "status": "inactive"
 };
@@ -4615,16 +4620,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="key"                data-endpoint="POSTapi-categories"
+               value="bngzmi"
+               data-component="body">
+    <br>
+<p>Must contain only letters and numbers. Must not be greater than 10 characters. Example: <code>bngzmi</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-categories"
-               value="b"
+               value="y"
                data-component="body">
     <br>
-<p>Must not be greater than 150 characters. Example: <code>b</code></p>
+<p>Must not be greater than 150 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -4825,7 +4842,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Con <code>cascadeKeys: true</code>, cambiar <code>key</code> renombra tambien sus productos (prefijo <code>CAT-</code>) y sus SKU
+(solo lo que sigue el patron automatico; todo o nada: si algo choca responde
+422 con <code>data.conflicts</code> y no guarda nada). Con <code>dryRun: true</code> no guarda:
+responde la vista previa <code>{ totals, products, variants, conflicts }</code>.</p>
 
 <span id="example-requests-PUTapi-categories--id-">
 <blockquote>Example request:</blockquote>
@@ -4838,9 +4858,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"b\",
+    \"key\": \"bngzmi\",
+    \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"active\",
+    \"cascadeKeys\": false,
+    \"dryRun\": false
 }"
 </code></pre></div>
 
@@ -4857,9 +4880,12 @@ const headers = {
 };
 
 let body = {
-    "name": "b",
+    "key": "bngzmi",
+    "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "active",
+    "cascadeKeys": false,
+    "dryRun": false
 };
 
 fetch(url, {
@@ -5000,16 +5026,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="key"                data-endpoint="PUTapi-categories--id-"
+               value="bngzmi"
+               data-component="body">
+    <br>
+<p>Must contain only letters and numbers. Must not be greater than 10 characters. Example: <code>bngzmi</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="PUTapi-categories--id-"
-               value="b"
+               value="y"
                data-component="body">
     <br>
-<p>Must not be greater than 150 characters. Example: <code>b</code></p>
+<p>Must not be greater than 150 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5036,6 +5074,50 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>cascadeKeys</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-categories--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="true"
+                   data-endpoint="PUTapi-categories--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-categories--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="false"
+                   data-endpoint="PUTapi-categories--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Rename what derives from <code>key</code> too. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dryRun</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-categories--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="true"
+                   data-endpoint="PUTapi-categories--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-categories--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="false"
+                   data-endpoint="PUTapi-categories--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Only preview the cascade rename, save nothing. Example: <code>false</code></p>
         </div>
         </form>
 
@@ -5513,9 +5595,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"b\",
+    \"key\": \"bngzmi\",
+    \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -5532,9 +5615,10 @@ const headers = {
 };
 
 let body = {
-    "name": "b",
+    "key": "bngzmi",
+    "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -5645,16 +5729,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="key"                data-endpoint="POSTapi-size-groups"
+               value="bngzmi"
+               data-component="body">
+    <br>
+<p>Must contain only letters and numbers. Must not be greater than 10 characters. Example: <code>bngzmi</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-size-groups"
-               value="b"
+               value="y"
                data-component="body">
     <br>
-<p>Must not be greater than 150 characters. Example: <code>b</code></p>
+<p>Must not be greater than 150 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5675,10 +5771,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-size-groups"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5855,7 +5951,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Con <code>cascadeKeys: true</code>, cambiar <code>key</code> renombra tambien el segmento en las claves de sus productos y sus SKU
+(solo lo que sigue el patron automatico; todo o nada: si algo choca responde
+422 con <code>data.conflicts</code> y no guarda nada). Con <code>dryRun: true</code> no guarda:
+responde la vista previa <code>{ totals, products, variants, conflicts }</code>.</p>
 
 <span id="example-requests-PUTapi-size-groups--id-">
 <blockquote>Example request:</blockquote>
@@ -5868,9 +5967,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"b\",
+    \"key\": \"bngzmi\",
+    \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\",
+    \"cascadeKeys\": false,
+    \"dryRun\": false
 }"
 </code></pre></div>
 
@@ -5887,9 +5989,12 @@ const headers = {
 };
 
 let body = {
-    "name": "b",
+    "key": "bngzmi",
+    "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active",
+    "cascadeKeys": false,
+    "dryRun": false
 };
 
 fetch(url, {
@@ -6030,16 +6135,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="key"                data-endpoint="PUTapi-size-groups--id-"
+               value="bngzmi"
+               data-component="body">
+    <br>
+<p>Must contain only letters and numbers. Must not be greater than 10 characters. Example: <code>bngzmi</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="PUTapi-size-groups--id-"
-               value="b"
+               value="y"
                data-component="body">
     <br>
-<p>Must not be greater than 150 characters. Example: <code>b</code></p>
+<p>Must not be greater than 150 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -6060,12 +6177,56 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-size-groups--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>cascadeKeys</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-size-groups--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="true"
+                   data-endpoint="PUTapi-size-groups--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-size-groups--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="false"
+                   data-endpoint="PUTapi-size-groups--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Rename what derives from <code>key</code> too. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dryRun</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-size-groups--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="true"
+                   data-endpoint="PUTapi-size-groups--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-size-groups--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="false"
+                   data-endpoint="PUTapi-size-groups--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Only preview the cascade rename, save nothing. Example: <code>false</code></p>
         </div>
         </form>
 
@@ -6547,7 +6708,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -6567,7 +6728,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -6720,10 +6881,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-sizes"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -6916,7 +7077,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -6936,7 +7097,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -7119,10 +7280,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-sizes--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -7604,7 +7765,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -7623,7 +7784,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -7764,10 +7925,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-colors"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -8566,6 +8727,243 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="inventory-GETapi-products-next-key">Next product key</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Sugerencia de la siguiente clave para mostrarla en el formulario de alta:
+<code>CAT[-GRUPO][-SEGMENTO]-NNN</code>, a partir del maximo que ya exista para ese
+prefijo. No reserva nada: el alta sin <code>key</code> la vuelve a calcular.</p>
+
+<span id="example-requests-GETapi-products-next-key">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/products/next-key?idMainCategory=1&amp;idSizeGroup=2&amp;keySegment=DAM" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"idMainCategory\": 16,
+    \"idSizeGroup\": 16,
+    \"keySegment\": \"n\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/products/next-key"
+);
+
+const params = {
+    "idMainCategory": "1",
+    "idSizeGroup": "2",
+    "keySegment": "DAM",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "idMainCategory": 16,
+    "idSizeGroup": 16,
+    "keySegment": "n"
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-products-next-key">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Next product key.&quot;,
+    &quot;data&quot;: {
+        &quot;key&quot;: &quot;GUA-NIN-022&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-products-next-key" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-products-next-key"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-products-next-key"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-products-next-key" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-products-next-key">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-products-next-key" data-method="GET"
+      data-path="api/products/next-key"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-products-next-key', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-products-next-key"
+                    onclick="tryItOut('GETapi-products-next-key');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-products-next-key"
+                    onclick="cancelTryOut('GETapi-products-next-key');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-products-next-key"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/products/next-key</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-products-next-key"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-products-next-key"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-products-next-key"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>idMainCategory</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idMainCategory"                data-endpoint="GETapi-products-next-key"
+               value="1"
+               data-component="query">
+    <br>
+<p>Main category ID. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>idSizeGroup</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idSizeGroup"                data-endpoint="GETapi-products-next-key"
+               value="2"
+               data-component="query">
+    <br>
+<p>Size group ID (<code>NIN</code> for Niños). Example: <code>2</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>keySegment</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="keySegment"                data-endpoint="GETapi-products-next-key"
+               value="DAM"
+               data-component="query">
+    <br>
+<p>Optional extra segment. Example: <code>DAM</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>idMainCategory</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idMainCategory"                data-endpoint="GETapi-products-next-key"
+               value="16"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the categories table. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>idSizeGroup</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idSizeGroup"                data-endpoint="GETapi-products-next-key"
+               value="16"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the size_groups table. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>keySegment</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="keySegment"                data-endpoint="GETapi-products-next-key"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must contain only letters. Must not be greater than 5 characters. Example: <code>n</code></p>
+        </div>
+        </form>
+
                     <h2 id="inventory-POSTapi-products--product--variants-query">Query product variants (POST)</h2>
 
 <p>
@@ -8939,7 +9337,7 @@ payload las mande como <code>active</code>: un producto inactivo no tiene varian
         {
             \"idSize\": 2,
             \"idColor\": 3,
-            \"sku\": \"CAM-001-34-BEI\",
+            \"sku\": \"CAM001-S2-C17\",
             \"codeBar\": \"7500000000011\",
             \"stock\": 3,
             \"status\": \"active\"
@@ -8972,7 +9370,7 @@ let body = {
         {
             "idSize": 2,
             "idColor": 3,
-            "sku": "CAM-001-34-BEI",
+            "sku": "CAM001-S2-C17",
             "codeBar": "7500000000011",
             "stock": 3,
             "status": "active"
@@ -9160,14 +9558,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>sku</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="variants.0.sku"                data-endpoint="POSTapi-products--product--variants"
-               value="CAM-001-34-BEI"
+               value="CAM001-S2-C17"
                data-component="body">
     <br>
-<p>SKU unico de la variante. Example: <code>CAM-001-34-BEI</code></p>
+<p>SKU unico de la variante. Si no viene se genera como <code>CLAVE-S{idTalla}-C{idColor}</code> con la clave actual del producto. Example: <code>CAM001-S2-C17</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>codeBar</code></b>&nbsp;&nbsp;
@@ -9722,7 +10120,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\phpC927.tmp" </code></pre></div>
+    --form "image=@C:\Users\jatai\AppData\Local\Temp\php7576.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9894,7 +10292,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\phpC927.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jatai\AppData\Local\Temp\php7576.tmp</code></p>
         </div>
         </form>
 
@@ -10277,7 +10675,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\phpC949.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jatai\AppData\Local\Temp\php7579.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -10918,6 +11316,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Si se crea con <code>status: inactive</code>, sus variantes nacen <code>inactive</code> aunque el
 payload las mande como <code>active</code>. Lo inverso si se respeta: en un producto
 activo puede haber variantes <code>inactive</code> (por ejemplo una talla descontinuada).</p>
+<p><code>key</code> y <code>variants[].sku</code> son opcionales: si no vienen se generan (ver
+<code>GET /api/products/next-key</code> y la regla <code>CLAVE-S{idTalla}-C{idColor}</code>).</p>
 
 <span id="example-requests-POSTapi-products">
 <blockquote>Example request:</blockquote>
@@ -10934,14 +11334,16 @@ activo puede haber variantes <code>inactive</code> (por ejemplo una talla descon
         1,
         2
     ],
+    \"idMainCategory\": 1,
     \"idSizeGroup\": 16,
-    \"key\": \"000001\",
-    \"name\": \"g\",
+    \"key\": \"CAM-043\",
+    \"keySegment\": \"DAM\",
+    \"name\": \"z\",
     \"description\": \"Eius et animi quos velit et.\",
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"discount\": 19,
     \"typeIva\": 1,
     \"rateIva\": 17,
@@ -10986,14 +11388,16 @@ let body = {
         1,
         2
     ],
+    "idMainCategory": 1,
     "idSizeGroup": 16,
-    "key": "000001",
-    "name": "g",
+    "key": "CAM-043",
+    "keySegment": "DAM",
+    "name": "z",
     "description": "Eius et animi quos velit et.",
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": false,
+    "stockControl": true,
     "discount": 19,
     "typeIva": 1,
     "rateIva": 17,
@@ -11142,6 +11546,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Category IDs.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>idMainCategory</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idMainCategory"                data-endpoint="POSTapi-products"
+               value="1"
+               data-component="body">
+    <br>
+<p>Main category ID (gives the key prefix). Defaults to the first of <code>categories</code>. Example: <code>1</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>idSizeGroup</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -11156,14 +11572,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>key</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="key"                data-endpoint="POSTapi-products"
-               value="000001"
+               value="CAM-043"
                data-component="body">
     <br>
-<p>Internal unique key. Example: <code>000001</code></p>
+<p>Internal unique key. Generated when omitted. Example: <code>CAM-043</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>keySegment</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="keySegment"                data-endpoint="POSTapi-products"
+               value="DAM"
+               data-component="body">
+    <br>
+<p>Extra key segment, only used when <code>key</code> is generated. Example: <code>DAM</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
@@ -11172,10 +11600,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-products"
-               value="g"
+               value="z"
                data-component="body">
     <br>
-<p>Must not be greater than 200 characters. Example: <code>g</code></p>
+<p>Must not be greater than 200 characters. Example: <code>z</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -11245,7 +11673,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -11370,7 +11798,7 @@ Must be one of:
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>sku</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="variants.0.sku"                data-endpoint="POSTapi-products"
@@ -11669,6 +12097,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Cambiar <code>status</code> cascadea a todas las variantes del producto: <code>inactive</code> las
 desactiva, <code>active</code> las reactiva. Solo se dispara si el valor cambia, asi que
 reenviar el formulario completo con el mismo <code>status</code> no las toca.</p>
+<p>Con <code>cascadeKeys: true</code>, cambiar <code>key</code> renombra tambien los SKU de sus variantes
+(solo lo que sigue el patron automatico; todo o nada: si algo choca responde
+422 con <code>data.conflicts</code> y no guarda nada). Con <code>dryRun: true</code> no guarda:
+responde la vista previa <code>{ totals, products, variants, conflicts }</code>.</p>
 
 <span id="example-requests-PUTapi-products--id-">
 <blockquote>Example request:</blockquote>
@@ -11684,6 +12116,7 @@ reenviar el formulario completo con el mismo <code>status</code> no las toca.</p
     \"categories\": [
         16
     ],
+    \"idMainCategory\": 16,
     \"idSizeGroup\": 16,
     \"key\": \"n\",
     \"name\": \"g\",
@@ -11691,14 +12124,16 @@ reenviar el formulario completo con el mismo <code>status</code> no las toca.</p
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"discount\": 19,
     \"typeIva\": 1,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"active\"
+    \"status\": \"active\",
+    \"cascadeKeys\": false,
+    \"dryRun\": false
 }"
 </code></pre></div>
 
@@ -11718,6 +12153,7 @@ let body = {
     "categories": [
         16
     ],
+    "idMainCategory": 16,
     "idSizeGroup": 16,
     "key": "n",
     "name": "g",
@@ -11725,14 +12161,16 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": false,
+    "stockControl": true,
     "discount": 19,
     "typeIva": 1,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "active"
+    "status": "active",
+    "cascadeKeys": false,
+    "dryRun": false
 };
 
 fetch(url, {
@@ -11887,6 +12325,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>The <code>id</code> of an existing record in the categories table.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>idMainCategory</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="idMainCategory"                data-endpoint="PUTapi-products--id-"
+               value="16"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the categories table. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>idSizeGroup</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -11990,7 +12440,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -12079,6 +12529,50 @@ Must be one of:
 <p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>cascadeKeys</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-products--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="true"
+                   data-endpoint="PUTapi-products--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-products--id-" style="display: none">
+            <input type="radio" name="cascadeKeys"
+                   value="false"
+                   data-endpoint="PUTapi-products--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Rename what derives from <code>key</code> too. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dryRun</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-products--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="true"
+                   data-endpoint="PUTapi-products--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-products--id-" style="display: none">
+            <input type="radio" name="dryRun"
+                   value="false"
+                   data-endpoint="PUTapi-products--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Only preview the cascade rename, save nothing. Example: <code>false</code></p>
         </div>
         </form>
 
@@ -14223,8 +14717,8 @@ por <code>idProductVariant</code>). Mismos campos que el alta.</p>
     --data "{
     \"idCurrency\": 16,
     \"exchangeRate\": 22,
-    \"dateOrder\": \"2026-10-14T14:01:09\",
-    \"dateExpected\": \"2026-10-14T14:01:09\",
+    \"dateOrder\": \"2026-10-24T23:06:51\",
+    \"dateExpected\": \"2026-10-24T23:06:51\",
     \"supplierName\": \"g\",
     \"supplierDetails\": \"z\",
     \"shippingAddress\": \"m\",
@@ -14255,8 +14749,8 @@ const headers = {
 let body = {
     "idCurrency": 16,
     "exchangeRate": 22,
-    "dateOrder": "2026-10-14T14:01:09",
-    "dateExpected": "2026-10-14T14:01:09",
+    "dateOrder": "2026-10-24T23:06:51",
+    "dateExpected": "2026-10-24T23:06:51",
     "supplierName": "g",
     "supplierDetails": "z",
     "shippingAddress": "m",
@@ -14440,10 +14934,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateOrder"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-14T14:01:09"
+               value="2026-10-24T23:06:51"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
+<p>Must be a valid date. Example: <code>2026-10-24T23:06:51</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateExpected</code></b>&nbsp;&nbsp;
@@ -14452,10 +14946,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateExpected"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-14T14:01:09"
+               value="2026-10-24T23:06:51"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-14T14:01:09</code></p>
+<p>Must be a valid date. Example: <code>2026-10-24T23:06:51</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>supplierName</code></b>&nbsp;&nbsp;

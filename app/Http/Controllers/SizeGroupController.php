@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\RespondsWithKeyRenamePreview;
 use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\SizeGroup\CreateSizeGroupRequest;
 use App\Http\Requests\SizeGroup\UpdateSizeGroupRequest;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
  */
 class SizeGroupController extends Controller
 {
+    use RespondsWithKeyRenamePreview;
     use TranslatesGridFilters;
 
     public function __construct(private SizeGroupService $sizeGroupService) {}
@@ -83,13 +85,24 @@ class SizeGroupController extends Controller
     /**
      * Update size group
      *
+     * Con `cascadeKeys: true`, cambiar `key` renombra tambien el segmento en las claves de sus productos y sus SKU
+     * (solo lo que sigue el patron automatico; todo o nada: si algo choca responde
+     * 422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:
+     * responde la vista previa `{ totals, products, variants, conflicts }`.
+     *
      * @urlParam id integer required Size group ID. Example: 1
+     * @bodyParam cascadeKeys boolean Rename what derives from `key` too. Example: false
+     * @bodyParam dryRun boolean Only preview the cascade rename, save nothing. Example: false
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Size group updated.","data":{}}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Size group not found.","data":null}
      */
     public function update(UpdateSizeGroupRequest $request, int $id): JsonResponse
     {
+        if ($request->isDryRun()) {
+            return $this->keyRenamePreviewResponse($this->sizeGroupService->keyRenamePreview($id, $request->toDTO()), 'Size group not found.');
+        }
+
         $sizeGroup = $this->sizeGroupService->update($id, $request->toDTO());
 
         if (!$sizeGroup) {

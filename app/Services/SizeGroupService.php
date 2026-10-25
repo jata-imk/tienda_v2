@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\SizeGroup\CreateSizeGroupDTO;
+use App\DTOs\Product\KeyRenamePlan;
 use App\DTOs\SizeGroup\UpdateSizeGroupDTO;
 use App\Models\SizeGroup;
 use App\Services\Concerns\AppliesGridConditions;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
 class SizeGroupService
 {
     use AppliesGridConditions;
+
+    public function __construct(private KeyRenameService $keyRenameService) {}
 
     public function index(array $filters = []): array|Collection
     {
@@ -68,6 +71,7 @@ class SizeGroupService
     public function store(CreateSizeGroupDTO $dto): SizeGroup
     {
         return SizeGroup::create([
+            'key'         => $dto->key,
             'name'        => $dto->name,
             'description' => $dto->description,
             'status'      => $dto->status,
@@ -83,14 +87,44 @@ class SizeGroupService
         }
 
         $fields = array_filter([
+            'key'         => $dto->key,
             'name'        => $dto->name,
             'description' => $dto->description,
             'status'      => $dto->status,
         ], fn($v) => $v !== null);
 
-        $sizeGroup->update($fields);
+        if ($dto->clearKey) {
+            $fields['key'] = null;
+        }
+
+        $this->keyRenameService->saveWithCascade(
+            $sizeGroup,
+            $dto->cascadeKeys,
+            fn(SizeGroup $locked) => $this->keyRenamePlan($locked, $dto),
+            fn(SizeGroup $locked) => $locked->update($fields),
+        );
 
         return $sizeGroup->fresh();
+    }
+
+    /**
+     * Vista previa (`dryRun`) del renombrado en cascada; null si no existe.
+     */
+    public function keyRenamePreview(int $id, UpdateSizeGroupDTO $dto): ?KeyRenamePlan
+    {
+        $sizeGroup = SizeGroup::find($id);
+
+        return $sizeGroup ? $this->keyRenamePlan($sizeGroup, $dto) : null;
+    }
+
+    /**
+     * `key: null` quita el segmento: `GUA-NIN-003` -> `GUA-003`.
+     */
+    private function keyRenamePlan(SizeGroup $sizeGroup, UpdateSizeGroupDTO $dto): KeyRenamePlan
+    {
+        return $dto->clearKey || $dto->key !== null
+            ? $this->keyRenameService->forSizeGroup($sizeGroup, $dto->clearKey ? null : $dto->key)
+            : new KeyRenamePlan();
     }
 
     public function destroy(int $id): bool

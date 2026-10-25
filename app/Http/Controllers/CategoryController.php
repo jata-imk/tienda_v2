@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\RespondsWithKeyRenamePreview;
 use App\Http\Controllers\Concerns\TranslatesGridFilters;
 use App\Http\Requests\Category\CreateCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
  */
 class CategoryController extends Controller
 {
+    use RespondsWithKeyRenamePreview;
     use TranslatesGridFilters;
 
     public function __construct(private CategoryService $categoryService) {}
@@ -97,13 +99,24 @@ class CategoryController extends Controller
     /**
      * Update category
      *
+     * Con `cascadeKeys: true`, cambiar `key` renombra tambien sus productos (prefijo `CAT-`) y sus SKU
+     * (solo lo que sigue el patron automatico; todo o nada: si algo choca responde
+     * 422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:
+     * responde la vista previa `{ totals, products, variants, conflicts }`.
+     *
      * @urlParam id integer required Category ID. Example: 1
+     * @bodyParam cascadeKeys boolean Rename what derives from `key` too. Example: false
+     * @bodyParam dryRun boolean Only preview the cascade rename, save nothing. Example: false
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Category updated.","data":{}}
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Category not found.","data":null}
      */
     public function update(UpdateCategoryRequest $request, int $id): JsonResponse
     {
+        if ($request->isDryRun()) {
+            return $this->keyRenamePreviewResponse($this->categoryService->keyRenamePreview($id, $request->toDTO()), 'Category not found.');
+        }
+
         $category = $this->categoryService->update($id, $request->toDTO());
 
         if (!$category) {

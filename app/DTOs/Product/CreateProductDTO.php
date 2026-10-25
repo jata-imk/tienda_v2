@@ -7,11 +7,15 @@ readonly class CreateProductDTO
     /**
      * @param int[]             $categoryIds
      * @param VariantInputDTO[] $variants
+     *
+     * `$key` null = se genera con la categoria principal, el grupo de tallas y
+     * `$keySegment`.
      */
     public function __construct(
         public array                $categoryIds,
+        public int                  $mainCategoryId,
         public ?int                 $sizeGroupId,
-        public string               $key,
+        public ?string              $key,
         public string               $name,
         public ?string              $description,
         public ?string              $codeBar,
@@ -27,5 +31,6 @@ readonly class CreateProductDTO
         public array                $variants = [],
         public ?InitialMovementDTO  $initialMovement = null,
         public string               $status = 'active',
+        public ?string              $keySegment = null,
     ) {}
 }

@@ -1,6 +1,8 @@
 <?php
 
+use App\Exceptions\KeyRenameConflictException;
 use App\Http\Middleware\JwtAuthenticate;
+use App\Http\Resources\Product\KeyRenamePlanResource;
 use App\Http\Middleware\RequireRole;
 use App\Support\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
@@ -25,5 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             return ApiResponse::error('No autenticado.', 401);
+        });
+
+        // Producto, categoria y grupo de tallas: el PUT con cascadeKeys choco.
+        $exceptions->render(function (KeyRenameConflictException $e, Request $request) {
+            return ApiResponse::error($e->getMessage(), 422, (new KeyRenamePlanResource($e->plan))->resolve($request));
         });
     })->create();

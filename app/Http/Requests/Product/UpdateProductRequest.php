@@ -3,12 +3,14 @@
 namespace App\Http\Requests\Product;
 
 use App\DTOs\Product\UpdateProductDTO;
+use App\Http\Requests\Concerns\ValidatesKeyCascade;
 use App\Http\Requests\Product\Concerns\NormalizesCategoriesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
 {
     use NormalizesCategoriesInput;
+    use ValidatesKeyCascade;
 
     public function authorize(): bool
     {
@@ -20,8 +22,10 @@ class UpdateProductRequest extends FormRequest
         $id = $this->route('product');
 
         return [
-            'categories'   => 'sometimes|array|min:1',
+            'categories'   => 'sometimes|array|list|min:1',
             'categories.*' => 'integer|distinct|exists:categories,id',
+            // Cambiarla no renombra la clave del producto.
+            'idMainCategory' => 'sometimes|integer|exists:categories,id',
             'idSizeGroup'  => 'sometimes|nullable|integer|exists:size_groups,id',
             'key'          => "sometimes|string|max:50|unique:products,key,{$id}",
             'name'         => 'sometimes|string|max:200',
@@ -37,6 +41,7 @@ class UpdateProductRequest extends FormRequest
             'isr'          => 'sometimes|numeric|min:0|max:100',
             'impEsp'       => 'sometimes|numeric|min:0|max:100',
             'status'       => 'sometimes|in:active,inactive',
+            ...$this->keyCascadeRules(),
         ];
     }
 
@@ -44,8 +49,9 @@ class UpdateProductRequest extends FormRequest
     {
         return new UpdateProductDTO(
             categoryIds:  $this->filled('categories') ? array_map('intval', $this->input('categories')) : null,
+            mainCategoryId: $this->filled('idMainCategory') ? (int) $this->input('idMainCategory') : null,
             sizeGroupId:  $this->filled('idSizeGroup') ? (int) $this->input('idSizeGroup') : null,
-            key:          $this->input('key'),
+            key:          $this->filled('key') ? strtoupper($this->input('key')) : null,
             name:         $this->input('name'),
             description:  $this->input('description'),
             codeBar:      $this->input('codeBar'),
@@ -59,6 +65,7 @@ class UpdateProductRequest extends FormRequest
             isr:          $this->filled('isr') ? (float) $this->input('isr') : null,
             impEsp:       $this->filled('impEsp') ? (float) $this->input('impEsp') : null,
             status:       $this->input('status'),
+            cascadeKeys:  $this->cascadeKeys(),
         );
     }
 }
