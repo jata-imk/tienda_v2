@@ -126,10 +126,10 @@ Un término vacío o sólo con espacios se ignora.
 
 | Tabla | Rol |
 |---|---|
-| `products` | Producto base (datos comerciales y fiscales). Una fila por producto. |
-| `categories` | Clasificación de productos. |
+| `products` | Producto base (datos comerciales y fiscales). Una fila por producto. `id_main_category` → categoría principal. |
+| `categories` | Clasificación de productos. `key` (única) es el prefijo de la clave de producto. |
 | `category_product` | Pivote producto ↔ categoría (un producto puede tener varias). |
-| `size_groups` | Grupos de tallas (Adultos, Niños). Catálogo. |
+| `size_groups` | Grupos de tallas (Adultos, Niños). Catálogo. `key` opcional (`NIN`) es un segmento de la clave de producto. |
 | `sizes` | Tallas por grupo (con `sort_order`). Catálogo. |
 | `colors` | Colores reutilizables (`hex_color`). Catálogo. |
 | `product_variants` | Existencia real por `producto + talla + color`. Único `id_product+id_size+id_color`. |
@@ -144,12 +144,21 @@ y la existencia total del producto es la suma de variantes activas (`totalStock`
 
 ## Catálogos — CRUD completo
 
-Mismo patrón para los tres. `GET`, `GET /{id}`, `POST`, `PUT /{id}`, `DELETE /{id}` (desactiva).
+Mismo patrón para todos. `GET`, `GET /{id}`, `POST`, `PUT /{id}`, `DELETE /{id}` (desactiva).
 Además `POST /{recurso}/query`.
+
+### `/api/categories`
+| Campo | Tipo | Req. | Descripción |
+|---|---|---|---|
+| `key` | string | no | Clave corta única, alfanumérica, máx. 10 (se guarda en mayúsculas). Si no viene se genera (ver [Claves automáticas](#claves-automáticas)) |
+| `name` | string | sí | Nombre de la categoría |
+| `description` | string | no | Descripción |
+| `status` | string | no | active / inactive |
 
 ### `/api/size-groups`
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|
+| `key` | string | no | Segmento de la clave de producto (ej. `NIN`). Sin clave, el grupo no agrega segmento |
 | `name` | string | sí | Nombre del grupo (ej. Adultos) |
 | `description` | string | no | Descripción |
 | `status` | string | no | active / inactive |
@@ -179,6 +188,7 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 |---|---|---|
 | `GET` | `/api/products` | Listar (incluye `variants` y `totalStock`) |
 | `POST` | `/api/products/query` | Listar con filtros avanzados |
+| `GET` | `/api/products/next-key` | Sugerir la siguiente clave (`?idMainCategory=&idSizeGroup=&keySegment=`) |
 | `GET` | `/api/products/{id}` | Ver uno con variantes |
 | `GET` | `/api/products/{id}/variants` | Variantes del producto (soporta filtros de grid) |
 | `POST` | `/api/products/{id}/variants/query` | Consultar variantes del producto (filtros en body) |
@@ -198,8 +208,10 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|
 | `categories` | int[] | sí | **Array** de FKs → categories (ej. `[1, 2]`) |
+| `idMainCategory` | int | no | Categoría principal (prefijo de la clave). Default: la primera de `categories`; siempre queda dentro de `categories` |
 | `idSizeGroup` | int | cond. | FK → size_groups. Requerido si `stockControl=true` |
-| `key` | string | sí | Clave interna única |
+| `key` | string | no | Clave interna única. Si no viene se genera (ver [Claves automáticas](#claves-automáticas)) |
+| `keySegment` | string | no | Segmento extra (letras, máx. 5, ej. `DAM`). Solo aplica si `key` se genera |
 | `name` | string | sí | Nombre |
 | `description` | string | no | Descripción |
 | `codeBar` | string | no | Código de barras general |
@@ -221,12 +233,94 @@ Filtra tallas de un grupo con `w[id_size_group]`.
 |---|---|---|---|
 | `idSize` | int | sí | FK → sizes. Debe pertenecer a `idSizeGroup` |
 | `idColor` | int | sí | FK → colors |
-| `sku` | string | sí | Clave única de la variante |
+| `sku` | string | no | Clave única de la variante. Si no viene se genera (ver [Claves automáticas](#claves-automáticas)) |
 | `codeBar` | string | no | Código de barras de la variante |
 | `stock` | number | sí | Existencia inicial (puede ser 0) |
 | `status` | string | no | active / inactive |
 
 No se permite repetir la combinación `idSize + idColor` dentro del payload.
+
+### Claves automáticas
+
+**Clave de categoría** (`categories.key`). Si el alta no la trae, se deriva del nombre
+(mayúsculas, sin acentos, solo letras): primeras 3 letras (`Camisa` → `CAM`); si ya existe, la
+inicial de cada palabra menos la última más la última completa, cortado a 3 (`Manga larga` →
+`MLA`, `Ropa de playa niño` → `RDP`); si también existe, la primera opción con número (`MAN2`).
+Se puede capturar a mano (`VEST`).
+
+Las claves capturadas a mano (de categoría, grupo, producto y SKU) se guardan en mayúsculas
+(`cam-050` → `CAM-050`). En `PUT /api/size-groups/{id}`, `key: null` quita el segmento del grupo.
+
+**Clave de producto** (`products.key`): `CAT[-GRUPO][-SEGMENTO]-NNN`.
+
+| Parte | Origen | Ejemplo |
+|---|---|---|
+| `CAT` | `key` de la categoría principal | `GUA` |
+| `GRUPO` | `key` del grupo de tallas, si tiene | `NIN` |
+| `SEGMENTO` | `keySegment` del alta | `DAM` |
+| `NNN` | Máximo existente del prefijo completo + 1, 3 dígitos | `022` |
+
+El consecutivo no rellena huecos (`CAM-001`, `CAM-007` → `CAM-008`), compara sin distinguir
+mayúsculas y cada prefijo es su propia serie (`CAM-NIN-xxx` no cuenta para `CAM`). El alta
+bloquea la fila de la categoría principal como **primera lectura** de su transacción, para que
+dos altas simultáneas no saquen la misma clave (con REPEATABLE READ, una lectura normal previa
+fijaría una foto vieja de `products`; verificado en MariaDB: la segunda alta repetía la clave). `GET /api/products/next-key` solo sugiere: no reserva, el alta recalcula.
+
+Cambiar después la categoría principal o el grupo de un producto no renombra su clave. Cambiar
+la clave de una categoría o de un grupo solo la renombra con `cascadeKeys` (ver
+[Renombrado en cascada](#renombrado-en-cascada)).
+
+**SKU de variante** (`product_variants.sku`), misma regla que el frontend:
+`CLAVENORMALIZADA-S{idTalla}-C{idColor}`. La clave se normaliza a mayúsculas, sin acentos y solo
+letras/números (`PROD` si queda vacía); talla y color van por id de catálogo.
+
+| Clave | idTalla | idColor | SKU |
+|---|---|---|---|
+| `CAM-001` | 2 | 17 | `CAM001-S2-C17` |
+| `GUA-NIN-003` | 15 | 1 | `GUANIN003-S15-C1` |
+
+Si el SKU ya existe (solo pasa si dos claves normalizan igual, `CAM-001` / `CAM 001`) o lo
+ocupa otra variante del mismo envío, se agrega `-2`, `-3`… Un SKU capturado se respeta. Al
+agregar variantes a un producto existente se usa su clave actual; cambiar la clave solo
+renombra los SKU ya emitidos con `cascadeKeys`.
+
+### Renombrado en cascada
+
+Opcional y apagado por defecto: los SKU suelen estar impresos en etiquetas, y los PDF de pedidos
+muestran el SKU actual de la variante (un pedido viejo reimpreso saldría con el nuevo). Se pide
+en el `PUT` que cambia la clave con dos banderas:
+
+| Bandera | Efecto |
+|---|---|
+| `cascadeKeys: true` | Además de la clave, renombra lo que se deriva de ella |
+| `dryRun: true` | No guarda nada: responde la vista previa del renombrado |
+
+| `PUT` | Cambia `key` | Con `cascadeKeys` se renombra |
+|---|---|---|
+| `/api/products/{id}` | `CAM-001` → `CAM-101` | Sus SKU: `CAM001-S2-C1` → `CAM101-S2-C1` |
+| `/api/categories/{id}` | `CAM` → `CMS` | Productos con esa categoría principal y prefijo `CAM-` (incluye `CAM-NIN-…`) y sus SKU |
+| `/api/size-groups/{id}` | `NIN` → `INF` (o `null`) | Productos del grupo con ese segmento: `GUA-NIN-003` → `GUA-INF-003` (o `GUA-003`) y sus SKU |
+
+- Solo se toca lo que sigue el patrón automático: una clave o un SKU capturado a mano
+  (`E2E-MANUAL`, `GUA0027-…` de una clave anterior) no se reconoce y se queda igual. El sufijo
+  anti-choque se conserva (`CAM001-S2-C1-2` → `CAM101-S2-C1-2`).
+- Un grupo sin clave anterior no dejó segmento que reconocer: no renombra nada.
+- Todo o nada: si una clave o SKU nuevo ya lo usa otro registro (o se repite dentro del plan),
+  responde **422** con `data.conflicts` y no guarda ningún cambio del `PUT`.
+
+Vista previa y cuerpo del 422 (mismo formato):
+
+```json
+{
+  "totals": { "products": 1, "variants": 1, "conflicts": 0 },
+  "products": [{ "id": 152, "from": "CAM-002", "to": "CAM-102" }],
+  "variants": [{ "id": 4971, "idProduct": 152, "from": "CAM002-S2-C1", "to": "CAM102-S2-C1" }],
+  "conflicts": []
+}
+```
+
+Flujo sugerido en el front: checkbox "Renombrar en cascada" → mismo `PUT` con `dryRun: true` →
+diálogo con `totals` y `conflicts` → al confirmar, el `PUT` sin `dryRun`.
 
 ### `initialMovement` (opcional)
 | Campo | Tipo | Req. | Descripción |
