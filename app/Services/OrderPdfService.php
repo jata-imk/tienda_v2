@@ -26,10 +26,16 @@ class OrderPdfService
         'cancelled'          => 'Cancelado',
     ];
 
+    /**
+     * Tallas por renglon de la matriz Talla/Cant.; con mas se parte en
+     * varias matrices para que la columna no se ensanche.
+     */
+    public const SIZES_PER_ROW = 6;
+
     public function __construct(private OrderService $orderService) {}
 
     /**
-     * @param Order $order con `details.variant.{product,size,color}`, `currency` y `user` cargados.
+     * @param Order $order con `details.variant.{product,size,color}` y `currency` cargados.
      */
     public function render(Order $order): PdfDocument
     {
@@ -78,9 +84,6 @@ class OrderPdfService
             'company'         => $company,
             'logo'            => $this->logoDataUri($company?->logo),
             'companyAddress'  => $this->companyAddress($company),
-            'shippingAddress' => $order->shipping_address
-                ? preg_split('/\R/', trim($order->shipping_address))
-                : array_values(array_filter([$company?->name, ...$this->companyAddress($company)])),
             'currencyCode'    => $currencyCode,
             'exchangeRate'    => $isBase ? null : $rate,
             'statusLabel'     => self::STATUS_LABELS[$order->status->value] ?? $order->status->value,
@@ -91,9 +94,13 @@ class OrderPdfService
     }
 
     /**
-     * Agrupa las lineas por producto + color, con las tallas ordenadas por
-     * `sizes.sort_order`. En el PDF cada talla es un renglon, pero el producto y
-     * el color solo se escriben en el primero del grupo.
+     * Agrupa las lineas por producto + color: un renglon por grupo, con las
+     * tallas (ordenadas por `sizes.sort_order`) en una matriz Talla/Cant.
+     * partida cada SIZES_PER_ROW tallas.
+     *
+     * Todas las tallas de un grupo comparten costo (lo valida OrderService);
+     * `unitCost` es null solo en pedidos anteriores a esa regla con costos
+     * mezclados, y el subtotal sigue siendo la suma real.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -104,20 +111,24 @@ class OrderPdfService
             ->map(function ($lines) {
                 $lines   = $lines->sortBy(fn ($d) => [(int) $d->variant->size?->sort_order, $d->variant->size?->name])->values();
                 $variant = $lines->first()->variant;
+                $costs   = $lines->map(fn ($d) => (float) $d->unit_cost)->unique();
 
                 return [
                     'productKey'  => $variant->product?->key,
                     'productName' => $variant->product?->name,
                     'color'       => $variant->color?->name,
-                    'sizes'       => $lines->map(fn ($d) => [
+                    'sizeRows'    => $lines->map(fn ($d) => [
                         'size'     => $d->variant->size?->name,
                         'ordered'  => (float) $d->quantity_ordered,
                         'received' => (float) $d->quantity_received,
-                        'unitCost' => (float) $d->unit_cost,
-                        'subtotal' => (float) $d->subtotal,
-                        'notes'    => $d->notes,
-                    ])->all(),
+                    ])->chunk(self::SIZES_PER_ROW)->map(fn ($row) => $row->values()->all())->all(),
+                    'notes'       => $lines->filter(fn ($d) => $d->notes)
+                        ->map(fn ($d) => "Talla {$d->variant->size?->name}: {$d->notes}")
+                        ->values()
+                        ->all(),
+                    'unitCost'    => $costs->count() === 1 ? $costs->first() : null,
                     'ordered'     => $lines->sum(fn ($d) => (float) $d->quantity_ordered),
+                    'received'    => $lines->sum(fn ($d) => (float) $d->quantity_received),
                     'subtotal'    => $lines->sum(fn ($d) => (float) $d->subtotal),
                 ];
             })
@@ -151,17 +162,17 @@ class OrderPdfService
     }
 
     /**
-     * @return string[] lineas de la direccion, sin vacias
+     * Direccion en una sola linea: calle y numero, colonia, CP y ciudad.
      */
-    private function companyAddress(?CompanyInfo $company): array
+    private function companyAddress(?CompanyInfo $company): string
     {
         if (!$company) {
-            return [];
+            return '';
         }
 
         $street = trim(implode(' ', array_filter([$company->street, $company->external_number])));
         $city   = trim(implode(' ', array_filter([$company->postal_code, $company->city])));
 
-        return array_values(array_filter([$street, $company->neighborhood, $city]));
+        return implode(', ', array_filter([$street, $company->neighborhood, $city]));
     }
 }

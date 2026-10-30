@@ -223,6 +223,39 @@ class OrderLifecycleTest extends TestCase
             ->assertJsonPath('data.folio', 1);
     }
 
+    public function test_all_sizes_of_a_product_and_color_must_share_the_unit_cost(): void
+    {
+        $blanco34 = $this->variant('CAM-001-34-BLA');
+        $blanco36 = $this->variant('CAM-001-36-BLA');
+        $azul38   = $this->variant('CAM-001-38-AZM');
+
+        // Sin unitCost la 34 toma el costo del producto (600): la 36 a 550 no cuadra.
+        $this->createOrder([
+            ['idProductVariant' => $blanco34->id, 'quantityOrdered' => 2],
+            ['idProductVariant' => $blanco36->id, 'quantityOrdered' => 2, 'unitCost' => 550],
+        ])
+            ->assertStatus(422)
+            ->assertJsonPath('data.sku', 'CAM-001-36-BLA')
+            ->assertJsonPath('data.expectedUnitCost', 600);
+
+        $this->assertSame(0, Order::count());
+
+        // Otro color puede llevar otro costo.
+        $id = $this->createOrder([
+            ['idProductVariant' => $blanco34->id, 'quantityOrdered' => 2, 'unitCost' => 550],
+            ['idProductVariant' => $blanco36->id, 'quantityOrdered' => 2, 'unitCost' => 550],
+            ['idProductVariant' => $azul38->id, 'quantityOrdered' => 1],
+        ])->assertCreated()->json('data.id');
+
+        // En la edicion aplica igual y el pedido queda como estaba.
+        $this->asAdmin()->putJson("/api/orders/{$id}", ['details' => [
+            ['idProductVariant' => $blanco34->id, 'quantityOrdered' => 2, 'unitCost' => 550],
+            ['idProductVariant' => $blanco36->id, 'quantityOrdered' => 2, 'unitCost' => 560],
+        ]])->assertStatus(422);
+
+        $this->assertEquals(2 * 550 * 2 + 600, $this->asAdmin()->getJson("/api/orders/{$id}")->json('data.totalAmount'));
+    }
+
     public function test_inactive_variants_and_products_are_rejected(): void
     {
         $variant = $this->variant('CAM-001-34-BLA');
