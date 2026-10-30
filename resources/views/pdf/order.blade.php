@@ -24,14 +24,12 @@
         .info .label { width: 105px; }
         .lines { margin-top: 10px; border: 1px solid #888; }
         .lines thead th { border-bottom: 1px solid #888; padding: 5px 6px; font-size: 9px; text-align: left; }
-        .lines tbody td { padding: 6px; }
+        .lines tbody td { padding: 4px 6px; vertical-align: middle; }
+        .lines .center { text-align: center; }
+        .lines thead th.num { text-align: right; }
+        .lines .size { text-align: center; font-weight: bold; }
         .lines .note { font-size: 8px; color: #2b4a8b; }
         .lines .sep td { border-bottom: 1px solid #ddd; padding: 0; }
-        .sizes { width: auto; margin-bottom: 3px; }
-        .sizes td, .sizes th { border: 1px solid #bbb; padding: 1px 4px; text-align: center; font-size: 8px; min-width: 14px; }
-        .sizes th { background: #eee; font-weight: bold; }
-        /* Gana sobre `.lines tbody td`, que es mas especifico que `.sizes td`. */
-        .lines .sizes td, .lines .sizes th { padding: 1px 4px; }
         .num { text-align: right; white-space: nowrap; }
         .sku { font-weight: bold; }
         .totals { margin-top: 8px; }
@@ -91,7 +89,7 @@
         <td style="width: 55%;">
             <div class="label">Información</div>
             <table class="info">
-                <tr><td class="label">Número documento</td><td>{{ $order->folio_label }}</td></tr>
+                <tr><td class="label">Clave</td><td>{{ $order->folio_label }}</td></tr>
                 <tr><td class="label">Fecha emisión</td><td>{{ $order->date_order?->format('d.m.Y') }}</td></tr>
                 <tr><td class="label">Fecha entrega</td><td>{{ $order->date_expected?->format('d.m.Y') ?? '—' }}</td></tr>
                 <tr><td class="label">Moneda</td><td>{{ $currencyCode }}@if ($exchangeRate) · T.C. {{ number_format($exchangeRate, 4) }}@endif</td></tr>
@@ -113,64 +111,46 @@
     @endif
 </table>
 
-{{-- Lineas: un renglon por producto + color, con sus tallas en matriz --}}
+{{-- Lineas: un renglon por talla; el producto, la descripcion y el precio
+     unitario se escriben una vez por producto + color (rowspan). --}}
 <table class="lines">
     <thead>
         <tr>
             <th>Producto/Descripción</th>
-            <th style="width: 160px;">Tallas</th>
-            <th class="num" style="width: 48px;">Cantidad</th>
+            <th class="center" style="width: 80px;">Costo Unitario</th>
+            <th class="center" style="width: 40px;">Talla</th>
+            <th class="center" style="width: 48px;">Cantidad</th>
             @if ($showReceived)
-                <th class="num" style="width: 48px;">Recibido</th>
+                <th class="center" style="width: 48px;">Recibido</th>
             @endif
-            <th class="num" style="width: 75px;">Precio unitario</th>
-            <th class="num" style="width: 85px;">Monto Neto</th>
+            <th class="num" style="width: 80px;">Costo total</th>
         </tr>
     </thead>
     <tbody>
         @php $columns = $showReceived ? 6 : 5; @endphp
         @foreach ($groups as $group)
-            <tr>
-                <td>
-                    <span class="sku">{{ $group['productKey'] }}</span><br>
-                    <span style="text-transform: uppercase;">{{ $group['productName'] }} · {{ $group['color'] }}</span>
-                    @foreach ($group['notes'] as $note)
-                        <div class="note">{{ $note }}</div>
-                    @endforeach
-                </td>
-                <td>
-                    @foreach ($group['sizeRows'] as $row)
-                        <table class="sizes">
-                            <tr>
-                                <th>Talla</th>
-                                @foreach ($row as $size)
-                                    <th>{{ $size['size'] }}</th>
-                                @endforeach
-                            </tr>
-                            <tr>
-                                <th>Cant.</th>
-                                @foreach ($row as $size)
-                                    <td>{{ $qty($size['ordered']) }}</td>
-                                @endforeach
-                            </tr>
-                            @if ($showReceived)
-                                <tr>
-                                    <th>Recib.</th>
-                                    @foreach ($row as $size)
-                                        <td>{{ $qty($size['received']) }}</td>
-                                    @endforeach
-                                </tr>
-                            @endif
-                        </table>
-                    @endforeach
-                </td>
-                <td class="num">{{ $qty($group['ordered']) }}</td>
-                @if ($showReceived)
-                    <td class="num">{{ $qty($group['received']) }}</td>
-                @endif
-                <td class="num">{{ $group['unitCost'] === null ? 'Varios' : $money($group['unitCost']) }}</td>
-                <td class="num">{{ $money($group['subtotal']) }}</td>
-            </tr>
+            @foreach ($group['sizes'] as $position => $size)
+                <tr>
+                    @if ($position === 0)
+                        <td rowspan="{{ count($group['sizes']) }}">
+                            <span class="sku">{{ $group['productKey'] }}</span><br>
+                            <span style="text-transform: uppercase;">{{ $group['productName'] }} · {{ $group['color'] }}</span>
+                            @foreach ($group['notes'] as $note)
+                                <div class="note">{{ $note }}</div>
+                            @endforeach
+                        </td>
+                        <td class="center" rowspan="{{ count($group['sizes']) }}">
+                            {{ $group['unitCost'] === null ? 'Varios' : $money($group['unitCost']) }}
+                        </td>
+                    @endif
+                    <td class="size">{{ $size['size'] }}</td>
+                    <td class="center">{{ $qty($size['ordered']) }}</td>
+                    @if ($showReceived)
+                        <td class="center">{{ $qty($size['received']) }}</td>
+                    @endif
+                    <td class="num">{{ $money($size['subtotal']) }}</td>
+                </tr>
+            @endforeach
             <tr class="sep"><td colspan="{{ $columns }}"></td></tr>
         @endforeach
     </tbody>

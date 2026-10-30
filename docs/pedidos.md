@@ -269,9 +269,9 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 | Emisor (izquierda) | `company_info`: razón social, dirección en **una línea** (calle y número, colonia, CP y ciudad) y RFC |
 | Logo (derecha) | `company_info.logo`; sin logo la celda queda vacía |
 | Proveedor | `supplierName` + `supplierDetails` |
-| Información | Folio, fecha emisión (`dateOrder`), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
+| Información | Clave (folio, `PED-0000001`), fecha emisión (`dateOrder`), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
 | Notas | `notes` (el renglón solo aparece si hay notas) |
-| Líneas | **Un renglón por producto + color**: Producto/Descripción (clave, nombre · color y las notas de línea como `Talla 34: …`), **Tallas** (matriz Talla / Cant. en el orden de `sizes.sortOrder`, partida cada 6 tallas — `OrderPdfService::SIZES_PER_ROW`), cantidad total, precio unitario y monto neto. Con recepciones se agregan la columna **Recibido** y el renglón `Recib.` en la matriz. Si un pedido anterior a la regla de costo único trae costos distintos en el grupo, el precio sale como `Varios` y el monto es la suma real |
+| Líneas | Agrupadas por **producto + color**, con **un renglón por talla** (orden de `sizes.sortOrder`). Columnas: Producto/Descripción (clave, nombre · color y notas de línea como `Talla 34: …`) y **Costo Unitario**, ambas una sola vez por grupo; luego Talla, Cantidad y Costo total de cada talla. Columna **Recibido** si ya hubo recepciones. Si un pedido anterior a la regla de costo único trae costos distintos en el grupo, el costo unitario sale como `Varios` y cada talla conserva su costo total real. Montos como `1,200.00 MXN` |
 | Totales | Total de piezas y total neto en la moneda del pedido |
 | Pie | `PED-0000001 · Página X de Y` |
 

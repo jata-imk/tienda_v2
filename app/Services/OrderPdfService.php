@@ -26,12 +26,6 @@ class OrderPdfService
         'cancelled'          => 'Cancelado',
     ];
 
-    /**
-     * Tallas por renglon de la matriz Talla/Cant.; con mas se parte en
-     * varias matrices para que la columna no se ensanche.
-     */
-    public const SIZES_PER_ROW = 6;
-
     public function __construct(private OrderService $orderService) {}
 
     /**
@@ -94,9 +88,9 @@ class OrderPdfService
     }
 
     /**
-     * Agrupa las lineas por producto + color: un renglon por grupo, con las
-     * tallas (ordenadas por `sizes.sort_order`) en una matriz Talla/Cant.
-     * partida cada SIZES_PER_ROW tallas.
+     * Agrupa las lineas por producto + color, con las tallas ordenadas por
+     * `sizes.sort_order`. En el PDF cada talla es un renglon; el articulo, la
+     * descripcion y el precio unitario se escriben una vez por grupo.
      *
      * Todas las tallas de un grupo comparten costo (lo valida OrderService);
      * `unitCost` es null solo en pedidos anteriores a esa regla con costos
@@ -117,18 +111,18 @@ class OrderPdfService
                     'productKey'  => $variant->product?->key,
                     'productName' => $variant->product?->name,
                     'color'       => $variant->color?->name,
-                    'sizeRows'    => $lines->map(fn ($d) => [
+                    'sizes'       => $lines->map(fn ($d) => [
                         'size'     => $d->variant->size?->name,
                         'ordered'  => (float) $d->quantity_ordered,
                         'received' => (float) $d->quantity_received,
-                    ])->chunk(self::SIZES_PER_ROW)->map(fn ($row) => $row->values()->all())->all(),
+                        'subtotal' => (float) $d->subtotal,
+                    ])->all(),
                     'notes'       => $lines->filter(fn ($d) => $d->notes)
                         ->map(fn ($d) => "Talla {$d->variant->size?->name}: {$d->notes}")
                         ->values()
                         ->all(),
                     'unitCost'    => $costs->count() === 1 ? $costs->first() : null,
                     'ordered'     => $lines->sum(fn ($d) => (float) $d->quantity_ordered),
-                    'received'    => $lines->sum(fn ($d) => (float) $d->quantity_received),
                     'subtotal'    => $lines->sum(fn ($d) => (float) $d->subtotal),
                 ];
             })

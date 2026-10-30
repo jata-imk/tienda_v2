@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\CompanyInfo;
-use App\Models\ProductVariant;
 use App\Services\OrderPdfService;
 use App\Services\OrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -64,10 +63,13 @@ class OrderPdfTest extends TestCase
         $this->assertStringContainsString('data:image/png;base64,', $html);
         $this->assertStringContainsString('BORRADOR', $html);
         $this->assertStringContainsString('Fecha emisión', $html);
+        $this->assertStringContainsString('<td class="label">Clave</td>', $html);
+        $this->assertStringContainsString('Costo Unitario</th>', $html);
         $this->assertStringContainsString('Producto/Descripción', $html);
+        $this->assertStringNotContainsString('10 · CAM-001', $html, 'Sin numero de posicion.');
         $this->assertStringNotContainsString('Recibido</th>', $html);
 
-        foreach (['Comprador', 'Dirección envío', 'Fecha documento', 'Artículo', 'UM</th>', 'PZA'] as $removed) {
+        foreach (['Comprador', 'Dirección envío', 'Fecha documento', 'Número documento', 'Precio unitario', 'Artículo', 'UM</th>', 'PZA'] as $removed) {
             $this->assertStringNotContainsString($removed, $html);
         }
     }
@@ -81,12 +83,11 @@ class OrderPdfTest extends TestCase
         $html = $this->renderView($id);
 
         $this->assertStringContainsString('Recibido</th>', $html);
-        $this->assertStringContainsString('<th>Recib.</th>', $html);
         $this->assertStringContainsString('Recibido parcialmente', $html);
         $this->assertStringNotContainsString('BORRADOR', $html);
     }
 
-    public function test_lines_are_grouped_by_product_and_color_with_a_size_matrix(): void
+    public function test_lines_are_grouped_by_product_and_color_with_one_row_per_size(): void
     {
         $id = $this->createOrder([
             ['idProductVariant' => $this->variant('CAM-001-38-AZM')->id, 'quantityOrdered' => 6],
@@ -102,9 +103,9 @@ class OrderPdfTest extends TestCase
 
         [$azul, $blanco] = $groups;
         $this->assertSame('Azul marino', $azul['color']);
-        $this->assertCount(1, $azul['sizeRows'], 'Tres tallas caben en una sola matriz.');
-        $this->assertSame(['34', '36', '38'], array_column($azul['sizeRows'][0], 'size'), 'Tallas en orden de sort_order.');
-        $this->assertSame([3.0, 6.0, 6.0], array_column($azul['sizeRows'][0], 'ordered'));
+        $this->assertSame(['34', '36', '38'], array_column($azul['sizes'], 'size'), 'Tallas en orden de sort_order.');
+        $this->assertSame([3.0, 6.0, 6.0], array_column($azul['sizes'], 'ordered'));
+        $this->assertEquals([1800, 3600, 3600], array_column($azul['sizes'], 'subtotal'));
         $this->assertSame(['Talla 36: Bordado'], $azul['notes']);
         $this->assertSame(15.0, $azul['ordered']);
         $this->assertSame(600.0, $azul['unitCost']);
@@ -115,36 +116,15 @@ class OrderPdfTest extends TestCase
         $this->assertEquals(2200, $blanco['subtotal']);
 
         $html = $this->renderView($id);
-        // El producto + color se escribe una vez por grupo y cada grupo lleva su matriz.
+        // Producto, descripcion y precio una vez por grupo; un renglon por talla.
         $this->assertSame(1, substr_count($html, 'Camisa lino caballero · Azul marino'));
         $this->assertSame(1, substr_count($html, 'Camisa lino caballero · Blanco'));
-        $this->assertSame(2, substr_count($html, '<table class="sizes">'));
+        $this->assertSame(2, substr_count($html, 'rowspan="3"'));
+        $this->assertSame(2, substr_count($html, 'rowspan="2"'));
+        $this->assertSame(5, substr_count($html, '<td class="size">'), 'Un renglon por talla.');
         $this->assertStringContainsString('Talla 36: Bordado', $html);
-        $this->assertStringContainsString('550.00 MXN', $html);
-        $this->assertStringContainsString('2,200.00 MXN', $html);
-    }
-
-    public function test_the_size_matrix_wraps_after_the_configured_number_of_sizes(): void
-    {
-        $sizes = $this->variant('CAM-001-34-BLA')->product->sizeGroup->sizes()->orderBy('sort_order')->get();
-        $this->assertGreaterThan(OrderPdfService::SIZES_PER_ROW, $sizes->count(), 'El grupo de tallas del seeder alcanza para partir la matriz.');
-
-        $base    = $this->variant('CAM-001-34-BLA');
-        $details = $sizes->map(fn ($size) => [
-            'idProductVariant' => ProductVariant::firstOrCreate(
-                ['id_product' => $base->id_product, 'id_size' => $size->id, 'id_color' => $base->id_color],
-                ['sku' => "CAM-001-T{$size->id}-BLA", 'stock' => 0, 'status' => 'active'],
-            )->id,
-            'quantityOrdered' => 1,
-        ])->all();
-
-        $id     = $this->createOrder($details)->assertCreated()->json('data.id');
-        $groups = app(OrderPdfService::class)->viewData(app(OrderService::class)->show($id))['groups'];
-        $rows   = $groups[0]['sizeRows'];
-
-        $this->assertCount((int) ceil($sizes->count() / OrderPdfService::SIZES_PER_ROW), $rows);
-        $this->assertCount(OrderPdfService::SIZES_PER_ROW, $rows[0]);
-        $this->assertSame($sizes->pluck('name')->all(), array_column(array_merge(...$rows), 'size'));
+        $this->assertSame(1, substr_count($html, '550.00 MXN'), 'El precio unitario sale una vez por grupo.');
+        $this->assertSame(2, substr_count($html, '1,100.00 MXN'));
     }
 
     public function test_orders_with_mixed_costs_from_before_the_rule_show_varios(): void
@@ -162,7 +142,7 @@ class OrderPdfTest extends TestCase
         $html = $this->renderView($id);
 
         $this->assertStringContainsString('Varios', $html);
-        $this->assertStringContainsString('2,300.00 MXN', $html, 'El monto es la suma real de las tallas.');
+        $this->assertStringContainsString('1,100.00 MXN', $html, 'Cada talla conserva su costo total real.');
     }
 
     private function draftOrder(): int

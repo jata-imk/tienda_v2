@@ -299,7 +299,8 @@ window.open(URL.createObjectURL(await res.blob()));
 Contenido del PDF:
 - Encabezado: datos de la empresa a la izquierda y logo a la derecha (de `company-info`),
   proveedor e información del pedido (sin comprador ni dirección de envío).
-- Líneas: **una fila por producto + color** con matriz Talla / Cant. y un solo precio unitario.
+- Líneas agrupadas por producto + color: producto/descripción y costo unitario una vez por
+  grupo, y una fila por talla con cantidad y costo total.
 - Totales y paginación.
 - Marca de agua **BORRADOR** o **CANCELADO** según el estatus.
 
