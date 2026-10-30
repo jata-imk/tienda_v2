@@ -101,7 +101,7 @@ Reglas de negocio y endpoints en [pedidos.md](pedidos.md).
 | `total_amount` | decimal(14,2) | Σ `subtotal` (sin impuestos) |
 | `supplier_name` | varchar nullable | Proveedor, texto libre (no hay tabla `suppliers`) |
 | `supplier_details` | text nullable | Dirección / RFC / contacto del proveedor |
-| `shipping_address` | text nullable | Dirección de envío; null → la de `company_info` |
+| `shipping_address` | text nullable | Dirección de envío (referencia; no se imprime en el PDF) |
 | `notes` | text nullable | Comentarios |
 | `date_order` | date | Fecha del pedido |
 | `date_expected` | date nullable | Fecha de entrega esperada |
