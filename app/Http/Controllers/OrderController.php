@@ -83,7 +83,8 @@ class OrderController extends Controller
      * Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`
      * toma la moneda base de la empresa. Sin `unitCost` la linea toma
      * `products.cost` (convertido a la moneda del pedido). Las variantes deben
-     * estar activas y su producto debe manejar existencias.
+     * estar activas y su producto debe manejar existencias. Todas las tallas de
+     * un mismo producto + color llevan el mismo `unitCost`.
      *
      * @bodyParam idCurrency integer Moneda del pedido. Default: moneda base. Example: 1
      * @bodyParam exchangeRate number Tipo de cambio; se congela al confirmar. Default: el de la moneda. Example: null
@@ -91,12 +92,12 @@ class OrderController extends Controller
      * @bodyParam dateExpected date Fecha de entrega esperada (≥ dateOrder). Example: 2026-10-30
      * @bodyParam supplierName string Proveedor (texto libre). Example: Telas del Sureste
      * @bodyParam supplierDetails string Direccion, RFC o contacto del proveedor. Example: null
-     * @bodyParam shippingAddress string Direccion de envio. Default en PDF: la de la empresa. Example: null
+     * @bodyParam shippingAddress string Direccion de envio (referencia; no se imprime en el PDF). Example: null
      * @bodyParam notes string Comentarios. Example: null
      * @bodyParam details array required Lineas del pedido (1 a 200).
      * @bodyParam details[].idProductVariant integer required Variante; no se repite en el pedido. Example: 1
      * @bodyParam details[].quantityOrdered number required Cantidad pedida. Example: 10
-     * @bodyParam details[].unitCost number Costo unitario en la moneda del pedido. Example: 600
+     * @bodyParam details[].unitCost number Costo unitario en la moneda del pedido; igual en todas las tallas del mismo producto + color. Example: 600
      * @bodyParam details[].notes string Comentario de la linea. Example: null
      *
      * @response 201 {"ok":true,"code":201,"status":"Created","message":"Order created.","data":{"id":1,"folioLabel":"PED-0000001","status":"draft"}}

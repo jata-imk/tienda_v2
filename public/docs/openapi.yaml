@@ -831,7 +831,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -849,7 +849,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1012,7 +1012,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -1762,11 +1762,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-24T23:06:51'
+                  example: '2026-10-29T23:15:44'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-11-16'
+                  example: '2052-11-21'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -2206,7 +2206,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -3427,7 +3427,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4911,7 +4911,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4947,7 +4947,7 @@ paths:
                       status:
                         type: string
                         description: ''
-                        example: active
+                        example: inactive
                         enum:
                           - active
                           - inactive
@@ -4963,7 +4963,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: return
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -5187,7 +5187,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -5214,7 +5214,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -6391,11 +6391,11 @@ paths:
                 dateOrder:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-24T23:06:51'
+                  example: '2026-10-29T23:15:44'
                 dateExpected:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-10-24T23:06:51'
+                  example: '2026-10-29T23:15:44'
                   nullable: true
                 supplierName:
                   type: string
@@ -6458,7 +6458,7 @@ paths:
     post:
       summary: 'Create a purchase order'
       operationId: createAPurchaseOrder
-      description: "Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias."
+      description: "Crea el pedido en `draft` con folio consecutivo `PED-0000001` (7 digitos con ceros). Sin `idCurrency`\ntoma la moneda base de la empresa. Sin `unitCost` la linea toma\n`products.cost` (convertido a la moneda del pedido). Las variantes deben\nestar activas y su producto debe manejar existencias. Todas las tallas de\nun mismo producto + color llevan el mismo `unitCost`."
       parameters: []
       responses:
         201:
@@ -6578,7 +6578,7 @@ paths:
                   nullable: true
                 shippingAddress:
                   type: string
-                  description: 'Direccion de envio. Default en PDF: la de la empresa.'
+                  description: 'Direccion de envio (referencia; no se imprime en el PDF).'
                   example: null
                   nullable: true
                 notes:
@@ -7141,7 +7141,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive

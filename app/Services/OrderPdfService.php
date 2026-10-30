@@ -29,7 +29,7 @@ class OrderPdfService
     public function __construct(private OrderService $orderService) {}
 
     /**
-     * @param Order $order con `details.variant.{product,size,color}`, `currency` y `user` cargados.
+     * @param Order $order con `details.variant.{product,size,color}` y `currency` cargados.
      */
     public function render(Order $order): PdfDocument
     {
@@ -78,9 +78,6 @@ class OrderPdfService
             'company'         => $company,
             'logo'            => $this->logoDataUri($company?->logo),
             'companyAddress'  => $this->companyAddress($company),
-            'shippingAddress' => $order->shipping_address
-                ? preg_split('/\R/', trim($order->shipping_address))
-                : array_values(array_filter([$company?->name, ...$this->companyAddress($company)])),
             'currencyCode'    => $currencyCode,
             'exchangeRate'    => $isBase ? null : $rate,
             'statusLabel'     => self::STATUS_LABELS[$order->status->value] ?? $order->status->value,
@@ -92,8 +89,12 @@ class OrderPdfService
 
     /**
      * Agrupa las lineas por producto + color, con las tallas ordenadas por
-     * `sizes.sort_order`. En el PDF cada talla es un renglon, pero el producto y
-     * el color solo se escriben en el primero del grupo.
+     * `sizes.sort_order`. En el PDF cada talla es un renglon; el articulo, la
+     * descripcion y el precio unitario se escriben una vez por grupo.
+     *
+     * Todas las tallas de un grupo comparten costo (lo valida OrderService);
+     * `unitCost` es null solo en pedidos anteriores a esa regla con costos
+     * mezclados, y el subtotal sigue siendo la suma real.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -104,6 +105,7 @@ class OrderPdfService
             ->map(function ($lines) {
                 $lines   = $lines->sortBy(fn ($d) => [(int) $d->variant->size?->sort_order, $d->variant->size?->name])->values();
                 $variant = $lines->first()->variant;
+                $costs   = $lines->map(fn ($d) => (float) $d->unit_cost)->unique();
 
                 return [
                     'productKey'  => $variant->product?->key,
@@ -113,10 +115,13 @@ class OrderPdfService
                         'size'     => $d->variant->size?->name,
                         'ordered'  => (float) $d->quantity_ordered,
                         'received' => (float) $d->quantity_received,
-                        'unitCost' => (float) $d->unit_cost,
                         'subtotal' => (float) $d->subtotal,
-                        'notes'    => $d->notes,
                     ])->all(),
+                    'notes'       => $lines->filter(fn ($d) => $d->notes)
+                        ->map(fn ($d) => "Talla {$d->variant->size?->name}: {$d->notes}")
+                        ->values()
+                        ->all(),
+                    'unitCost'    => $costs->count() === 1 ? $costs->first() : null,
                     'ordered'     => $lines->sum(fn ($d) => (float) $d->quantity_ordered),
                     'subtotal'    => $lines->sum(fn ($d) => (float) $d->subtotal),
                 ];
@@ -151,17 +156,17 @@ class OrderPdfService
     }
 
     /**
-     * @return string[] lineas de la direccion, sin vacias
+     * Direccion en una sola linea: calle y numero, colonia, CP y ciudad.
      */
-    private function companyAddress(?CompanyInfo $company): array
+    private function companyAddress(?CompanyInfo $company): string
     {
         if (!$company) {
-            return [];
+            return '';
         }
 
         $street = trim(implode(' ', array_filter([$company->street, $company->external_number])));
         $city   = trim(implode(' ', array_filter([$company->postal_code, $company->city])));
 
-        return array_values(array_filter([$street, $company->neighborhood, $city]));
+        return implode(', ', array_filter([$street, $company->neighborhood, $city]));
     }
 }

@@ -261,11 +261,12 @@ Los cambios están en `POST /api/inventory/movements/query`
    - Filtro rápido de estatus y búsqueda con `search`.
 2. **Alta y edición (solo admin, solo borrador).**
    - Encabezado: proveedor, detalles del proveedor (multilínea), fecha de entrega, dirección de
-     envío (multilínea; vacía = la de la empresa), moneda y tipo de cambio (solo si la moneda no
+     envío (multilínea; solo referencia, no sale en el PDF), moneda y tipo de cambio (solo si la moneda no
      es la base), notas.
    - Líneas: elegir producto y mostrar la **matriz talla × color** de sus variantes activas para
      capturar cantidades. Envía una línea por celda con cantidad > 0. El costo es editable y por
-     default viene el del producto.
+     default viene el del producto; captúralo **una vez por producto + color** y mándalo igual en
+     todas sus tallas (si difieren, el backend responde 422).
    - Al guardar, `POST` o `PUT` con **todas** las líneas. Muestra los totales que regresa el
      backend; no los calcules tú.
 3. **Detalle.**
@@ -296,9 +297,10 @@ window.open(URL.createObjectURL(await res.blob()));
 ```
 
 Contenido del PDF:
-- Encabezado: logo y datos de la empresa (de `company-info`), proveedor e información del pedido.
-- Dirección de envío.
-- Líneas **agrupadas por producto + color, con una fila por talla**.
+- Encabezado: datos de la empresa a la izquierda y logo a la derecha (de `company-info`),
+  proveedor e información del pedido (sin comprador ni dirección de envío).
+- Líneas agrupadas por producto + color: producto/descripción y costo unitario una vez por
+  grupo, y una fila por talla con cantidad y costo total.
 - Totales y paginación.
 - Marca de agua **BORRADOR** o **CANCELADO** según el estatus.
 

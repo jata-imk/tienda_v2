@@ -523,19 +523,23 @@ class OrderService
      * Reemplaza las lineas del pedido por las del DTO, identificadas por
      * variante: actualiza las existentes, crea las nuevas y borra las ausentes.
      *
+     * Todas las tallas de un mismo producto + color deben llevar el mismo
+     * costo unitario: el PDF imprime un solo precio por producto + color.
+     *
      * @param OrderLineDTO[] $lines
      */
     private function syncLines(Order $order, array $lines): void
     {
         $variantIds = array_map(fn ($line) => $line->productVariantId, $lines);
 
-        $variants = ProductVariant::with('product')
+        $variants = ProductVariant::with(['product', 'color'])
             ->whereIn('id', $variantIds)
             ->get()
             ->keyBy('id');
 
-        $rate     = null;
-        $existing = $order->details()->get()->keyBy('id_product_variant');
+        $rate       = null;
+        $existing   = $order->details()->get()->keyBy('id_product_variant');
+        $groupCosts = [];
 
         foreach ($lines as $line) {
             $variant = $variants->get($line->productVariantId);
@@ -559,6 +563,17 @@ class OrderService
             if ($unitCost === null) {
                 $rate     ??= $this->effectiveExchangeRate($order);
                 $unitCost = round((float) $variant->product->cost / $rate, 2);
+            }
+
+            $group = $variant->id_product.'-'.$variant->id_color;
+            $groupCosts[$group] ??= round($unitCost, 2);
+
+            if ($groupCosts[$group] !== round($unitCost, 2)) {
+                throw new OrderDomainException(
+                    "Todas las tallas de {$variant->product->name} · {$variant->color?->name} deben tener el mismo costo unitario.",
+                    422,
+                    $context + ['unitCost' => $unitCost, 'expectedUnitCost' => $groupCosts[$group]],
+                );
             }
 
             $attributes = [

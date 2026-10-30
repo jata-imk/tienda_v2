@@ -24,9 +24,9 @@
         .info .label { width: 105px; }
         .lines { margin-top: 10px; border: 1px solid #888; }
         .lines thead th { border-bottom: 1px solid #888; padding: 5px 6px; font-size: 9px; text-align: left; }
-        .lines tbody td { padding: 2px 6px; }
-        .lines tbody tr.first td { padding-top: 6px; }
-        .lines tbody tr.last td { padding-bottom: 6px; }
+        .lines tbody td { padding: 4px 6px; vertical-align: middle; }
+        .lines .center { text-align: center; }
+        .lines thead th.num { text-align: right; }
         .lines .size { text-align: center; font-weight: bold; }
         .lines .note { font-size: 8px; color: #2b4a8b; }
         .lines .sep td { border-bottom: 1px solid #ddd; padding: 0; }
@@ -40,7 +40,7 @@
             text-align: center; font-size: 90px; font-weight: bold;
             color: #cc0000; opacity: 0.12; transform: rotate(-30deg);
         }
-        .logo { max-height: 105px; max-width: 200px; }
+        .logo { max-height: 80px; max-width: 200px; }
     </style>
 </head>
 <body>
@@ -48,27 +48,25 @@
     <div class="watermark">{{ $watermark }}</div>
 @endif
 
-{{-- Encabezado: emisor (nuestra empresa) --}}
+{{-- Encabezado: emisor (nuestra empresa) a la izquierda, logo a la derecha --}}
 <table>
     <tr>
-        <td style="width: 45%;">
-            @if ($logo)
-                <img class="logo" src="{{ $logo }}" alt="">
-            @else
-                <div class="company-name" style="font-size: 14px;">{{ $company?->name }}</div>
-            @endif
-        </td>
-        <td style="width: 55%;">
+        <td>
             <div class="company-name">{{ $company?->legal_name ?: $company?->name }}</div>
             <div class="company-lines">
-                @foreach ($companyAddress as $line)
-                    {{ $line }}<br>
-                @endforeach
+                @if ($companyAddress)
+                    {{ $companyAddress }}<br>
+                @endif
                 @if ($company?->rfc)
                     RFC: {{ $company->rfc }}
                 @endif
             </div>
             <div class="title">Pedido de Compra</div>
+        </td>
+        <td style="width: 210px; text-align: right;">
+            @if ($logo)
+                <img class="logo" src="{{ $logo }}" alt="">
+            @endif
         </td>
     </tr>
 </table>
@@ -91,87 +89,65 @@
         <td style="width: 55%;">
             <div class="label">Información</div>
             <table class="info">
-                <tr><td class="label">Número documento</td><td>{{ $order->folio_label }}</td></tr>
-                <tr><td class="label">Fecha documento</td><td>{{ $order->date_order?->format('d.m.Y') }}</td></tr>
-                <tr><td class="label">Comprador</td><td>{{ $order->user?->user_name }}</td></tr>
+                <tr><td class="label">Clave</td><td>{{ $order->folio_label }}</td></tr>
+                <tr><td class="label">Fecha emisión</td><td>{{ $order->date_order?->format('d.m.Y') }}</td></tr>
                 <tr><td class="label">Fecha entrega</td><td>{{ $order->date_expected?->format('d.m.Y') ?? '—' }}</td></tr>
                 <tr><td class="label">Moneda</td><td>{{ $currencyCode }}@if ($exchangeRate) · T.C. {{ number_format($exchangeRate, 4) }}@endif</td></tr>
                 <tr><td class="label">Estatus</td><td>{{ $statusLabel }}</td></tr>
             </table>
         </td>
     </tr>
-    <tr>
-        <td colspan="2" style="border-top: 1px solid #888;">
-            <table>
-                <tr>
-                    <td class="label" style="width: 110px;">Dirección envío</td>
-                    <td class="company-lines">
-                        @foreach ($shippingAddress as $line)
-                            {{ $line }}<br>
-                        @endforeach
-                    </td>
-                </tr>
-                @if ($order->notes)
+    @if ($order->notes)
+        <tr>
+            <td colspan="2" style="border-top: 1px solid #888;">
+                <table>
                     <tr>
-                        <td class="label" style="padding-top: 6px;">Notas</td>
-                        <td style="padding-top: 6px;">{!! nl2br(e($order->notes)) !!}</td>
+                        <td class="label" style="width: 110px;">Notas</td>
+                        <td>{!! nl2br(e($order->notes)) !!}</td>
                     </tr>
-                @endif
-            </table>
-        </td>
-    </tr>
+                </table>
+            </td>
+        </tr>
+    @endif
 </table>
 
-{{-- Lineas --}}
+{{-- Lineas: un renglon por talla; el producto, la descripcion y el precio
+     unitario se escriben una vez por producto + color (rowspan). --}}
 <table class="lines">
     <thead>
         <tr>
-            <th style="width: 38px;">Artículo</th>
-            <th>Artículo/Descripción</th>
-            <th style="width: 40px; text-align: center;">Talla</th>
-            <th class="num" style="width: 48px;">Cantidad</th>
+            <th>Producto/Descripción</th>
+            <th class="center" style="width: 80px;">Costo Unitario</th>
+            <th class="center" style="width: 40px;">Talla</th>
+            <th class="center" style="width: 48px;">Cantidad</th>
             @if ($showReceived)
-                <th class="num" style="width: 48px;">Recibido</th>
+                <th class="center" style="width: 48px;">Recibido</th>
             @endif
-            <th style="width: 28px;">UM</th>
-            <th class="num" style="width: 80px;">Precio unitario</th>
-            <th class="num" style="width: 88px;">Monto Neto</th>
+            <th class="num" style="width: 80px;">Costo total</th>
         </tr>
     </thead>
     <tbody>
-        {{-- Un renglon por talla; el articulo y la descripcion (producto +
-             color) solo se escriben en el primer renglon de cada grupo. --}}
-        @php $columns = $showReceived ? 8 : 7; @endphp
-        @foreach ($groups as $index => $group)
+        @php $columns = $showReceived ? 6 : 5; @endphp
+        @foreach ($groups as $group)
             @foreach ($group['sizes'] as $position => $size)
-                @php
-                    $isFirst = $position === 0;
-                    $isLast  = $position === count($group['sizes']) - 1;
-                @endphp
-                <tr class="{{ $isFirst ? 'first' : '' }} {{ $isLast ? 'last' : '' }}">
-                    <td>{{ $isFirst ? ($index + 1) * 10 : '' }}</td>
-                    {{-- La clave va en el renglon de la primera talla y el nombre +
-                         color en el de la segunda, para que cada renglon tenga
-                         una sola linea y las tallas queden parejas. --}}
-                    <td>
-                        @if ($isFirst)
-                            <span class="sku">{{ $group['productKey'] }}</span>
-                        @endif
-                        @if ($position === 1 || ($isFirst && count($group['sizes']) === 1))
-                            @if ($isFirst)<br>@endif
+                <tr>
+                    @if ($position === 0)
+                        <td rowspan="{{ count($group['sizes']) }}">
+                            <span class="sku">{{ $group['productKey'] }}</span><br>
                             <span style="text-transform: uppercase;">{{ $group['productName'] }} · {{ $group['color'] }}</span>
-                        @endif
-                        @if ($size['notes'])
-                            <div class="note">Talla {{ $size['size'] }}: {{ $size['notes'] }}</div>
-                        @endif
-                    </td>
-                    <td class="size">{{ $size['size'] }}</td>
-                    <td class="num">{{ $qty($size['ordered']) }}</td>
-                    @if ($showReceived)
-                        <td class="num">{{ $qty($size['received']) }}</td>
+                            @foreach ($group['notes'] as $note)
+                                <div class="note">{{ $note }}</div>
+                            @endforeach
+                        </td>
+                        <td class="center" rowspan="{{ count($group['sizes']) }}">
+                            {{ $group['unitCost'] === null ? 'Varios' : $money($group['unitCost']) }}
+                        </td>
                     @endif
-                    <td>PZA</td>
-                    <td class="num">{{ $money($size['unitCost']) }}</td>
+                    <td class="size">{{ $size['size'] }}</td>
+                    <td class="center">{{ $qty($size['ordered']) }}</td>
+                    @if ($showReceived)
+                        <td class="center">{{ $qty($size['received']) }}</td>
+                    @endif
                     <td class="num">{{ $money($size['subtotal']) }}</td>
                 </tr>
             @endforeach

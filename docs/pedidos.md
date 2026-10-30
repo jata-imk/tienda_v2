@@ -107,18 +107,21 @@ Columnas útiles: `status`, `idCurrency`, `dateOrder`, `dateExpected`, `folio`.
 | `dateExpected` | date | no | Fecha de entrega esperada (≥ `dateOrder`) |
 | `supplierName` | string | no | Proveedor (máx. 255) |
 | `supplierDetails` | string | no | Dirección, RFC, contacto (multilínea, máx. 2000) |
-| `shippingAddress` | string | no | Dirección de envío (multilínea). Vacía → la de la empresa en el PDF |
+| `shippingAddress` | string | no | Dirección de envío (multilínea). Solo referencia: **no se imprime en el PDF** |
 | `notes` | string | no | Comentarios |
 | `details` | array | sí | 1 a 200 líneas |
 | `details[].idProductVariant` | int | sí | Variante. **No se repite** dentro del pedido |
 | `details[].quantityOrdered` | number | sí | > 0, hasta 3 decimales |
-| `details[].unitCost` | number | no | Costo unitario en la moneda del pedido |
+| `details[].unitCost` | number | no | Costo unitario en la moneda del pedido. Igual en todas las tallas del mismo producto + color |
 | `details[].notes` | string | no | Comentario de la línea |
 
 Reglas de negocio (`422`, no se crea nada):
 - La variante y su producto deben estar `active`.
 - El producto debe tener `stockControl = true` (los servicios sin existencias no se compran por aquí).
 - La moneda debe estar `active`.
+- Todas las tallas de un mismo **producto + color** llevan el mismo costo unitario (el explícito o el
+  tomado de `products.cost`). Si no, `422` con `data.sku`, `data.unitCost` y `data.expectedUnitCost`.
+  Colores distintos sí pueden tener costos distintos. Aplica igual en `PUT`.
 
 ```json
 // Request
@@ -263,13 +266,12 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 
 | Bloque | Origen |
 |---|---|
-| Logo | `company_info.logo` (sin logo se imprime el nombre comercial) |
-| Emisor | `company_info`: razón social, calle, número, colonia, CP, ciudad, RFC |
+| Emisor (izquierda) | `company_info`: razón social, dirección en **una línea** (calle y número, colonia, CP y ciudad) y RFC |
+| Logo (derecha) | `company_info.logo`; sin logo la celda queda vacía |
 | Proveedor | `supplierName` + `supplierDetails` |
-| Información | Folio, `dateOrder`, comprador (usuario), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
-| Dirección envío | `shippingAddress`; vacía → nombre y dirección de la empresa |
-| Notas | `notes` |
-| Líneas | Agrupadas por **producto + color**: un renglón por talla (columna **Talla**, en el orden de `sizes.sortOrder`) con su cantidad, UM (`PZA`), costo unitario y monto neto. El artículo (10, 20, 30…), la clave y el nombre + color se escriben **una sola vez** por grupo, en sus primeros renglones. Columna **Recibido** si ya hubo recepciones. Las notas de línea salen bajo la descripción como `Talla 34: …` |
+| Información | Clave (folio, `PED-0000001`), fecha emisión (`dateOrder`), `dateExpected`, moneda (+ T.C. si no es la base), estatus |
+| Notas | `notes` (el renglón solo aparece si hay notas) |
+| Líneas | Agrupadas por **producto + color**, con **un renglón por talla** (orden de `sizes.sortOrder`). Columnas: Producto/Descripción (clave, nombre · color y notas de línea como `Talla 34: …`) y **Costo Unitario**, ambas una sola vez por grupo; luego Talla, Cantidad y Costo total de cada talla. Columna **Recibido** si ya hubo recepciones. Si un pedido anterior a la regla de costo único trae costos distintos en el grupo, el costo unitario sale como `Varios` y cada talla conserva su costo total real. Montos como `1,200.00 MXN` |
 | Totales | Total de piezas y total neto en la moneda del pedido |
 | Pie | `PED-0000001 · Página X de Y` |
 
@@ -282,7 +284,7 @@ Qué alimenta cada bloque (tamaño carta, generado con dompdf):
 | `403` | Rol sin acceso |
 | `404` | Pedido inexistente |
 | `409` | Transición inválida: editar/confirmar fuera de draft, recibir en draft/received/cancelled, cancelar un pedido con recepciones o ya finalizado |
-| `422` | Validación del request, variante inactiva o sin control de existencias, moneda inactiva, recepción que excede lo pendiente o línea de otro pedido |
+| `422` | Validación del request, variante inactiva o sin control de existencias, moneda inactiva, costo distinto entre tallas del mismo producto + color, recepción que excede lo pendiente o línea de otro pedido |
 
 ---
 
