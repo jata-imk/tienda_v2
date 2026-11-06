@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\DTOs\SizeGroup\CreateSizeGroupDTO;
 use App\DTOs\Product\KeyRenamePlan;
+use App\DTOs\SizeGroup\CreateSizeGroupDTO;
 use App\DTOs\SizeGroup\UpdateSizeGroupDTO;
 use App\Models\SizeGroup;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 
 class SizeGroupService
@@ -19,7 +20,7 @@ class SizeGroupService
     {
         $query = SizeGroup::query();
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applySizeGroupCondition']);
             } else {
@@ -29,11 +30,11 @@ class SizeGroupService
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'size_groups');
         }
 
@@ -41,15 +42,15 @@ class SizeGroupService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -70,28 +71,30 @@ class SizeGroupService
 
     public function store(CreateSizeGroupDTO $dto): SizeGroup
     {
-        return SizeGroup::create([
-            'key'         => $dto->key,
-            'name'        => $dto->name,
-            'description' => $dto->description,
-            'status'      => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            return SizeGroup::create([
+                'key' => $dto->key,
+                'name' => $dto->name,
+                'description' => $dto->description,
+                'status' => $dto->status,
+            ]);
+        });
     }
 
     public function update(int $id, UpdateSizeGroupDTO $dto): ?SizeGroup
     {
         $sizeGroup = SizeGroup::find($id);
 
-        if (!$sizeGroup) {
+        if (! $sizeGroup) {
             return null;
         }
 
         $fields = array_filter([
-            'key'         => $dto->key,
-            'name'        => $dto->name,
+            'key' => $dto->key,
+            'name' => $dto->name,
             'description' => $dto->description,
-            'status'      => $dto->status,
-        ], fn($v) => $v !== null);
+            'status' => $dto->status,
+        ], fn ($v) => $v !== null);
 
         if ($dto->clearKey) {
             $fields['key'] = null;
@@ -100,8 +103,8 @@ class SizeGroupService
         $this->keyRenameService->saveWithCascade(
             $sizeGroup,
             $dto->cascadeKeys,
-            fn(SizeGroup $locked) => $this->keyRenamePlan($locked, $dto),
-            fn(SizeGroup $locked) => $locked->update($fields),
+            fn (SizeGroup $locked) => $this->keyRenamePlan($locked, $dto),
+            fn (SizeGroup $locked) => $locked->update($fields),
         );
 
         return $sizeGroup->fresh();
@@ -124,27 +127,29 @@ class SizeGroupService
     {
         return $dto->clearKey || $dto->key !== null
             ? $this->keyRenameService->forSizeGroup($sizeGroup, $dto->clearKey ? null : $dto->key)
-            : new KeyRenamePlan();
+            : new KeyRenamePlan;
     }
 
     public function destroy(int $id): bool
     {
-        $sizeGroup = SizeGroup::find($id);
+        return Audit::transaction(function () use ($id) {
+            $sizeGroup = SizeGroup::lockForUpdate()->find($id);
 
-        if (!$sizeGroup) {
-            return false;
-        }
+            if (! $sizeGroup) {
+                return false;
+            }
 
-        $sizeGroup->update(['status' => 'inactive']);
+            $sizeGroup->update(['status' => 'inactive']);
 
-        return true;
+            return true;
+        });
     }
 
     /**
      * Resuelve una condicion de grupo de tallas soportando el campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applySizeGroupCondition($query, array $cond, string $boolean): void
     {
@@ -156,12 +161,12 @@ class SizeGroupService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal) {
                 $q->where('name', 'like', $likeVal)
-                  ->orWhere('description', 'like', $likeVal);
+                    ->orWhere('description', 'like', $likeVal);
             });
 
             return;

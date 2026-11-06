@@ -15,6 +15,16 @@ tallas/colores/categorías) se documentan en [inventario.md](inventario.md); `cu
 
 ## Tablas
 
+### Auditoría
+
+`audit_events` conserva una acción con su usuario/rol históricos, resultado, contexto
+de petición y fecha UTC. `audit_changes` conserva sus registros afectados y valores
+antes/después. Los datos de negocio y su auditoría se confirman en la misma transacción.
+La consulta es exclusiva de administradores y siempre paginada (15 por defecto, máximo
+100), incluidos los cambios asociados a un evento. No hay borrado automático.
+
+Cobertura, esquema lógico, exclusiones y despliegue: [auditoria.md](auditoria.md).
+
 ### `user_types`
 Catálogo de roles de usuario.
 

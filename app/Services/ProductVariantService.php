@@ -8,9 +8,9 @@ use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Alta, edicion y baja de variantes sobre un producto ya creado. El `stock` de
@@ -31,7 +31,7 @@ class ProductVariantService
     /**
      * Consulta paginada o filtrada de las variantes de un producto.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      * @return array{items: mixed, total: ?int, page?: int, pages?: int}|Collection
      */
     public function queryByProduct(int $productId, array $filters = []): array|Collection
@@ -39,32 +39,32 @@ class ProductVariantService
         $query = ProductVariant::with(['size', 'color'])
             ->where('id_product', $productId);
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applyVariantCondition']);
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     $this->applyVariantCondition($query, [
-                        'column'   => $column,
+                        'column' => $column,
                         'operator' => is_array($value) ? 'in' : '=',
-                        'value'    => $value,
-                        'logic'    => 'and',
+                        'value' => $value,
+                        'logic' => 'and',
                     ], 'and');
                 }
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             // `color` y `size` no son columnas de product_variants, pero el
             // frontend las ve en la respuesta y es por ahi por donde querria
             // ordenar la matriz. Se resuelven igual que en los filtros `w`.
             $this->applyGridOrder($query, $filters, 'product_variants', [
-                'color' => fn($q, string $direction) => $q->orderByColor($direction),
-                'size'  => fn($q, string $direction) => $q->orderBySize($direction),
+                'color' => fn ($q, string $direction) => $q->orderByColor($direction),
+                'size' => fn ($q, string $direction) => $q->orderBySize($direction),
             ]);
         } else {
             // Sin `o` explicito la matriz llega en orden de presentacion, no en
@@ -76,15 +76,15 @@ class ProductVariantService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -101,12 +101,12 @@ class ProductVariantService
     /**
      * Resuelve una condicion de variante de producto soportando relaciones y campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applyVariantCondition($query, array $cond, string $boolean): void
     {
-        $or     = $boolean === 'or';
+        $or = $boolean === 'or';
         $column = $cond['column'];
 
         if ($column === 'search') {
@@ -115,14 +115,14 @@ class ProductVariantService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal) {
                 $q->where('sku', 'like', $likeVal)
-                  ->orWhere('code_bar', 'like', $likeVal)
-                  ->orWhereHas('size', fn($sq) => $sq->where('name', 'like', $likeVal))
-                  ->orWhereHas('color', fn($cq) => $cq->where('name', 'like', $likeVal));
+                    ->orWhere('code_bar', 'like', $likeVal)
+                    ->orWhereHas('size', fn ($sq) => $sq->where('name', 'like', $likeVal))
+                    ->orWhereHas('color', fn ($cq) => $cq->where('name', 'like', $likeVal));
             });
 
             return;
@@ -130,8 +130,8 @@ class ProductVariantService
 
         if ($column === 'size' || $column === 'size_name') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
 
             $query->$method('size', function ($sq) use ($operator, $value) {
                 $sq->where('name', $operator, $value);
@@ -142,8 +142,8 @@ class ProductVariantService
 
         if ($column === 'color' || $column === 'color_name') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
 
             $query->$method('color', function ($cq) use ($operator, $value) {
                 $cq->where('name', $operator, $value);
@@ -163,33 +163,33 @@ class ProductVariantService
      */
     public function store(Product $product, CreateVariantsDTO $dto): Collection
     {
-        return DB::transaction(function () use ($product, $dto) {
-            $created = new Collection();
-            $skus    = VariantSku::resolve($product->key, $dto->variants);
+        return Audit::transaction(function () use ($product, $dto) {
+            $created = new Collection;
+            $skus = VariantSku::resolve($product->key, $dto->variants);
 
             foreach ($dto->variants as $i => $variantInput) {
                 $variant = ProductVariant::create([
                     'id_product' => $product->id,
-                    'id_size'    => $variantInput->sizeId,
-                    'id_color'   => $variantInput->colorId,
-                    'sku'        => $skus[$i],
-                    'code_bar'   => $variantInput->codeBar,
-                    'stock'      => $variantInput->stock,
-                    'status'     => ProductVariant::statusUnder($product, $variantInput->status),
+                    'id_size' => $variantInput->sizeId,
+                    'id_color' => $variantInput->colorId,
+                    'sku' => $skus[$i],
+                    'code_bar' => $variantInput->codeBar,
+                    'stock' => $variantInput->stock,
+                    'status' => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
                 // Movimiento inicial por cada variante con existencia > 0.
                 if ($dto->initialMovement !== null && $variantInput->stock > 0) {
                     InventoryMovement::create([
                         'id_product_variant' => $variant->id,
-                        'movement_type'      => $dto->initialMovement->movementType,
-                        'quantity'           => $variantInput->stock,
-                        'previous_stock'     => 0,
-                        'new_stock'          => $variantInput->stock,
-                        'reference_type'     => $dto->initialMovement->referenceType,
-                        'reference_id'       => $dto->initialMovement->referenceId,
-                        'notes'              => $dto->initialMovement->notes,
-                        'id_user'            => $dto->initialMovement->userId,
+                        'movement_type' => $dto->initialMovement->movementType,
+                        'quantity' => $variantInput->stock,
+                        'previous_stock' => 0,
+                        'new_stock' => $variantInput->stock,
+                        'reference_type' => $dto->initialMovement->referenceType,
+                        'reference_id' => $dto->initialMovement->referenceId,
+                        'notes' => $dto->initialMovement->notes,
+                        'id_user' => $dto->initialMovement->userId,
                     ]);
                 }
 
@@ -202,17 +202,20 @@ class ProductVariantService
 
     public function update(ProductVariant $variant, UpdateVariantDTO $dto): ProductVariant
     {
-        $fields = array_filter([
-            'sku'      => $dto->sku,
-            'code_bar' => $dto->codeBar,
-            'status'   => $dto->status,
-        ], fn($v) => $v !== null);
+        return Audit::transaction(function () use ($variant, $dto) {
+            $variant = ProductVariant::lockForUpdate()->findOrFail($variant->id);
+            $fields = array_filter([
+                'sku' => $dto->sku,
+                'code_bar' => $dto->codeBar,
+                'status' => $dto->status,
+            ], fn ($v) => $v !== null);
 
-        if ($fields !== []) {
-            $variant->update($fields);
-        }
+            if ($fields !== []) {
+                $variant->update($fields);
+            }
 
-        return $variant->fresh(['size', 'color']);
+            return $variant->fresh(['size', 'color']);
+        });
     }
 
     /**
@@ -221,9 +224,12 @@ class ProductVariantService
      */
     public function deactivate(ProductVariant $variant): ProductVariant
     {
-        $variant->update(['status' => 'inactive']);
+        return Audit::transaction(function () use ($variant) {
+            $variant = ProductVariant::lockForUpdate()->findOrFail($variant->id);
+            $variant->update(['status' => 'inactive']);
 
-        return $variant->fresh(['size', 'color']);
+            return $variant->fresh(['size', 'color']);
+        });
     }
 
     /** Existencia vigente del producto (solo variantes activas). */

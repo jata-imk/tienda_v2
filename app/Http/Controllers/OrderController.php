@@ -12,9 +12,11 @@ use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Http\Resources\InventoryMovement\InventoryMovementResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\Order\OrderStatusHistoryResource;
+use App\Services\AuditTrail;
 use App\Services\OrderPdfService;
 use App\Services\OrderService;
 use App\Support\ApiResponse;
+use App\Support\Audit;
 use Closure;
 use DomainException;
 use Illuminate\Http\JsonResponse;
@@ -70,7 +72,7 @@ class OrderController extends Controller
     {
         $found = $this->orderService->show($order);
 
-        if (!$found) {
+        if (! $found) {
             return $this->notFound();
         }
 
@@ -105,7 +107,7 @@ class OrderController extends Controller
      */
     public function store(CreateOrderRequest $request): JsonResponse
     {
-        return $this->handle(fn() => ApiResponse::created(
+        return $this->handle(fn () => ApiResponse::created(
             'Order created.',
             new OrderResource($this->orderService->store($request->toDTO(), $request->user()->id)),
         ));
@@ -138,6 +140,7 @@ class OrderController extends Controller
      * `draft` → `confirmed`. Congela el tipo de cambio. No afecta existencias.
      *
      * @urlParam order integer required Order ID. Example: 1
+     *
      * @bodyParam notes string Comentario para el historial. Example: Enviado al proveedor
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Order confirmed.","data":{"id":1,"status":"confirmed"}}
@@ -159,6 +162,7 @@ class OrderController extends Controller
      * (`partially_received`) nunca se cancela.
      *
      * @urlParam order integer required Order ID. Example: 1
+     *
      * @bodyParam notes string Motivo de la cancelacion. Example: Proveedor sin existencia
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Order cancelled.","data":{"id":1,"status":"cancelled"}}
@@ -183,6 +187,7 @@ class OrderController extends Controller
      * `partially_received`. Atomico: si una linea falla no se aplica nada.
      *
      * @urlParam order integer required Order ID. Example: 1
+     *
      * @bodyParam notes string Comentario de la recepcion. Example: Remesa 1
      * @bodyParam lines array required Lineas recibidas (1 a 200).
      * @bodyParam lines[].detailId integer required Id de la linea del pedido. Example: 1
@@ -197,12 +202,12 @@ class OrderController extends Controller
         return $this->handle(function () use ($request, $order) {
             $result = $this->orderService->receive($order, $request->toDTO(), $request->user()->id);
 
-            if (!$result) {
+            if (! $result) {
                 return $this->notFound();
             }
 
             return ApiResponse::ok('Order received.', [
-                'order'     => new OrderResource($result['order']),
+                'order' => new OrderResource($result['order']),
                 'movements' => InventoryMovementResource::collection(collect($result['movements'])),
             ]);
         });
@@ -235,6 +240,7 @@ class OrderController extends Controller
      * estatus; en `draft` y `cancelled` lleva marca de agua.
      *
      * @urlParam order integer required Order ID. Example: 1
+     *
      * @queryParam download boolean Descargar en lugar de mostrar. Example: 1
      *
      * @response 404 {"ok":false,"code":404,"status":"Not Found","message":"Order not found.","data":null}
@@ -243,14 +249,20 @@ class OrderController extends Controller
     {
         $found = $this->orderService->show($order);
 
-        if (!$found) {
+        if (! $found) {
             return $this->notFound();
         }
 
-        $pdf      = $this->orderPdfService->render($found);
-        $fileName = "{$found->folio_label}.pdf";
+        return Audit::transaction(function () use ($request, $found) {
+            $audit = app(AuditTrail::class);
+            $audit->subject('order', $found->id);
+            $audit->metadata(['folio' => $found->folio_label, 'orderStatus' => $found->status->value,
+                'delivery' => $request->boolean('download') ? 'attachment' : 'inline']);
+            $pdf = $this->orderPdfService->render($found);
+            $fileName = "{$found->folio_label}.pdf";
 
-        return $request->boolean('download') ? $pdf->download($fileName) : $pdf->stream($fileName);
+            return $request->boolean('download') ? $pdf->download($fileName) : $pdf->stream($fileName);
+        });
     }
 
     /**

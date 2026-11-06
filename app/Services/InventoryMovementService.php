@@ -9,8 +9,8 @@ use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class InventoryMovementService
 {
@@ -21,33 +21,33 @@ class InventoryMovementService
     /**
      * Listado o consulta paginada del historial de movimientos (Kardex).
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      * @return array{items: mixed, total: ?int, page?: int, pages?: int}|Collection
      */
     public function index(array $filters = []): array|Collection
     {
         $query = InventoryMovement::with(self::MOVEMENT_RELATIONS);
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applyMovementCondition']);
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     $this->applyMovementCondition($query, [
-                        'column'   => $column,
+                        'column' => $column,
                         'operator' => is_array($value) ? 'in' : '=',
-                        'value'    => $value,
-                        'logic'    => 'and',
+                        'value' => $value,
+                        'logic' => 'and',
                     ], 'and');
                 }
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'inventory_movements');
         } else {
             $query->orderByDesc('id');
@@ -57,15 +57,15 @@ class InventoryMovementService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -82,12 +82,12 @@ class InventoryMovementService
     /**
      * Resuelve una condicion de movimiento de inventario soportando relaciones y virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applyMovementCondition($query, array $cond, string $boolean): void
     {
-        $or     = $boolean === 'or';
+        $or = $boolean === 'or';
         $column = $cond['column'];
 
         if ($column === 'search') {
@@ -96,22 +96,22 @@ class InventoryMovementService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $folio = OrderService::parseFolio($value);
 
             $query->$method(function ($q) use ($likeVal, $folio) {
                 $q->where('notes', 'like', $likeVal)
-                  ->orWhere('reference_type', 'like', $likeVal)
-                  ->when($folio !== null, fn($fq) => $fq->orWhere(
-                      fn($oq) => $this->whereFromOrder($oq, fn($dq) => $dq->whereHas('order', fn($o) => $o->where('folio', $folio))),
-                  ))
-                  ->orWhereHas('user', fn($uq) => $uq->where('user_name', 'like', $likeVal))
-                  ->orWhereHas('variant', function ($vq) use ($likeVal) {
-                      $vq->where('sku', 'like', $likeVal)
-                         ->orWhereHas('product', fn($pq) => $pq->where('name', 'like', $likeVal)->orWhere('key', 'like', $likeVal));
-                  });
+                    ->orWhere('reference_type', 'like', $likeVal)
+                    ->when($folio !== null, fn ($fq) => $fq->orWhere(
+                        fn ($oq) => $this->whereFromOrder($oq, fn ($dq) => $dq->whereHas('order', fn ($o) => $o->where('folio', $folio))),
+                    ))
+                    ->orWhereHas('user', fn ($uq) => $uq->where('user_name', 'like', $likeVal))
+                    ->orWhereHas('variant', function ($vq) use ($likeVal) {
+                        $vq->where('sku', 'like', $likeVal)
+                            ->orWhereHas('product', fn ($pq) => $pq->where('name', 'like', $likeVal)->orWhere('key', 'like', $likeVal));
+                    });
             });
 
             return;
@@ -119,8 +119,8 @@ class InventoryMovementService
 
         if ($column === 'id_product' || $column === 'product') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
 
             $query->$method('variant', function ($vq) use ($operator, $value) {
                 if ($operator === 'in' || is_array($value)) {
@@ -135,8 +135,8 @@ class InventoryMovementService
 
         if ($column === 'sku') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
 
             $query->$method('variant', function ($vq) use ($operator, $value) {
                 $vq->where('sku', $operator, $value);
@@ -147,10 +147,10 @@ class InventoryMovementService
 
         if ($column === 'id_order') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhere' : 'where';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhere' : 'where';
 
-            $query->$method(fn($q) => $this->whereFromOrder($q, function ($dq) use ($operator, $value) {
+            $query->$method(fn ($q) => $this->whereFromOrder($q, function ($dq) use ($operator, $value) {
                 if ($operator === 'in' || is_array($value)) {
                     $dq->whereIn('id_order', (array) $value);
                 } else {
@@ -172,7 +172,7 @@ class InventoryMovementService
     private function whereFromOrder($query, callable $detailScope): void
     {
         $query->where('reference_type', OrderDetail::REFERENCE_TYPE)
-              ->whereHas('orderDetail', $detailScope);
+            ->whereHas('orderDetail', $detailScope);
     }
 
     /**
@@ -190,19 +190,19 @@ class InventoryMovementService
      * @return array{movements: InventoryMovement[], totalStock: float}
      *
      * @throws InventoryDomainException si el producto no controla existencias,
-     *         alguna variante no existe / no pertenece al producto, o el stock
-     *         quedaria negativo.
+     *                                  alguna variante no existe / no pertenece al producto, o el stock
+     *                                  quedaria negativo.
      */
     public function register(RegisterMovementsDTO $dto): array
     {
-        return DB::transaction(function () use ($dto) {
+        return Audit::transaction(function () use ($dto) {
             $product = Product::find($dto->productId);
 
-            if (!$product) {
+            if (! $product) {
                 throw new InventoryDomainException('Producto no encontrado.');
             }
 
-            if (!$product->stock_control) {
+            if (! $product->stock_control) {
                 throw new InventoryDomainException('El producto no maneja existencias.');
             }
 
@@ -222,7 +222,7 @@ class InventoryMovementService
             foreach ($variantIds as $variantId) {
                 $variant = $variants->get($variantId);
 
-                if (!$variant) {
+                if (! $variant) {
                     throw new InventoryDomainException("La variante {$variantId} no existe.");
                 }
 
@@ -234,9 +234,9 @@ class InventoryMovementService
             $movements = [];
 
             foreach ($dto->lines as $line) {
-                $variant       = $variants->get($line->productVariantId);
+                $variant = $variants->get($line->productVariantId);
                 $previousStock = (float) $variant->stock;
-                $signedQty     = in_array($line->movementType, self::INCREASE_TYPES, true)
+                $signedQty = in_array($line->movementType, self::INCREASE_TYPES, true)
                     ? $line->quantity
                     : -$line->quantity;
                 $newStock = $previousStock + $signedQty;
@@ -247,8 +247,8 @@ class InventoryMovementService
                     throw new InventoryDomainException(
                         "La variante {$variantLabel} no tiene existencia suficiente.",
                         [
-                            'idProductVariant'  => $variant->id,
-                            'currentStock'      => $previousStock,
+                            'idProductVariant' => $variant->id,
+                            'currentStock' => $previousStock,
                             'requestedQuantity' => $line->quantity,
                         ],
                     );
@@ -258,14 +258,14 @@ class InventoryMovementService
 
                 $movements[] = InventoryMovement::create([
                     'id_product_variant' => $variant->id,
-                    'movement_type'      => $line->movementType,
-                    'quantity'           => $line->quantity,
-                    'previous_stock'     => $previousStock,
-                    'new_stock'          => $newStock,
-                    'reference_type'     => $dto->referenceType,
-                    'reference_id'       => $line->referenceId ?? $dto->referenceId,
-                    'notes'              => $dto->notes,
-                    'id_user'            => $dto->userId,
+                    'movement_type' => $line->movementType,
+                    'quantity' => $line->quantity,
+                    'previous_stock' => $previousStock,
+                    'new_stock' => $newStock,
+                    'reference_type' => $dto->referenceType,
+                    'reference_id' => $line->referenceId ?? $dto->referenceId,
+                    'notes' => $dto->notes,
+                    'id_user' => $dto->userId,
                 ]);
             }
 
@@ -274,7 +274,7 @@ class InventoryMovementService
                 ->sum('stock');
 
             return [
-                'movements'  => $movements,
+                'movements' => $movements,
                 'totalStock' => $totalStock,
             ];
         });

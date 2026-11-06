@@ -66,6 +66,25 @@
                     <a href="#authenticating-requests">Authenticating requests</a>
                 </li>
                             </ul>
+                    <ul id="tocify-header-audit" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="audit">
+                    <a href="#audit">Audit</a>
+                </li>
+                                    <ul id="tocify-subheader-audit" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="audit-GETapi-audit-events">
+                                <a href="#audit-GETapi-audit-events">List audit events</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="audit-POSTapi-audit-events-query">
+                                <a href="#audit-POSTapi-audit-events-query">Query audit events (POST)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="audit-GETapi-audit-events--id--changes">
+                                <a href="#audit-GETapi-audit-events--id--changes">List changes before/after</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="audit-GETapi-audit-events--id-">
+                                <a href="#audit-GETapi-audit-events--id-">Get audit event metadata</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-authentication" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="authentication">
                     <a href="#authentication">Authentication</a>
@@ -346,7 +365,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: October 29, 2026</li>
+        <li>Last updated: November 6, 2026</li>
     </ul>
 </div>
 
@@ -368,7 +387,1594 @@ You can switch the language used with the tabs at the top right (or from the nav
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>Obtén tu token haciendo <b>POST /api/login</b> con tus credenciales. Luego pégalo aquí para probar los endpoints protegidos.</p>
 
-        <h1 id="authentication">Authentication</h1>
+        <h1 id="audit">Audit</h1>
+
+
+
+                                <h2 id="audit-GETapi-audit-events">List audit events</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Solo administrador. Siempre paginado: 15 por defecto, máximo 100.
+Soporta p, f, o, w, totalCount, dateFrom/dateTo y entityType/entityId.</p>
+
+<span id="example-requests-GETapi-audit-events">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/audit-events?p%5Bpage%5D=1&amp;p%5Bper_page%5D=15&amp;totalCount=1&amp;dateFrom=2026-11-01&amp;dateTo=2026-11-06&amp;entityType=product&amp;entityId=1" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"p\": {
+        \"page\": 16,
+        \"r\": 39,
+        \"per_page\": 7,
+        \"s\": 16
+    },
+    \"f\": [
+        \"entityId\"
+    ],
+    \"o\": {
+        \"column\": \"occurredAt\",
+        \"field\": \"requestId\",
+        \"direction\": \"asc\",
+        \"type\": \"desc\"
+    },
+    \"dateFrom\": \"2026-11-06T10:27:29\",
+    \"dateTo\": \"2052-11-29\",
+    \"entityType\": \"n\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/audit-events"
+);
+
+const params = {
+    "p[page]": "1",
+    "p[per_page]": "15",
+    "totalCount": "1",
+    "dateFrom": "2026-11-01",
+    "dateTo": "2026-11-06",
+    "entityType": "product",
+    "entityId": "1",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "p": {
+        "page": 16,
+        "r": 39,
+        "per_page": 7,
+        "s": 16
+    },
+    "f": [
+        "entityId"
+    ],
+    "o": {
+        "column": "occurredAt",
+        "field": "requestId",
+        "direction": "asc",
+        "type": "desc"
+    },
+    "dateFrom": "2026-11-06T10:27:29",
+    "dateTo": "2052-11-29",
+    "entityType": "n"
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-audit-events">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Audit events retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [],
+        &quot;page&quot;: 1,
+        &quot;perPage&quot;: 15,
+        &quot;hasMore&quot;: false,
+        &quot;totalCount&quot;: 0,
+        &quot;summary&quot;: [
+            0
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-audit-events" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-audit-events"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-audit-events"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-audit-events" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-audit-events">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-audit-events" data-method="GET"
+      data-path="api/audit-events"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-audit-events', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-audit-events"
+                    onclick="tryItOut('GETapi-audit-events');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-audit-events"
+                    onclick="cancelTryOut('GETapi-audit-events');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-audit-events"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/audit-events</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-audit-events"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-audit-events"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-audit-events"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>p[page]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p[page]"                data-endpoint="GETapi-audit-events"
+               value="1"
+               data-component="query">
+    <br>
+<p>Página desde 1. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>p[per_page]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p[per_page]"                data-endpoint="GETapi-audit-events"
+               value="15"
+               data-component="query">
+    <br>
+<p>Tamaño entre 1 y 100. Default 15. Example: <code>15</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-audit-events" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="1"
+                   data-endpoint="GETapi-audit-events"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-audit-events" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="0"
+                   data-endpoint="GETapi-audit-events"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Incluir conteo total; false evita COUNT. Example: <code>true</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateFrom"                data-endpoint="GETapi-audit-events"
+               value="2026-11-01"
+               data-component="query">
+    <br>
+<p>Fecha inicial inclusiva. Example: <code>2026-11-01</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateTo"                data-endpoint="GETapi-audit-events"
+               value="2026-11-06"
+               data-component="query">
+    <br>
+<p>Fecha final inclusiva. Example: <code>2026-11-06</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityType"                data-endpoint="GETapi-audit-events"
+               value="product"
+               data-component="query">
+    <br>
+<p>Entidad principal o afectada. Example: <code>product</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityId"                data-endpoint="GETapi-audit-events"
+               value="1"
+               data-component="query">
+    <br>
+<p>ID de la entidad principal o afectada. Example: <code>1</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>p</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.page"                data-endpoint="GETapi-audit-events"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Example: <code>16</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>r</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.r"                data-endpoint="GETapi-audit-events"
+               value="39"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Example: <code>39</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.per_page"                data-endpoint="GETapi-audit-events"
+               value="7"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>7</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>s</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.s"                data-endpoint="GETapi-audit-events"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>16</code></p>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>f</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="f[0]"                data-endpoint="GETapi-audit-events"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="f[1]"                data-endpoint="GETapi-audit-events"
+               data-component="body">
+    <br>
+
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>o</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>column</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.column"                data-endpoint="GETapi-audit-events"
+               value="occurredAt"
+               data-component="body">
+    <br>
+<p>Example: <code>occurredAt</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>field</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.field"                data-endpoint="GETapi-audit-events"
+               value="requestId"
+               data-component="body">
+    <br>
+<p>Example: <code>requestId</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.direction"                data-endpoint="GETapi-audit-events"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.type"                data-endpoint="GETapi-audit-events"
+               value="desc"
+               data-component="body">
+    <br>
+<p>Example: <code>desc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>w</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="w"                data-endpoint="GETapi-audit-events"
+               value=""
+               data-component="body">
+    <br>
+<p>Must not have more than 50 items.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="totalCount"                data-endpoint="GETapi-audit-events"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateFrom"                data-endpoint="GETapi-audit-events"
+               value="2026-11-06T10:27:29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateTo"                data-endpoint="GETapi-audit-events"
+               value="2052-11-29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityType"                data-endpoint="GETapi-audit-events"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 64 characters. Example: <code>n</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityId"                data-endpoint="GETapi-audit-events"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+        </form>
+
+                    <h2 id="audit-POSTapi-audit-events-query">Query audit events (POST)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Mismos filtros que GET. p.page y p.r son desplazamientos desde cero.</p>
+
+<span id="example-requests-POSTapi-audit-events-query">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/audit-events/query" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"p\": {
+        \"page\": 0,
+        \"r\": 39,
+        \"per_page\": 15,
+        \"s\": 16
+    },
+    \"f\": [
+        \"id\"
+    ],
+    \"o\": {
+        \"column\": \"roleCode\",
+        \"field\": \"actorName\",
+        \"direction\": \"desc\",
+        \"type\": \"asc\"
+    },
+    \"totalCount\": true,
+    \"dateFrom\": \"2026-11-06T10:27:29\",
+    \"dateTo\": \"2052-11-29\",
+    \"entityType\": \"n\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/audit-events/query"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "p": {
+        "page": 0,
+        "r": 39,
+        "per_page": 15,
+        "s": 16
+    },
+    "f": [
+        "id"
+    ],
+    "o": {
+        "column": "roleCode",
+        "field": "actorName",
+        "direction": "desc",
+        "type": "asc"
+    },
+    "totalCount": true,
+    "dateFrom": "2026-11-06T10:27:29",
+    "dateTo": "2052-11-29",
+    "entityType": "n"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-audit-events-query">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Audit events retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [],
+        &quot;page&quot;: 1,
+        &quot;perPage&quot;: 15,
+        &quot;hasMore&quot;: false,
+        &quot;totalCount&quot;: 0,
+        &quot;summary&quot;: [
+            0
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-audit-events-query" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-audit-events-query"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-audit-events-query"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-audit-events-query" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-audit-events-query">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-audit-events-query" data-method="POST"
+      data-path="api/audit-events/query"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-audit-events-query', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-audit-events-query"
+                    onclick="tryItOut('POSTapi-audit-events-query');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-audit-events-query"
+                    onclick="cancelTryOut('POSTapi-audit-events-query');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-audit-events-query"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/audit-events/query</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-audit-events-query"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-audit-events-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-audit-events-query"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>p</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>Paginación obligatoria en el servidor aunque se omita.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.page"                data-endpoint="POSTapi-audit-events-query"
+               value="0"
+               data-component="body">
+    <br>
+<p>Desplazamiento desde cero. Example: <code>0</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>r</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.r"                data-endpoint="POSTapi-audit-events-query"
+               value="39"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Example: <code>39</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.per_page"                data-endpoint="POSTapi-audit-events-query"
+               value="15"
+               data-component="body">
+    <br>
+<p>Tamaño entre 1 y 100. Default 15. Example: <code>15</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>s</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.s"                data-endpoint="POSTapi-audit-events-query"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>16</code></p>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>f</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="f[0]"                data-endpoint="POSTapi-audit-events-query"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="f[1]"                data-endpoint="POSTapi-audit-events-query"
+               data-component="body">
+    <br>
+
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>o</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>column</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.column"                data-endpoint="POSTapi-audit-events-query"
+               value="roleCode"
+               data-component="body">
+    <br>
+<p>Example: <code>roleCode</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>field</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.field"                data-endpoint="POSTapi-audit-events-query"
+               value="actorName"
+               data-component="body">
+    <br>
+<p>Example: <code>actorName</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.direction"                data-endpoint="POSTapi-audit-events-query"
+               value="desc"
+               data-component="body">
+    <br>
+<p>Example: <code>desc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.type"                data-endpoint="POSTapi-audit-events-query"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>w</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="w"                data-endpoint="POSTapi-audit-events-query"
+               value=""
+               data-component="body">
+    <br>
+<p>Must not have more than 50 items.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-audit-events-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="true"
+                   data-endpoint="POSTapi-audit-events-query"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-audit-events-query" style="display: none">
+            <input type="radio" name="totalCount"
+                   value="false"
+                   data-endpoint="POSTapi-audit-events-query"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Incluir conteo total. Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateFrom"                data-endpoint="POSTapi-audit-events-query"
+               value="2026-11-06T10:27:29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateTo"                data-endpoint="POSTapi-audit-events-query"
+               value="2052-11-29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityType"                data-endpoint="POSTapi-audit-events-query"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 64 characters. Example: <code>n</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityId"                data-endpoint="POSTapi-audit-events-query"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+        </form>
+
+                    <h2 id="audit-GETapi-audit-events--id--changes">List changes before/after</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Siempre paginado: 15 por defecto, máximo 100. Soporta p, f, o, w y totalCount.</p>
+
+<span id="example-requests-GETapi-audit-events--id--changes">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/audit-events/1/changes?p%5Bpage%5D=1&amp;p%5Bper_page%5D=15" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"p\": {
+        \"page\": 16,
+        \"r\": 39,
+        \"per_page\": 7,
+        \"s\": 16
+    },
+    \"f\": [
+        \"auditEventId\"
+    ],
+    \"o\": {
+        \"column\": \"entityType\",
+        \"field\": \"id\",
+        \"direction\": \"desc\",
+        \"type\": \"asc\"
+    },
+    \"dateFrom\": \"2026-11-06T10:27:29\",
+    \"dateTo\": \"2052-11-29\",
+    \"entityType\": \"n\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/audit-events/1/changes"
+);
+
+const params = {
+    "p[page]": "1",
+    "p[per_page]": "15",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "p": {
+        "page": 16,
+        "r": 39,
+        "per_page": 7,
+        "s": 16
+    },
+    "f": [
+        "auditEventId"
+    ],
+    "o": {
+        "column": "entityType",
+        "field": "id",
+        "direction": "desc",
+        "type": "asc"
+    },
+    "dateFrom": "2026-11-06T10:27:29",
+    "dateTo": "2052-11-29",
+    "entityType": "n"
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-audit-events--id--changes">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Audit changes retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;auditEventId&quot;: 1,
+                &quot;entityType&quot;: &quot;product_variant&quot;,
+                &quot;entityId&quot;: &quot;5&quot;,
+                &quot;operation&quot;: &quot;updated&quot;,
+                &quot;beforeValues&quot;: {
+                    &quot;stock&quot;: &quot;10.000&quot;
+                },
+                &quot;afterValues&quot;: {
+                    &quot;stock&quot;: &quot;12.000&quot;
+                }
+            }
+        ],
+        &quot;page&quot;: 1,
+        &quot;perPage&quot;: 15,
+        &quot;hasMore&quot;: false,
+        &quot;totalCount&quot;: 1,
+        &quot;summary&quot;: [
+            1
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-audit-events--id--changes" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-audit-events--id--changes"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-audit-events--id--changes"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-audit-events--id--changes" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-audit-events--id--changes">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-audit-events--id--changes" data-method="GET"
+      data-path="api/audit-events/{id}/changes"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-audit-events--id--changes', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-audit-events--id--changes"
+                    onclick="tryItOut('GETapi-audit-events--id--changes');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-audit-events--id--changes"
+                    onclick="cancelTryOut('GETapi-audit-events--id--changes');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-audit-events--id--changes"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/audit-events/{id}/changes</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-audit-events--id--changes"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-audit-events--id--changes"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-audit-events--id--changes"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-audit-events--id--changes"
+               value="1"
+               data-component="url">
+    <br>
+<p>Identificador del evento. Example: <code>1</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>p[page]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p[page]"                data-endpoint="GETapi-audit-events--id--changes"
+               value="1"
+               data-component="query">
+    <br>
+<p>Página desde 1. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>p[per_page]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p[per_page]"                data-endpoint="GETapi-audit-events--id--changes"
+               value="15"
+               data-component="query">
+    <br>
+<p>Tamaño entre 1 y 100. Example: <code>15</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>p</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.page"                data-endpoint="GETapi-audit-events--id--changes"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Example: <code>16</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>r</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.r"                data-endpoint="GETapi-audit-events--id--changes"
+               value="39"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Example: <code>39</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.per_page"                data-endpoint="GETapi-audit-events--id--changes"
+               value="7"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>7</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>s</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="p.s"                data-endpoint="GETapi-audit-events--id--changes"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>16</code></p>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>f</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="f[0]"                data-endpoint="GETapi-audit-events--id--changes"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="f[1]"                data-endpoint="GETapi-audit-events--id--changes"
+               data-component="body">
+    <br>
+
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>auditEventId</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>operation</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>o</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>column</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.column"                data-endpoint="GETapi-audit-events--id--changes"
+               value="entityType"
+               data-component="body">
+    <br>
+<p>Example: <code>entityType</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>auditEventId</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>operation</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>field</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.field"                data-endpoint="GETapi-audit-events--id--changes"
+               value="id"
+               data-component="body">
+    <br>
+<p>Example: <code>id</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>id</code></li> <li><code>auditEventId</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>operation</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.direction"                data-endpoint="GETapi-audit-events--id--changes"
+               value="desc"
+               data-component="body">
+    <br>
+<p>Example: <code>desc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="o.type"                data-endpoint="GETapi-audit-events--id--changes"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+                    </div>
+                                    </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>w</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="w"                data-endpoint="GETapi-audit-events--id--changes"
+               value=""
+               data-component="body">
+    <br>
+<p>Must not have more than 50 items.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="totalCount"                data-endpoint="GETapi-audit-events--id--changes"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateFrom"                data-endpoint="GETapi-audit-events--id--changes"
+               value="2026-11-06T10:27:29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateTo"                data-endpoint="GETapi-audit-events--id--changes"
+               value="2052-11-29"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityType"                data-endpoint="GETapi-audit-events--id--changes"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 64 characters. Example: <code>n</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityId"                data-endpoint="GETapi-audit-events--id--changes"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+        </form>
+
+                    <h2 id="audit-GETapi-audit-events--id-">Get audit event metadata</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Los cambios se consultan paginados en /changes.</p>
+
+<span id="example-requests-GETapi-audit-events--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/audit-events/1" \
+    --header "Authorization: Bearer {TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/audit-events/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-audit-events--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: true,
+    &quot;code&quot;: 200,
+    &quot;status&quot;: &quot;OK&quot;,
+    &quot;message&quot;: &quot;Audit event retrieved.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 1,
+        &quot;requestId&quot;: &quot;019a55b7-cb40-7000-8000-000000000001&quot;,
+        &quot;module&quot;: &quot;orders&quot;,
+        &quot;action&quot;: &quot;orders.pdf_generated&quot;,
+        &quot;outcome&quot;: &quot;success&quot;,
+        &quot;actorId&quot;: 1,
+        &quot;actorName&quot;: &quot;admin&quot;,
+        &quot;roleCode&quot;: &quot;administrator&quot;,
+        &quot;roleName&quot;: &quot;Administrador&quot;,
+        &quot;entityType&quot;: &quot;order&quot;,
+        &quot;entityId&quot;: &quot;1&quot;,
+        &quot;source&quot;: &quot;api&quot;,
+        &quot;metadata&quot;: {
+            &quot;delivery&quot;: &quot;inline&quot;,
+            &quot;folio&quot;: &quot;PED-0000001&quot;
+        },
+        &quot;occurredAt&quot;: &quot;2026-11-06T18:00:00.000000Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 404,
+    &quot;status&quot;: &quot;Not Found&quot;,
+    &quot;message&quot;: &quot;Audit event not found.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-audit-events--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-audit-events--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-audit-events--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-audit-events--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-audit-events--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-audit-events--id-" data-method="GET"
+      data-path="api/audit-events/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-audit-events--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-audit-events--id-"
+                    onclick="tryItOut('GETapi-audit-events--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-audit-events--id-"
+                    onclick="cancelTryOut('GETapi-audit-events--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-audit-events--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/audit-events/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-audit-events--id-"
+               value="Bearer {TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-audit-events--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-audit-events--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-audit-events--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>Identificador del evento. Example: <code>1</code></p>
+            </div>
+                    </form>
+
+                <h1 id="authentication">Authentication</h1>
 
     <p>Session management endpoints.</p>
 
@@ -1120,10 +2726,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"postalCode\": \"y\",
     \"neighborhood\": \"v\",
     \"city\": \"d\",
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -1153,10 +2759,10 @@ let body = {
     "postalCode": "y",
     "neighborhood": "v",
     "city": "d",
-    "stockControl": false,
+    "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -1455,7 +3061,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -1500,10 +3106,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-company-info"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -1544,7 +3150,7 @@ Must be one of:
     \"stockControl\": false,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -1577,7 +3183,7 @@ let body = {
     "stockControl": false,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -1921,10 +3527,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3047,7 +4653,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
     \"exchangeRate\": 0,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -3068,7 +4674,7 @@ let body = {
     "code": "ngzmiy",
     "symbol": "vdljni",
     "exchangeRate": 0,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -3263,10 +4869,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3706,8 +5312,8 @@ alerts omit zero-stock variants that have never had inventory movements.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-10-29T23:15:44\",
-    \"dateTo\": \"2052-11-21\",
+    \"dateFrom\": \"2026-11-06T10:27:29\",
+    \"dateTo\": \"2052-11-29\",
     \"lowStockThreshold\": 39
 }"
 </code></pre></div>
@@ -3735,8 +5341,8 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-10-29T23:15:44",
-    "dateTo": "2052-11-21",
+    "dateFrom": "2026-11-06T10:27:29",
+    "dateTo": "2052-11-29",
     "lowStockThreshold": 39
 };
 
@@ -3937,10 +5543,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-10-29T23:15:44"
+               value="2026-11-06T10:27:29"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-29T23:15:44</code></p>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -3949,10 +5555,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-dashboard"
-               value="2052-11-21"
+               value="2052-11-29"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-21</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>lowStockThreshold</code></b>&nbsp;&nbsp;
@@ -4489,7 +6095,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"key\": \"bngzmi\",
     \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -4509,7 +6115,7 @@ let body = {
     "key": "bngzmi",
     "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -4662,10 +6268,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-categories"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5598,7 +7204,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"key\": \"bngzmi\",
     \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -5618,7 +7224,7 @@ let body = {
     "key": "bngzmi",
     "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -5771,10 +7377,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-size-groups"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5970,7 +7576,7 @@ responde la vista previa <code>{ totals, products, variants, conflicts }</code>.
     \"key\": \"bngzmi\",
     \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"active\",
+    \"status\": \"inactive\",
     \"cascadeKeys\": false,
     \"dryRun\": false
 }"
@@ -5992,7 +7598,7 @@ let body = {
     "key": "bngzmi",
     "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "active",
+    "status": "inactive",
     "cascadeKeys": false,
     "dryRun": false
 };
@@ -6177,10 +7783,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-size-groups--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -8120,7 +9726,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -8139,7 +9745,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -8310,10 +9916,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-colors--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -10116,16 +11722,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://127.0.0.1:8000/api/products/architecto/image" \
+    "http://127.0.0.1:8000/api/products/1/image" \
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jatai\AppData\Local\Temp\phpA15.tmp" </code></pre></div>
+    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php5908.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/products/architecto/image"
+    "http://127.0.0.1:8000/api/products/1/image"
 );
 
 const headers = {
@@ -10259,15 +11865,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="product"                data-endpoint="POSTapi-products--product--image"
-               value="architecto"
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="POSTapi-products--product--image"
+               value="1"
                data-component="url">
     <br>
-<p>The product. Example: <code>architecto</code></p>
+<p>The product. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -10292,7 +11898,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jatai\AppData\Local\Temp\phpA15.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php5908.tmp</code></p>
         </div>
         </form>
 
@@ -10310,7 +11916,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://127.0.0.1:8000/api/products/architecto/image" \
+    "http://127.0.0.1:8000/api/products/1/image" \
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -10318,7 +11924,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/products/architecto/image"
+    "http://127.0.0.1:8000/api/products/1/image"
 );
 
 const headers = {
@@ -10449,15 +12055,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="product"                data-endpoint="DELETEapi-products--product--image"
-               value="architecto"
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="DELETEapi-products--product--image"
+               value="1"
                data-component="url">
     <br>
-<p>The product. Example: <code>architecto</code></p>
+<p>The product. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -10675,7 +12281,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jatai\AppData\Local\Temp\phpA37.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php593A.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11343,16 +12949,16 @@ activo puede haber variantes <code>inactive</code> (por ejemplo una talla descon
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"discount\": 19,
     \"typeIva\": 1,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"inactive\",
+    \"status\": \"active\",
     \"initialMovement\": {
-        \"movementType\": \"adjustment\",
+        \"movementType\": \"entry\",
         \"referenceType\": \"w\",
         \"referenceId\": 16,
         \"notes\": \"architecto\",
@@ -11365,7 +12971,7 @@ activo puede haber variantes <code>inactive</code> (por ejemplo una talla descon
             \"sku\": \"n\",
             \"codeBar\": \"g\",
             \"stock\": 12,
-            \"status\": \"inactive\"
+            \"status\": \"active\"
         }
     ]
 }"
@@ -11397,16 +13003,16 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": true,
+    "stockControl": false,
     "discount": 19,
     "typeIva": 1,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "inactive",
+    "status": "active",
     "initialMovement": {
-        "movementType": "adjustment",
+        "movementType": "entry",
         "referenceType": "w",
         "referenceId": 16,
         "notes": "architecto",
@@ -11419,7 +13025,7 @@ let body = {
             "sku": "n",
             "codeBar": "g",
             "stock": 12,
-            "status": "inactive"
+            "status": "active"
         }
     ]
 };
@@ -11673,7 +13279,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -11754,10 +13360,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -11838,10 +13444,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="variants.0.status"                data-endpoint="POSTapi-products"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
                     </div>
@@ -11864,10 +13470,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="initialMovement.movementType"                data-endpoint="POSTapi-products"
-               value="adjustment"
+               value="entry"
                data-component="body">
     <br>
-<p>This field is required when <code>initialMovement</code> is present. Example: <code>adjustment</code></p>
+<p>This field is required when <code>initialMovement</code> is present. Example: <code>entry</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>sale</code></li> <li><code>adjustment</code></li> <li><code>return</code></li> <li><code>cancel</code></li></ul>
                     </div>
@@ -12124,14 +13730,14 @@ responde la vista previa <code>{ totals, products, variants, conflicts }</code>.
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"discount\": 19,
-    \"typeIva\": 3,
+    \"typeIva\": 4,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"inactive\",
+    \"status\": \"active\",
     \"cascadeKeys\": false,
     \"dryRun\": false
 }"
@@ -12161,14 +13767,14 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": true,
+    "stockControl": false,
     "discount": 19,
-    "typeIva": 3,
+    "typeIva": 4,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "inactive",
+    "status": "active",
     "cascadeKeys": false,
     "dryRun": false
 };
@@ -12440,7 +14046,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -12461,10 +14067,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="3"
+               value="4"
                data-component="body">
     <br>
-<p>Example: <code>3</code></p>
+<p>Example: <code>4</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -12523,10 +14129,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -13720,7 +15326,20 @@ fetch(url, {
 
 <span id="example-responses-GETapi-orders--order--pdf">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 404,
+    &quot;status&quot;: &quot;Not Found&quot;,
+    &quot;message&quot;: &quot;Order not found.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -13728,21 +15347,9 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
+x-request-id: cfd09fe6-13ed-4f29-a5fb-9e73449c2b8b
 access-control-allow-origin: *
  </code></pre></details>         <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;ok&quot;: false,
-    &quot;code&quot;: 401,
-    &quot;status&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Token inv&aacute;lido o malformado.&quot;,
-    &quot;data&quot;: null
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;ok&quot;: false,
@@ -14718,8 +16325,8 @@ por <code>idProductVariant</code>). Mismos campos que el alta.</p>
     --data "{
     \"idCurrency\": 16,
     \"exchangeRate\": 22,
-    \"dateOrder\": \"2026-10-29T23:15:44\",
-    \"dateExpected\": \"2026-10-29T23:15:44\",
+    \"dateOrder\": \"2026-11-06T10:27:29\",
+    \"dateExpected\": \"2026-11-06T10:27:29\",
     \"supplierName\": \"g\",
     \"supplierDetails\": \"z\",
     \"shippingAddress\": \"m\",
@@ -14750,8 +16357,8 @@ const headers = {
 let body = {
     "idCurrency": 16,
     "exchangeRate": 22,
-    "dateOrder": "2026-10-29T23:15:44",
-    "dateExpected": "2026-10-29T23:15:44",
+    "dateOrder": "2026-11-06T10:27:29",
+    "dateExpected": "2026-11-06T10:27:29",
     "supplierName": "g",
     "supplierDetails": "z",
     "shippingAddress": "m",
@@ -14935,10 +16542,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateOrder"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-29T23:15:44"
+               value="2026-11-06T10:27:29"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-29T23:15:44</code></p>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateExpected</code></b>&nbsp;&nbsp;
@@ -14947,10 +16554,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateExpected"                data-endpoint="PUTapi-orders--order-"
-               value="2026-10-29T23:15:44"
+               value="2026-11-06T10:27:29"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-10-29T23:15:44</code></p>
+<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>supplierName</code></b>&nbsp;&nbsp;

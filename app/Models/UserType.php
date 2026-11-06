@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\NullsUpdatedAtOnCreate;
+use App\Services\AuditTrail;
 use Illuminate\Database\Eloquent\Model;
 
 class UserType extends Model
@@ -20,9 +21,10 @@ class UserType extends Model
                 return;
             }
 
-            UserSession::whereIn('id_user', $userType->users()->select('users.id'))
-                ->whereNull('revoked_at')
-                ->update(['revoked_at' => now()]);
+            app(AuditTrail::class)->bulkUpdate(
+                UserSession::whereIn('id_user', $userType->users()->select('users.id'))->whereNull('revoked_at'),
+                ['revoked_at' => now()],
+            );
         });
     }
 

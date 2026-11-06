@@ -7,7 +7,7 @@ use App\DTOs\Category\UpdateCategoryDTO;
 use App\DTOs\Product\KeyRenamePlan;
 use App\Models\Category;
 use App\Services\Concerns\AppliesGridConditions;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryService
@@ -21,7 +21,7 @@ class CategoryService
         $query = Category::query();
 
         // where filters
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 // Cada `&&` abre un bloque y arrastra los `||` que le siguen, para
                 // que un grupo OR no anule los filtros AND anteriores.
@@ -46,12 +46,12 @@ class CategoryService
         }
 
         // field selection
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
         // ordering
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'categories');
         }
 
@@ -60,15 +60,15 @@ class CategoryService
             : true;
 
         // pagination
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -86,7 +86,7 @@ class CategoryService
      * Resuelve una condicion. `$boolean` es el conector con la condicion anterior
      * dentro del bloque (`and` en la primera, `or` en las demas).
      *
-     * @param array<string, mixed> $cond
+     * @param  array<string, mixed>  $cond
      */
     private function applyCategoryCondition($query, array $cond, string $boolean): void
     {
@@ -96,7 +96,7 @@ class CategoryService
                 return;
             }
 
-            $sql  = strtoupper($cond['operator']) . ' ? ESCAPE ?';
+            $sql = strtoupper($cond['operator']).' ? ESCAPE ?';
             $bind = [$cond['value'], '\\'];
 
             $query->{$boolean === 'or' ? 'orWhere' : 'where'}(function ($q) use ($sql, $bind) {
@@ -117,35 +117,37 @@ class CategoryService
 
     public function store(CreateCategoryDTO $dto): Category
     {
-        // Sin clave, el hook `creating` del modelo la genera.
-        return Category::create([
-            'key'         => $dto->key,
-            'name'        => $dto->name,
-            'description' => $dto->description,
-            'status'      => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            // Sin clave, el hook `creating` del modelo la genera.
+            return Category::create([
+                'key' => $dto->key,
+                'name' => $dto->name,
+                'description' => $dto->description,
+                'status' => $dto->status,
+            ]);
+        });
     }
 
     public function update(int $id, UpdateCategoryDTO $dto): ?Category
     {
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return null;
         }
 
         $fields = array_filter([
-            'key'         => $dto->key,
-            'name'        => $dto->name,
+            'key' => $dto->key,
+            'name' => $dto->name,
             'description' => $dto->description,
-            'status'      => $dto->status,
-        ], fn($v) => $v !== null);
+            'status' => $dto->status,
+        ], fn ($v) => $v !== null);
 
         $this->keyRenameService->saveWithCascade(
             $category,
             $dto->cascadeKeys,
-            fn(Category $locked) => $this->keyRenamePlan($locked, $dto),
-            fn(Category $locked) => $locked->update($fields),
+            fn (Category $locked) => $this->keyRenamePlan($locked, $dto),
+            fn (Category $locked) => $locked->update($fields),
         );
 
         return $category->fresh();
@@ -165,19 +167,21 @@ class CategoryService
     {
         return $dto->key !== null
             ? $this->keyRenameService->forCategory($category, $dto->key)
-            : new KeyRenamePlan();
+            : new KeyRenamePlan;
     }
 
     public function destroy(int $id): bool
     {
-        $category = Category::find($id);
+        return Audit::transaction(function () use ($id) {
+            $category = Category::lockForUpdate()->find($id);
 
-        if (!$category) {
-            return false;
-        }
+            if (! $category) {
+                return false;
+            }
 
-        $category->update(['status' => 'inactive']);
+            $category->update(['status' => 'inactive']);
 
-        return true;
+            return true;
+        });
     }
 }

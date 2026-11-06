@@ -7,6 +7,7 @@ use App\DTOs\Currency\UpdateCurrencyDTO;
 use App\Models\CompanyInfo;
 use App\Models\Currency;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 
 class CurrencyService
@@ -17,7 +18,7 @@ class CurrencyService
     {
         $query = Currency::query();
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applyCurrencyCondition']);
             } else {
@@ -27,11 +28,11 @@ class CurrencyService
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'currencies');
         }
 
@@ -39,15 +40,15 @@ class CurrencyService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -64,12 +65,12 @@ class CurrencyService
     /**
      * Resuelve una condicion de moneda soportando el campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applyCurrencyCondition($query, array $cond, string $boolean): void
     {
-        $or     = $boolean === 'or';
+        $or = $boolean === 'or';
         $column = $cond['column'];
 
         if ($column === 'search') {
@@ -78,13 +79,13 @@ class CurrencyService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal) {
                 $q->where('name', 'like', $likeVal)
-                  ->orWhere('code', 'like', $likeVal)
-                  ->orWhere('symbol', 'like', $likeVal);
+                    ->orWhere('code', 'like', $likeVal)
+                    ->orWhere('symbol', 'like', $likeVal);
             });
 
             return;
@@ -100,34 +101,38 @@ class CurrencyService
 
     public function store(CreateCurrencyDTO $dto): Currency
     {
-        return Currency::create([
-            'name'          => $dto->name,
-            'code'          => $dto->code,
-            'symbol'        => $dto->symbol,
-            'exchange_rate' => $dto->exchangeRate,
-            'status'        => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            return Currency::create([
+                'name' => $dto->name,
+                'code' => $dto->code,
+                'symbol' => $dto->symbol,
+                'exchange_rate' => $dto->exchangeRate,
+                'status' => $dto->status,
+            ]);
+        });
     }
 
     public function update(int $id, UpdateCurrencyDTO $dto): ?Currency
     {
-        $currency = Currency::find($id);
+        return Audit::transaction(function () use ($id, $dto) {
+            $currency = Currency::lockForUpdate()->find($id);
 
-        if (!$currency) {
-            return null;
-        }
+            if (! $currency) {
+                return null;
+            }
 
-        $fields = array_filter([
-            'name'          => $dto->name,
-            'code'          => $dto->code,
-            'symbol'        => $dto->symbol,
-            'exchange_rate' => $dto->exchangeRate,
-            'status'        => $dto->status,
-        ], fn($v) => $v !== null);
+            $fields = array_filter([
+                'name' => $dto->name,
+                'code' => $dto->code,
+                'symbol' => $dto->symbol,
+                'exchange_rate' => $dto->exchangeRate,
+                'status' => $dto->status,
+            ], fn ($v) => $v !== null);
 
-        $currency->update($fields);
+            $currency->update($fields);
 
-        return $currency->fresh();
+            return $currency->fresh();
+        });
     }
 
     /**
@@ -138,18 +143,20 @@ class CurrencyService
      */
     public function destroy(int $id): string
     {
-        $currency = Currency::find($id);
+        return Audit::transaction(function () use ($id) {
+            $currency = Currency::lockForUpdate()->find($id);
 
-        if (!$currency) {
-            return 'not_found';
-        }
+            if (! $currency) {
+                return 'not_found';
+            }
 
-        if (CompanyInfo::where('id_currency', $id)->exists()) {
-            return 'in_use';
-        }
+            if (CompanyInfo::where('id_currency', $id)->exists()) {
+                return 'in_use';
+            }
 
-        $currency->update(['status' => 'inactive']);
+            $currency->update(['status' => 'inactive']);
 
-        return 'deactivated';
+            return 'deactivated';
+        });
     }
 }

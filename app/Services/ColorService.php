@@ -6,6 +6,7 @@ use App\DTOs\Color\CreateColorDTO;
 use App\DTOs\Color\UpdateColorDTO;
 use App\Models\Color;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 
 class ColorService
@@ -16,7 +17,7 @@ class ColorService
     {
         $query = Color::query();
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applyColorCondition']);
             } else {
@@ -26,11 +27,11 @@ class ColorService
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'colors');
         }
 
@@ -38,15 +39,15 @@ class ColorService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -67,50 +68,56 @@ class ColorService
 
     public function store(CreateColorDTO $dto): Color
     {
-        return Color::create([
-            'name'      => $dto->name,
-            'hex_color' => $dto->hexColor,
-            'status'    => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            return Color::create([
+                'name' => $dto->name,
+                'hex_color' => $dto->hexColor,
+                'status' => $dto->status,
+            ]);
+        });
     }
 
     public function update(int $id, UpdateColorDTO $dto): ?Color
     {
-        $color = Color::find($id);
+        return Audit::transaction(function () use ($id, $dto) {
+            $color = Color::lockForUpdate()->find($id);
 
-        if (!$color) {
-            return null;
-        }
+            if (! $color) {
+                return null;
+            }
 
-        $fields = array_filter([
-            'name'      => $dto->name,
-            'hex_color' => $dto->hexColor,
-            'status'    => $dto->status,
-        ], fn($v) => $v !== null);
+            $fields = array_filter([
+                'name' => $dto->name,
+                'hex_color' => $dto->hexColor,
+                'status' => $dto->status,
+            ], fn ($v) => $v !== null);
 
-        $color->update($fields);
+            $color->update($fields);
 
-        return $color->fresh();
+            return $color->fresh();
+        });
     }
 
     public function destroy(int $id): bool
     {
-        $color = Color::find($id);
+        return Audit::transaction(function () use ($id) {
+            $color = Color::lockForUpdate()->find($id);
 
-        if (!$color) {
-            return false;
-        }
+            if (! $color) {
+                return false;
+            }
 
-        $color->update(['status' => 'inactive']);
+            $color->update(['status' => 'inactive']);
 
-        return true;
+            return true;
+        });
     }
 
     /**
      * Resuelve una condicion de color soportando el campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applyColorCondition($query, array $cond, string $boolean): void
     {
@@ -122,12 +129,12 @@ class ColorService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal) {
                 $q->where('name', 'like', $likeVal)
-                  ->orWhere('hex_color', 'like', $likeVal);
+                    ->orWhere('hex_color', 'like', $likeVal);
             });
 
             return;

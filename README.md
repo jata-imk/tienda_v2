@@ -66,6 +66,8 @@ git config core.hooksPath .githooks
 | Pedidos de compra (interno) | `docs/pedidos.md` |
 | Entrega pedidos de compra | `docs/entrega-pedidos-frontend.md` |
 | Base de datos (interno) | `docs/database.md` |
+| Auditoría, consulta y despliegue | `docs/auditoria.md` |
+| Entrega de auditoría para frontend | `docs/entrega-auditoria-frontend.md` |
 
 Para regenerar manualmente:
 

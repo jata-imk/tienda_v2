@@ -13,11 +13,13 @@ use App\Enums\OrderStatus;
 use App\Exceptions\OrderDomainException;
 use App\Models\CompanyInfo;
 use App\Models\Currency;
+use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusHistory;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -40,11 +42,11 @@ class OrderService
      * `partially_received` solo avanza a `received` (nunca se cancela).
      */
     private const ALLOWED_TRANSITIONS = [
-        'draft'              => ['confirmed', 'cancelled'],
-        'confirmed'          => ['partially_received', 'received', 'cancelled'],
+        'draft' => ['confirmed', 'cancelled'],
+        'confirmed' => ['partially_received', 'received', 'cancelled'],
         'partially_received' => ['received'],
-        'received'           => [],
-        'cancelled'          => [],
+        'received' => [],
+        'cancelled' => [],
     ];
 
     /** Memo de la moneda base; la instancia vive una peticion (scoped). */
@@ -64,33 +66,33 @@ class OrderService
     }
 
     /**
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      * @return array{items: mixed, total: ?int, page?: int, pages?: int}|Collection
      */
     public function index(array $filters = []): array|Collection
     {
         $query = Order::with(['currency', 'user']);
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applyOrderCondition']);
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     $this->applyOrderCondition($query, [
-                        'column'   => $column,
+                        'column' => $column,
                         'operator' => is_array($value) ? 'in' : '=',
-                        'value'    => $value,
-                        'logic'    => 'and',
+                        'value' => $value,
+                        'logic' => 'and',
                     ], 'and');
                 }
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'orders');
         } else {
             $query->orderByDesc('id');
@@ -100,15 +102,15 @@ class OrderService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -125,12 +127,12 @@ class OrderService
     /**
      * Resuelve una condicion de pedido soportando relaciones y el campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applyOrderCondition($query, array $cond, string $boolean): void
     {
-        $or     = $boolean === 'or';
+        $or = $boolean === 'or';
         $column = $cond['column'];
 
         if ($column === 'search') {
@@ -139,15 +141,15 @@ class OrderService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $folio   = self::parseFolio($value);
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $folio = self::parseFolio($value);
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal, $folio) {
                 $q->where('notes', 'like', $likeVal)
-                  ->orWhere('supplier_name', 'like', $likeVal)
-                  ->when($folio !== null, fn($fq) => $fq->orWhere('folio', $folio))
-                  ->orWhereHas('user', fn($uq) => $uq->where('user_name', 'like', $likeVal));
+                    ->orWhere('supplier_name', 'like', $likeVal)
+                    ->when($folio !== null, fn ($fq) => $fq->orWhere('folio', $folio))
+                    ->orWhereHas('user', fn ($uq) => $uq->where('user_name', 'like', $likeVal));
             });
 
             return;
@@ -155,9 +157,9 @@ class OrderService
 
         if ($column === 'id_product' || $column === 'sku') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
-            $target   = $column === 'id_product' ? 'id_product' : 'sku';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
+            $target = $column === 'id_product' ? 'id_product' : 'sku';
 
             $query->$method('details.variant', function ($vq) use ($operator, $value, $target) {
                 if ($operator === 'in' || is_array($value)) {
@@ -180,24 +182,24 @@ class OrderService
 
     public function store(CreateOrderDTO $dto, int $userId): Order
     {
-        $order = DB::transaction(function () use ($dto, $userId) {
+        $order = Audit::transaction(function () use ($dto, $userId) {
             $currency = $this->resolveCurrency($dto->currencyId);
 
             $folio = $this->nextFolio(Order::DEFAULT_KEY);
 
             $order = Order::create([
-                'key'              => Order::DEFAULT_KEY,
-                'folio'            => $folio,
-                'status'           => OrderStatus::Draft,
-                'id_currency'      => $currency->id,
-                'exchange_rate'    => $this->isBaseCurrency($currency) ? null : $dto->exchangeRate,
-                'supplier_name'    => $dto->supplierName,
+                'key' => Order::DEFAULT_KEY,
+                'folio' => $folio,
+                'status' => OrderStatus::Draft,
+                'id_currency' => $currency->id,
+                'exchange_rate' => $this->isBaseCurrency($currency) ? null : $dto->exchangeRate,
+                'supplier_name' => $dto->supplierName,
                 'supplier_details' => $dto->supplierDetails,
                 'shipping_address' => $dto->shippingAddress,
-                'notes'            => $dto->notes,
-                'date_order'       => $dto->dateOrder ?? now()->toDateString(),
-                'date_expected'    => $dto->dateExpected,
-                'id_user'          => $userId,
+                'notes' => $dto->notes,
+                'date_order' => $dto->dateOrder ?? now()->toDateString(),
+                'date_expected' => $dto->dateExpected,
+                'id_user' => $userId,
             ]);
 
             $this->syncLines($order, $dto->lines);
@@ -215,10 +217,10 @@ class OrderService
      */
     public function update(int $id, UpdateOrderDTO $dto): ?Order
     {
-        $found = DB::transaction(function () use ($id, $dto) {
+        $found = Audit::transaction(function () use ($id, $dto) {
             $order = Order::lockForUpdate()->find($id);
 
-            if (!$order) {
+            if (! $order) {
                 return false;
             }
 
@@ -230,7 +232,7 @@ class OrderService
                 $attributes['id_currency'] = $this->resolveCurrency($attributes['id_currency'])->id;
 
                 // Un tipo de cambio capturado para otra moneda no aplica a la nueva.
-                if ($attributes['id_currency'] !== $order->id_currency && !array_key_exists('exchange_rate', $attributes)) {
+                if ($attributes['id_currency'] !== $order->id_currency && ! array_key_exists('exchange_rate', $attributes)) {
                     $attributes['exchange_rate'] = null;
                 }
             }
@@ -257,16 +259,16 @@ class OrderService
 
     public function confirm(int $id, OrderTransitionDTO $dto, int $userId): ?Order
     {
-        $found = DB::transaction(function () use ($id, $dto, $userId) {
+        $found = Audit::transaction(function () use ($id, $dto, $userId) {
             $order = Order::lockForUpdate()->find($id);
 
-            if (!$order) {
+            if (! $order) {
                 return false;
             }
 
             $this->assertDraft($order, 'Solo se puede confirmar un pedido en borrador.');
 
-            if (!$order->details()->exists()) {
+            if (! $order->details()->exists()) {
                 throw new OrderDomainException('El pedido no tiene lineas.');
             }
 
@@ -284,10 +286,10 @@ class OrderService
 
     public function cancel(int $id, OrderTransitionDTO $dto, int $userId): ?Order
     {
-        $found = DB::transaction(function () use ($id, $dto, $userId) {
+        $found = Audit::transaction(function () use ($id, $dto, $userId) {
             $order = Order::lockForUpdate()->find($id);
 
-            if (!$order) {
+            if (! $order) {
                 return false;
             }
 
@@ -316,18 +318,18 @@ class OrderService
      * bloquea por PK, y los productos se procesan en orden de id). Un orden
      * fijo evita deadlocks entre recepciones concurrentes.
      *
-     * @return array{order: Order, movements: \App\Models\InventoryMovement[]}|null
+     * @return array{order: Order, movements: InventoryMovement[]}|null
      */
     public function receive(int $id, ReceiveOrderDTO $dto, int $userId): ?array
     {
-        $result = DB::transaction(function () use ($id, $dto, $userId) {
+        $result = Audit::transaction(function () use ($id, $dto, $userId) {
             $order = Order::lockForUpdate()->find($id);
 
-            if (!$order) {
+            if (! $order) {
                 return null;
             }
 
-            if (!in_array($order->status, [OrderStatus::Confirmed, OrderStatus::PartiallyReceived], true)) {
+            if (! in_array($order->status, [OrderStatus::Confirmed, OrderStatus::PartiallyReceived], true)) {
                 throw OrderDomainException::conflict('Solo se puede recibir un pedido confirmado o parcialmente recibido.');
             }
 
@@ -344,7 +346,7 @@ class OrderService
             foreach ($dto->lines as $line) {
                 $detail = $details->get($line->detailId);
 
-                if (!$detail) {
+                if (! $detail) {
                     throw new OrderDomainException(
                         "La linea {$line->detailId} no pertenece al pedido.",
                         422,
@@ -352,7 +354,7 @@ class OrderService
                     );
                 }
 
-                $ordered  = (float) $detail->quantity_ordered;
+                $ordered = (float) $detail->quantity_ordered;
                 $received = (float) $detail->quantity_received;
 
                 if (round($received + $line->quantity, 3) > round($ordered, 3)) {
@@ -360,9 +362,9 @@ class OrderService
                         'La cantidad recibida excede lo pendiente de la linea.',
                         422,
                         [
-                            'detailId'          => $detail->id,
-                            'quantityOrdered'   => $ordered,
-                            'quantityReceived'  => $received,
+                            'detailId' => $detail->id,
+                            'quantityOrdered' => $ordered,
+                            'quantityReceived' => $received,
                             'requestedQuantity' => $line->quantity,
                         ],
                     );
@@ -375,25 +377,25 @@ class OrderService
                 $detail = $details->get($line->detailId);
                 $byProduct[$detail->variant->id_product][] = new MovementLineDTO(
                     productVariantId: $detail->id_product_variant,
-                    movementType:     'purchase',
-                    quantity:         $line->quantity,
-                    referenceId:      $detail->id,
+                    movementType: 'purchase',
+                    quantity: $line->quantity,
+                    referenceId: $detail->id,
                 );
             }
 
             ksort($byProduct);
 
-            $notes     = trim("Recepción {$order->folio_label}. ".($dto->notes ?? ''));
+            $notes = trim("Recepción {$order->folio_label}. ".($dto->notes ?? ''));
             $movements = [];
 
             foreach ($byProduct as $productId => $lines) {
                 $registered = $this->movementService->register(new RegisterMovementsDTO(
-                    productId:     $productId,
-                    userId:        $userId,
+                    productId: $productId,
+                    userId: $userId,
                     referenceType: OrderDetail::REFERENCE_TYPE,
-                    referenceId:   null,
-                    notes:         $notes,
-                    lines:         $lines,
+                    referenceId: null,
+                    notes: $notes,
+                    lines: $lines,
                 ));
 
                 array_push($movements, ...$registered['movements']);
@@ -430,14 +432,14 @@ class OrderService
         }
 
         return [
-            'order'     => $this->show($result['orderId']),
+            'order' => $this->show($result['orderId']),
             'movements' => $result['movements'],
         ];
     }
 
     public function history(int $id): ?Collection
     {
-        if (!Order::whereKey($id)->exists()) {
+        if (! Order::whereKey($id)->exists()) {
             return null;
         }
 
@@ -480,7 +482,7 @@ class OrderService
     {
         $currency = Currency::find($currencyId ?? $this->baseCurrencyId());
 
-        if (!$currency) {
+        if (! $currency) {
             throw new OrderDomainException('No hay moneda base configurada.');
         }
 
@@ -526,7 +528,7 @@ class OrderService
      * Todas las tallas de un mismo producto + color deben llevar el mismo
      * costo unitario: el PDF imprime un solo precio por producto + color.
      *
-     * @param OrderLineDTO[] $lines
+     * @param  OrderLineDTO[]  $lines
      */
     private function syncLines(Order $order, array $lines): void
     {
@@ -537,20 +539,20 @@ class OrderService
             ->get()
             ->keyBy('id');
 
-        $rate       = null;
-        $existing   = $order->details()->get()->keyBy('id_product_variant');
+        $rate = null;
+        $existing = $order->details()->get()->keyBy('id_product_variant');
         $groupCosts = [];
 
         foreach ($lines as $line) {
             $variant = $variants->get($line->productVariantId);
 
-            if (!$variant) {
+            if (! $variant) {
                 throw new OrderDomainException("La variante {$line->productVariantId} no existe.");
             }
 
             $context = ['idProductVariant' => $variant->id, 'sku' => $variant->sku];
 
-            if (!$variant->product->stock_control) {
+            if (! $variant->product->stock_control) {
                 throw new OrderDomainException("El producto de la variante {$variant->sku} no maneja existencias.", 422, $context);
             }
 
@@ -561,7 +563,7 @@ class OrderService
             $unitCost = $line->unitCost;
 
             if ($unitCost === null) {
-                $rate     ??= $this->effectiveExchangeRate($order);
+                $rate ??= $this->effectiveExchangeRate($order);
                 $unitCost = round((float) $variant->product->cost / $rate, 2);
             }
 
@@ -578,9 +580,9 @@ class OrderService
 
             $attributes = [
                 'quantity_ordered' => $line->quantityOrdered,
-                'unit_cost'        => $unitCost,
-                'subtotal'         => round($line->quantityOrdered * $unitCost, 2),
-                'notes'            => $line->notes,
+                'unit_cost' => $unitCost,
+                'subtotal' => round($line->quantityOrdered * $unitCost, 2),
+                'notes' => $line->notes,
             ];
 
             $detail = $existing->get($variant->id);
@@ -592,7 +594,7 @@ class OrderService
             }
         }
 
-        $order->details()->whereNotIn('id_product_variant', $variantIds)->delete();
+        app(AuditTrail::class)->bulkDelete($order->details()->whereNotIn('id_product_variant', $variantIds));
     }
 
     private function recalculateTotals(Order $order): void
@@ -608,7 +610,7 @@ class OrderService
         }
 
         $order->update([
-            'total_items'  => round($details->sum(fn ($d) => (float) $d->quantity_ordered), 3),
+            'total_items' => round($details->sum(fn ($d) => (float) $d->quantity_ordered), 3),
             'total_amount' => round($details->sum(fn ($d) => round((float) $d->quantity_ordered * (float) $d->unit_cost, 2)), 2),
         ]);
     }
@@ -620,7 +622,7 @@ class OrderService
     {
         $from = $order->status;
 
-        if (!in_array($to->value, self::ALLOWED_TRANSITIONS[$from->value], true)) {
+        if (! in_array($to->value, self::ALLOWED_TRANSITIONS[$from->value], true)) {
             throw OrderDomainException::conflict(
                 "No se puede pasar el pedido de {$from->value} a {$to->value}.",
                 ['status' => $from->value],
@@ -636,11 +638,11 @@ class OrderService
     private function writeHistory(Order $order, ?OrderStatus $from, OrderStatus $to, int $userId, ?string $notes): void
     {
         OrderStatusHistory::create([
-            'id_order'        => $order->id,
+            'id_order' => $order->id,
             'previous_status' => $from?->value,
-            'new_status'      => $to->value,
-            'id_user'         => $userId,
-            'notes'           => $notes,
+            'new_status' => $to->value,
+            'id_user' => $userId,
+            'notes' => $notes,
         ]);
     }
 }

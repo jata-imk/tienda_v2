@@ -7,7 +7,9 @@ use App\Http\Resources\Currency\CurrencyResource;
 use App\Models\CompanyInfo;
 use App\Models\User;
 use App\Models\UserSession;
+use App\Support\Audit;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -21,47 +23,59 @@ class AuthService
         $user = User::with('userType')->where('user_name', $dto->userName)->first();
 
         if (! $user || $user->status !== 'active' || $user->userType?->status !== 'active') {
+            app(AuditTrail::class)->metadata(['reason' => ! $user ? 'user_not_found' : 'user_or_role_inactive']);
+
             return ['result' => 'error', 'message' => 'User not found or inactive', 'data' => null];
         }
 
         if (! Hash::check($dto->password, $user->password)) {
+            app(AuditTrail::class)->metadata(['reason' => 'invalid_credentials']);
+
             return ['result' => 'error', 'message' => 'Incorrect password', 'data' => null];
         }
 
-        $token = $this->resolveToken($user);
-        $company = CompanyInfo::with('currency')->first();
+        return Audit::transaction(function () use ($user) {
+            app(AuditTrail::class)->identify($user);
+            $token = $this->resolveToken($user);
+            $company = CompanyInfo::with('currency')->first();
 
-        return [
-            'result' => 'ok',
-            'message' => 'Login successful',
-            'data' => [
-                'token' => $token,
-                'companyInfo' => $this->formatCompany($company),
-                'user' => $this->formatUser($user),
-                'catalogs' => $this->catalogService->all(),
-            ],
-        ];
+            return [
+                'result' => 'ok',
+                'message' => 'Login successful',
+                'data' => [
+                    'token' => $token,
+                    'companyInfo' => $this->formatCompany($company),
+                    'user' => $this->formatUser($user),
+                    'catalogs' => $this->catalogService->all(),
+                ],
+            ];
+        });
     }
 
     public function logout(string $tokenHash): bool
     {
-        $session = UserSession::where('token_hash', $tokenHash)
-            ->whereNull('revoked_at')
-            ->first();
+        return Audit::transaction(function () use ($tokenHash) {
+            $session = UserSession::where('token_hash', $tokenHash)
+                ->whereNull('revoked_at')
+                ->lockForUpdate()->first();
 
-        if (! $session) {
-            return false;
-        }
+            if (! $session) {
+                return false;
+            }
 
-        $session->update(['revoked_at' => Carbon::now()]);
+            $session->update(['revoked_at' => Carbon::now()]);
 
-        try {
-            JWTAuth::setToken($tokenHash)->invalidate();
-        } catch (JWTException) {
-            // Token ya inválido, ignorar
-        }
+            DB::afterCommit(function () use ($tokenHash) {
+                try {
+                    JWTAuth::setToken($tokenHash)->invalidate();
+                } catch (\Throwable $exception) {
+                    // La comprobación de user_sessions sigue siendo la fuente de revocación.
+                    app(AuditTrail::class)->fallback('auth.blacklist_failed', $exception);
+                }
+            });
 
-        return true;
+            return true;
+        });
     }
 
     private function resolveToken(User $user): string
