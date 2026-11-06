@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Http\Controllers\AuditEventController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
@@ -68,6 +69,10 @@ Route::middleware('jwt.authenticate')->group(function () {
     });
 
     Route::middleware('role:'.UserRole::Administrator->value)->group(function () {
+        Route::get('audit-events', [AuditEventController::class, 'index'])->name('audit-events.index');
+        Route::post('audit-events/query', [AuditEventController::class, 'query'])->name('audit-events.query');
+        Route::get('audit-events/{id}/changes', [AuditEventController::class, 'changes'])->whereNumber('id')->name('audit-events.changes');
+        Route::get('audit-events/{id}', [AuditEventController::class, 'show'])->whereNumber('id')->name('audit-events.show');
         // Purchase orders: alta, edicion y transiciones
         Route::post('orders', [OrderController::class, 'store']);
         Route::put('orders/{order}', [OrderController::class, 'update'])->whereNumber('order');

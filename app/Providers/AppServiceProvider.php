@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Observers\AuditObserver;
+use App\Services\AuditTrail;
 use App\Services\OrderService;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
         // Una instancia por peticion: OrderService memoriza la moneda base, que
         // OrderResource consulta por cada pedido del listado.
         $this->app->scoped(OrderService::class);
+        $this->app->scoped(AuditTrail::class);
     }
 
     /**
@@ -22,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        foreach (array_keys(config('audit.models', [])) as $model) {
+            $model::observe(AuditObserver::class);
+        }
     }
 }

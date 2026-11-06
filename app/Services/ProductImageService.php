@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -23,7 +24,7 @@ class ProductImageService
     }
 
     /**
-     * @param UploadedFile[] $files
+     * @param  UploadedFile[]  $files
      */
     public function addImages(Product $product, Color $color, array $files): Collection
     {
@@ -32,7 +33,7 @@ class ProductImageService
         $storedPaths = [];
 
         try {
-            return DB::transaction(function () use ($product, $color, $files, &$storedPaths) {
+            return Audit::transaction(function () use ($product, $color, $files, &$storedPaths) {
                 return collect($files)->map(function (UploadedFile $file) use ($product, $color, &$storedPaths) {
                     $stored = $this->imageService->store($file, "products/{$product->id}/colors/{$color->id}");
 
@@ -41,8 +42,8 @@ class ProductImageService
 
                     return ProductImage::create([
                         'id_product' => $product->id,
-                        'id_color'   => $color->id,
-                        'path'       => $stored['path'],
+                        'id_color' => $color->id,
+                        'path' => $stored['path'],
                         'path_thumb' => $stored['thumb'],
                     ]);
                 });
@@ -63,7 +64,11 @@ class ProductImageService
 
     public function deleteImage(ProductImage $image): void
     {
-        $this->imageService->delete($image->path, $image->path_thumb);
-        $image->delete();
+        Audit::transaction(function () use ($image) {
+            $image = ProductImage::lockForUpdate()->findOrFail($image->id);
+            $paths = [$image->path, $image->path_thumb];
+            $image->delete();
+            DB::afterCommit(fn () => $this->imageService->deleteAfterCommit(...$paths));
+        });
     }
 }

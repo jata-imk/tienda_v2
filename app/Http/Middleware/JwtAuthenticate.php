@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\AuditUnavailableException;
 use App\Models\UserSession;
+use App\Services\AuditTrail;
 use App\Support\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
@@ -21,31 +23,31 @@ class JwtAuthenticate
     {
         try {
             if (! $this->auth->parseToken()->authenticate()) {
-                return ApiResponse::error('Usuario no encontrado.', 401);
+                return $this->deny('Usuario no encontrado.', 'user_not_found');
             }
         } catch (TokenBlacklistedException) {
-            return ApiResponse::error('Sesión revocada. El token fue invalidado (logout previo).', 401);
+            return $this->deny('Sesión revocada. El token fue invalidado (logout previo).', 'token_blacklisted');
         } catch (TokenExpiredException) {
-            return ApiResponse::error('Token expirado. Inicia sesión nuevamente.', 401, $this->expiryClaims($request));
+            return $this->deny('Token expirado. Inicia sesión nuevamente.', 'token_expired', $this->expiryClaims($request));
         } catch (TokenInvalidException) {
-            return ApiResponse::error('Token inválido o malformado.', 401);
+            return $this->deny('Token inválido o malformado.', 'token_invalid');
         } catch (JWTException) {
-            return ApiResponse::error('No se proporcionó token de autenticación.', 401);
+            return $this->deny('No se proporcionó token de autenticación.', 'token_missing');
         }
 
         $token = $request->bearerToken();
         $session = UserSession::where('token_hash', $token)->first();
 
         if (! $session) {
-            return ApiResponse::error('Sesión no registrada.', 401);
+            return $this->deny('Sesión no registrada.', 'session_unregistered');
         }
 
         if ($session->revoked_at !== null) {
-            return ApiResponse::error('Sesión revocada.', 401);
+            return $this->deny('Sesión revocada.', 'session_revoked');
         }
 
         if ($session->expires_at->isPast()) {
-            return ApiResponse::error('Sesión expirada. Inicia sesión nuevamente.', 401);
+            return $this->deny('Sesión expirada. Inicia sesión nuevamente.', 'session_expired');
         }
 
         $user = $request->user();
@@ -53,15 +55,30 @@ class JwtAuthenticate
 
         if (! $user || $user->status !== 'active' || $user->userType?->status !== 'active') {
             if ($user) {
-                UserSession::where('id_user', $user->id)
-                    ->whereNull('revoked_at')
-                    ->update(['revoked_at' => now()]);
+                $audit = app(AuditTrail::class);
+                try {
+                    $audit->run('security', 'auth.sessions_revoked', fn () => $audit->bulkUpdate(
+                        UserSession::where('id_user', $user->id)->whereNull('revoked_at'),
+                        ['revoked_at' => now()],
+                    ));
+                } catch (AuditUnavailableException) {
+                    // La cuenta sigue rechazada aunque la bitácora no esté disponible.
+                }
             }
 
-            return ApiResponse::error('La cuenta o su rol están inactivos. Inicia sesión nuevamente.', 401);
+            return $this->deny('La cuenta o su rol están inactivos. Inicia sesión nuevamente.', 'user_or_role_inactive');
         }
 
+        app(AuditTrail::class)->identify($user);
+
         return $next($request);
+    }
+
+    private function deny(string $message, string $reason, ?array $data = null): Response
+    {
+        app(AuditTrail::class)->metadata(['reason' => $reason]);
+
+        return ApiResponse::error($message, 401, $data);
     }
 
     private function expiryClaims(Request $request): ?array

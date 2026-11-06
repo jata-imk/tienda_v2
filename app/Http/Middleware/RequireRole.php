@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AuditTrail;
 use App\Support\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ class RequireRole
         $roleCode = $request->user()?->userType?->code;
 
         if (! $roleCode || ! in_array($roleCode, $roles, true)) {
+            app(AuditTrail::class)->metadata(['reason' => 'role_not_allowed']);
+
             return ApiResponse::error('No tienes permisos para realizar esta acción.', 403);
         }
 

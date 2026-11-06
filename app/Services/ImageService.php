@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\DeleteStoredImages;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class ImageService
     public function store(UploadedFile $file, string $directory): array
     {
         $extension = strtolower($file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'jpg');
-        $name      = Str::uuid() . '.' . $extension;
+        $name = Str::uuid().'.'.$extension;
 
         $disk = Storage::disk('public');
         $path = $file->storeAs($directory, $name, ['disk' => 'public']);
@@ -30,8 +31,15 @@ class ImageService
             throw new RuntimeException('No se pudo guardar la imagen.');
         }
 
-        $thumbPath = $directory . '/thumbs/' . $name;
-        $disk->put($thumbPath, $this->makeThumb($disk->get($path), $extension));
+        $thumbPath = $directory.'/thumbs/'.$name;
+        try {
+            if (! $disk->put($thumbPath, $this->makeThumb($disk->get($path), $extension))) {
+                throw new RuntimeException('No se pudo guardar la miniatura.');
+            }
+        } catch (\Throwable $exception) {
+            $this->delete($path, $thumbPath);
+            throw $exception;
+        }
 
         return ['path' => $path, 'thumb' => $thumbPath];
     }
@@ -42,6 +50,16 @@ class ImageService
 
         foreach (array_filter($paths) as $path) {
             $disk->delete($path);
+        }
+    }
+
+    /** Una limpieza fallida se reintenta en cola; la referencia ya fue confirmada. */
+    public function deleteAfterCommit(?string ...$paths): void
+    {
+        try {
+            DeleteStoredImages::dispatch(array_values(array_filter($paths)));
+        } catch (\Throwable $exception) {
+            app(AuditTrail::class)->fallback('images.cleanup_dispatch_failed', $exception);
         }
     }
 
@@ -57,9 +75,9 @@ class ImageService
             throw new RuntimeException('El archivo no es una imagen valida.');
         }
 
-        $width  = imagesx($source);
+        $width = imagesx($source);
         $height = imagesy($source);
-        $ratio  = min(self::THUMB_MAX_SIDE / max($width, $height), 1);
+        $ratio = min(self::THUMB_MAX_SIDE / max($width, $height), 1);
 
         $thumb = imagescale($source, (int) round($width * $ratio), (int) round($height * $ratio));
         imagedestroy($source);
@@ -76,7 +94,7 @@ class ImageService
         ob_start();
 
         match ($extension) {
-            'png'  => imagepng($thumb, null, 8),
+            'png' => imagepng($thumb, null, 8),
             'webp' => imagewebp($thumb, null, 80),
             default => imagejpeg($thumb, null, 80),
         };

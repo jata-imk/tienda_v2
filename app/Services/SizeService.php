@@ -6,6 +6,7 @@ use App\DTOs\Size\CreateSizeDTO;
 use App\DTOs\Size\UpdateSizeDTO;
 use App\Models\Size;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
 
 class SizeService
@@ -16,7 +17,7 @@ class SizeService
     {
         $query = Size::with('sizeGroup');
 
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 $this->applyConditions($query, $filters['w'], [$this, 'applySizeCondition']);
             } else {
@@ -26,11 +27,11 @@ class SizeService
             }
         }
 
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $query->select($filters['f']);
         }
 
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'sizes');
         } else {
             $query->orderBy('sort_order');
@@ -40,15 +41,15 @@ class SizeService
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
             : true;
 
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -69,58 +70,64 @@ class SizeService
 
     public function store(CreateSizeDTO $dto): Size
     {
-        $size = Size::create([
-            'id_size_group' => $dto->sizeGroupId,
-            'name'          => $dto->name,
-            'sort_order'    => $dto->sortOrder,
-            'status'        => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            $size = Size::create([
+                'id_size_group' => $dto->sizeGroupId,
+                'name' => $dto->name,
+                'sort_order' => $dto->sortOrder,
+                'status' => $dto->status,
+            ]);
 
-        return $size->fresh('sizeGroup');
+            return $size->fresh('sizeGroup');
+        });
     }
 
     public function update(int $id, UpdateSizeDTO $dto): ?Size
     {
-        $size = Size::find($id);
+        return Audit::transaction(function () use ($id, $dto) {
+            $size = Size::lockForUpdate()->find($id);
 
-        if (!$size) {
-            return null;
-        }
+            if (! $size) {
+                return null;
+            }
 
-        $fields = array_filter([
-            'id_size_group' => $dto->sizeGroupId,
-            'name'          => $dto->name,
-            'sort_order'    => $dto->sortOrder,
-            'status'        => $dto->status,
-        ], fn($v) => $v !== null);
+            $fields = array_filter([
+                'id_size_group' => $dto->sizeGroupId,
+                'name' => $dto->name,
+                'sort_order' => $dto->sortOrder,
+                'status' => $dto->status,
+            ], fn ($v) => $v !== null);
 
-        $size->update($fields);
+            $size->update($fields);
 
-        return $size->fresh('sizeGroup');
+            return $size->fresh('sizeGroup');
+        });
     }
 
     public function destroy(int $id): bool
     {
-        $size = Size::find($id);
+        return Audit::transaction(function () use ($id) {
+            $size = Size::lockForUpdate()->find($id);
 
-        if (!$size) {
-            return false;
-        }
+            if (! $size) {
+                return false;
+            }
 
-        $size->update(['status' => 'inactive']);
+            $size->update(['status' => 'inactive']);
 
-        return true;
+            return true;
+        });
     }
 
     /**
      * Resuelve una condicion de talla soportando relaciones y campo virtual `search`.
      *
-     * @param mixed $query
-     * @param array<string, mixed> $cond
+     * @param  mixed  $query
+     * @param  array<string, mixed>  $cond
      */
     public function applySizeCondition($query, array $cond, string $boolean): void
     {
-        $or     = $boolean === 'or';
+        $or = $boolean === 'or';
         $column = $cond['column'];
 
         if ($column === 'search') {
@@ -129,12 +136,12 @@ class SizeService
                 return;
             }
 
-            $likeVal = '%' . addcslashes($value, '%_\\') . '%';
-            $method  = $or ? 'orWhere' : 'where';
+            $likeVal = '%'.addcslashes($value, '%_\\').'%';
+            $method = $or ? 'orWhere' : 'where';
 
             $query->$method(function ($q) use ($likeVal) {
                 $q->where('name', 'like', $likeVal)
-                  ->orWhereHas('sizeGroup', fn($sq) => $sq->where('name', 'like', $likeVal));
+                    ->orWhereHas('sizeGroup', fn ($sq) => $sq->where('name', 'like', $likeVal));
             });
 
             return;
@@ -142,8 +149,8 @@ class SizeService
 
         if ($column === 'size_group') {
             $operator = $cond['operator'] ?? '=';
-            $value    = $cond['value'] ?? null;
-            $method   = $or ? 'orWhereHas' : 'whereHas';
+            $value = $cond['value'] ?? null;
+            $method = $or ? 'orWhereHas' : 'whereHas';
 
             $query->$method('sizeGroup', function ($sq) use ($operator, $value) {
                 $sq->where('name', $operator, $value);

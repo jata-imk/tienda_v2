@@ -7,8 +7,8 @@ use App\DTOs\User\UpdateUserDTO;
 use App\Models\User;
 use App\Models\UserSession;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -70,23 +70,25 @@ class UserService
 
     public function store(CreateUserDTO $dto): User
     {
-        $user = User::create([
-            'id_user_type' => $dto->userTypeId,
-            'first_name' => $dto->firstName,
-            'last_name' => $dto->lastName,
-            'user_name' => $dto->userName,
-            'email' => $dto->email,
-            'password' => Hash::make($dto->password),
-            'status' => $dto->status,
-        ]);
+        return Audit::transaction(function () use ($dto) {
+            $user = User::create([
+                'id_user_type' => $dto->userTypeId,
+                'first_name' => $dto->firstName,
+                'last_name' => $dto->lastName,
+                'user_name' => $dto->userName,
+                'email' => $dto->email,
+                'password' => Hash::make($dto->password),
+                'status' => $dto->status,
+            ]);
 
-        return $user->fresh('userType');
+            return $user->fresh('userType');
+        });
     }
 
     public function update(int $id, UpdateUserDTO $dto): ?User
     {
-        return DB::transaction(function () use ($id, $dto) {
-            $user = User::find($id);
+        return Audit::transaction(function () use ($id, $dto) {
+            $user = User::lockForUpdate()->find($id);
 
             if (! $user) {
                 return null;
@@ -115,25 +117,28 @@ class UserService
 
     public function destroy(int $id): bool
     {
-        $user = User::find($id);
+        return Audit::transaction(function () use ($id) {
+            $user = User::lockForUpdate()->find($id);
 
-        if (! $user) {
-            return false;
-        }
+            if (! $user) {
+                return false;
+            }
 
-        DB::transaction(function () use ($user) {
-            $user->update(['status' => 'inactive']);
-            $this->revokeSessions($user);
+            Audit::transaction(function () use ($user) {
+                $user->update(['status' => 'inactive']);
+                $this->revokeSessions($user);
+            });
+
+            return true;
         });
-
-        return true;
     }
 
     private function revokeSessions(User $user): void
     {
-        UserSession::where('id_user', $user->id)
-            ->whereNull('revoked_at')
-            ->update(['revoked_at' => now()]);
+        app(AuditTrail::class)->bulkUpdate(
+            UserSession::where('id_user', $user->id)->whereNull('revoked_at'),
+            ['revoked_at' => now()],
+        );
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Concerns\AppliesGridConditions;
+use App\Support\Audit;
 use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
@@ -33,7 +34,7 @@ class ProductService
     private static function variantRelations(): array
     {
         return array_merge(self::VARIANT_RELATIONS, [
-            'variants' => fn($query) => $query->orderedForDisplay(),
+            'variants' => fn ($query) => $query->orderedForDisplay(),
         ]);
     }
 
@@ -54,7 +55,7 @@ class ProductService
         $query = Product::with(self::variantRelations());
 
         // where filters — `categories` ya no es columna: se resuelve por la pivote
-        if (!empty($filters['w'])) {
+        if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
                 // Cada `&&` abre un bloque y arrastra los `||` que le siguen; un
                 // bloque de dos o mas se envuelve en parentesis para que el OR no
@@ -75,7 +76,7 @@ class ProductService
             } else {
                 foreach ($filters['w'] as $column => $value) {
                     if (in_array($column, self::CATEGORY_FILTER_KEYS, true)) {
-                        $query->whereHas('categories', fn($q) => $q->whereIn('categories.id', (array) $value));
+                        $query->whereHas('categories', fn ($q) => $q->whereIn('categories.id', (array) $value));
 
                         continue;
                     }
@@ -86,7 +87,7 @@ class ProductService
         }
 
         // field selection — `categories` se descarta: no existe como columna
-        if (!empty($filters['f'])) {
+        if (! empty($filters['f'])) {
             $fields = array_values(array_diff($filters['f'], self::CATEGORY_FILTER_KEYS));
 
             if ($fields !== []) {
@@ -96,7 +97,7 @@ class ProductService
         }
 
         // ordering
-        if (!empty($filters['o'])) {
+        if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'products');
         }
 
@@ -105,15 +106,15 @@ class ProductService
             : true;
 
         // pagination
-        if (!empty($filters['p'])) {
-            $page    = (int) ($filters['p']['page'] ?? 1);
+        if (! empty($filters['p'])) {
+            $page = (int) ($filters['p']['page'] ?? 1);
             $perPage = (int) ($filters['p']['per_page'] ?? 15);
-            $items   = $query->paginate($perPage, ['*'], 'page', $page);
+            $items = $query->paginate($perPage, ['*'], 'page', $page);
 
             return [
                 'items' => $items->items(),
                 'total' => $totalCount ? $items->total() : null,
-                'page'  => $items->currentPage(),
+                'page' => $items->currentPage(),
                 'pages' => $items->lastPage(),
             ];
         }
@@ -133,14 +134,14 @@ class ProductService
      * demas). Las columnas que en realidad son relaciones (`categories`,
      * `id_size_group`) nunca llegan al builder plano.
      *
-     * @param array<string, mixed> $cond
+     * @param  array<string, mixed>  $cond
      */
     private function applyProductCondition($query, array $cond, string $boolean): void
     {
-        $or       = $boolean === 'or';
-        $column   = $cond['column'];
+        $or = $boolean === 'or';
+        $column = $cond['column'];
         $operator = $cond['operator'] ?? '=';
-        $value    = $cond['value'] ?? null;
+        $value = $cond['value'] ?? null;
 
         // Campo virtual `search`: OR agrupado sobre columnas y relaciones.
         if ($column === 'search') {
@@ -166,7 +167,7 @@ class ProductService
 
             $query->$method(
                 'sizeGroup',
-                fn($q) => $q->whereRaw('size_groups.name LIKE ? ESCAPE ?', [$value, '\\']),
+                fn ($q) => $q->whereRaw('size_groups.name LIKE ? ESCAPE ?', [$value, '\\']),
             );
 
             return;
@@ -191,7 +192,7 @@ class ProductService
 
             $method = $this->relationMethod($operator === 'in', $or);
 
-            $query->$method('categories', fn($q) => $q->whereIn('categories.id', $ids));
+            $query->$method('categories', fn ($q) => $q->whereIn('categories.id', $ids));
 
             return;
         }
@@ -201,7 +202,7 @@ class ProductService
 
             $query->$method(
                 'categories',
-                fn($q) => $q->whereRaw('categories.name LIKE ? ESCAPE ?', [$value, '\\']),
+                fn ($q) => $q->whereRaw('categories.name LIKE ? ESCAPE ?', [$value, '\\']),
             );
 
             return;
@@ -209,7 +210,7 @@ class ProductService
 
         $query->{$this->relationMethod(true, $or)}(
             'categories',
-            fn($q) => $q->where('categories.id', $operator, $value),
+            fn ($q) => $q->where('categories.id', $operator, $value),
         );
     }
 
@@ -238,7 +239,7 @@ class ProductService
         // ESCAPE explícito para que `\%`, `\_`, `\\` (que agrega escapeLike) se
         // interpreten igual en MariaDB y en sqlite (los tests corren en sqlite,
         // que no asume `\` como carácter de escape por defecto).
-        $sql  = strtoupper($operator) . ' ? ESCAPE ?';
+        $sql = strtoupper($operator).' ? ESCAPE ?';
         $bind = [$value, '\\'];
 
         $query->$method(function ($q) use ($sql, $bind) {
@@ -246,8 +247,8 @@ class ProductService
                 ->orWhereRaw("products.key $sql", $bind)
                 ->orWhereRaw("products.description $sql", $bind)
                 ->orWhereRaw("products.code_bar $sql", $bind)
-                ->orWhereHas('categories', fn($c) => $c->whereRaw("categories.name $sql", $bind))
-                ->orWhereHas('sizeGroup', fn($s) => $s->whereRaw("size_groups.name $sql", $bind));
+                ->orWhereHas('categories', fn ($c) => $c->whereRaw("categories.name $sql", $bind))
+                ->orWhereHas('sizeGroup', fn ($s) => $s->whereRaw("size_groups.name $sql", $bind));
         });
     }
 
@@ -267,7 +268,7 @@ class ProductService
 
     public function store(CreateProductDTO $dto): Product
     {
-        return DB::transaction(function () use ($dto) {
+        return Audit::transaction(function () use ($dto) {
             // Primera lectura de la transaccion: ver ProductKeyService::nextForInsert().
             $key = $dto->key ?? $this->productKeyService->nextForInsert(
                 $dto->mainCategoryId,
@@ -277,50 +278,50 @@ class ProductService
 
             $product = Product::create([
                 'id_main_category' => $dto->mainCategoryId,
-                'id_size_group'    => $dto->sizeGroupId,
-                'key'              => $key,
-                'name'             => $dto->name,
-                'description'      => $dto->description,
-                'code_bar'         => $dto->codeBar,
-                'price'            => $dto->price,
-                'cost'             => $dto->cost,
-                'stock_control'    => $dto->stockControl,
-                'discount'         => $dto->discount,
-                'type_iva'         => $dto->typeIva,
-                'rate_iva'         => $dto->rateIva,
-                'quota_iva'        => $dto->quotaIva,
-                'isr'              => $dto->isr,
-                'imp_esp'          => $dto->impEsp,
-                'status'           => $dto->status,
+                'id_size_group' => $dto->sizeGroupId,
+                'key' => $key,
+                'name' => $dto->name,
+                'description' => $dto->description,
+                'code_bar' => $dto->codeBar,
+                'price' => $dto->price,
+                'cost' => $dto->cost,
+                'stock_control' => $dto->stockControl,
+                'discount' => $dto->discount,
+                'type_iva' => $dto->typeIva,
+                'rate_iva' => $dto->rateIva,
+                'quota_iva' => $dto->quotaIva,
+                'isr' => $dto->isr,
+                'imp_esp' => $dto->impEsp,
+                'status' => $dto->status,
             ]);
 
-            $product->categories()->sync(self::withMainCategory($dto->categoryIds, $dto->mainCategoryId));
+            $this->syncCategories($product, self::withMainCategory($dto->categoryIds, $dto->mainCategoryId));
 
             $skus = VariantSku::resolve($product->key, $dto->variants);
 
             foreach ($dto->variants as $i => $variantInput) {
                 $variant = ProductVariant::create([
                     'id_product' => $product->id,
-                    'id_size'    => $variantInput->sizeId,
-                    'id_color'   => $variantInput->colorId,
-                    'sku'        => $skus[$i],
-                    'code_bar'   => $variantInput->codeBar,
-                    'stock'      => $variantInput->stock,
-                    'status'     => ProductVariant::statusUnder($product, $variantInput->status),
+                    'id_size' => $variantInput->sizeId,
+                    'id_color' => $variantInput->colorId,
+                    'sku' => $skus[$i],
+                    'code_bar' => $variantInput->codeBar,
+                    'stock' => $variantInput->stock,
+                    'status' => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
                 // Movimiento inicial por cada variante con existencia > 0.
                 if ($dto->initialMovement !== null && $variantInput->stock > 0) {
                     InventoryMovement::create([
                         'id_product_variant' => $variant->id,
-                        'movement_type'      => $dto->initialMovement->movementType,
-                        'quantity'           => $variantInput->stock,
-                        'previous_stock'     => 0,
-                        'new_stock'          => $variantInput->stock,
-                        'reference_type'     => $dto->initialMovement->referenceType,
-                        'reference_id'       => $dto->initialMovement->referenceId,
-                        'notes'              => $dto->initialMovement->notes,
-                        'id_user'            => $dto->initialMovement->userId,
+                        'movement_type' => $dto->initialMovement->movementType,
+                        'quantity' => $variantInput->stock,
+                        'previous_stock' => 0,
+                        'new_stock' => $variantInput->stock,
+                        'reference_type' => $dto->initialMovement->referenceType,
+                        'reference_id' => $dto->initialMovement->referenceId,
+                        'notes' => $dto->initialMovement->notes,
+                        'id_user' => $dto->initialMovement->userId,
                     ]);
                 }
             }
@@ -333,7 +334,7 @@ class ProductService
     {
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return null;
         }
 
@@ -342,33 +343,33 @@ class ProductService
         $mainCategoryId = $dto->mainCategoryId;
 
         if ($mainCategoryId === null && $dto->categoryIds !== null
-            && !in_array($product->id_main_category, $dto->categoryIds, true)) {
+            && ! in_array($product->id_main_category, $dto->categoryIds, true)) {
             $mainCategoryId = $dto->categoryIds[0];
         }
 
         $fields = array_filter([
             'id_main_category' => $mainCategoryId,
-            'id_size_group'    => $dto->sizeGroupId,
-            'key'              => $dto->key,
-            'name'             => $dto->name,
-            'description'      => $dto->description,
-            'code_bar'         => $dto->codeBar,
-            'price'            => $dto->price,
-            'cost'             => $dto->cost,
-            'stock_control'    => $dto->stockControl,
-            'discount'         => $dto->discount,
-            'type_iva'         => $dto->typeIva,
-            'rate_iva'         => $dto->rateIva,
-            'quota_iva'        => $dto->quotaIva,
-            'isr'              => $dto->isr,
-            'imp_esp'          => $dto->impEsp,
-            'status'           => $dto->status,
-        ], fn($v) => $v !== null);
+            'id_size_group' => $dto->sizeGroupId,
+            'key' => $dto->key,
+            'name' => $dto->name,
+            'description' => $dto->description,
+            'code_bar' => $dto->codeBar,
+            'price' => $dto->price,
+            'cost' => $dto->cost,
+            'stock_control' => $dto->stockControl,
+            'discount' => $dto->discount,
+            'type_iva' => $dto->typeIva,
+            'rate_iva' => $dto->rateIva,
+            'quota_iva' => $dto->quotaIva,
+            'isr' => $dto->isr,
+            'imp_esp' => $dto->impEsp,
+            'status' => $dto->status,
+        ], fn ($v) => $v !== null);
 
         $this->keyRenameService->saveWithCascade(
             $product,
             $dto->cascadeKeys,
-            fn(Product $locked) => $this->keyRenamePlan($locked, $dto),
+            fn (Product $locked) => $this->keyRenamePlan($locked, $dto),
             function (Product $locked) use ($fields, $dto) {
                 if ($fields !== []) {
                     $locked->update($fields);
@@ -381,9 +382,9 @@ class ProductService
                 }
 
                 if ($dto->categoryIds !== null) {
-                    $locked->categories()->sync(self::withMainCategory($dto->categoryIds, $locked->id_main_category));
+                    $this->syncCategories($locked, self::withMainCategory($dto->categoryIds, $locked->id_main_category));
                 } elseif ($dto->mainCategoryId !== null) {
-                    $locked->categories()->syncWithoutDetaching([$dto->mainCategoryId]);
+                    $this->syncCategories($locked, [$dto->mainCategoryId], false);
                 }
             },
         );
@@ -405,14 +406,14 @@ class ProductService
     {
         return $dto->key !== null
             ? $this->keyRenameService->forProduct($product, $dto->key)
-            : new KeyRenamePlan();
+            : new KeyRenamePlan;
     }
 
     /**
      * La categoria principal siempre forma parte de la pivote: se agrega al
      * final si el payload no la trae.
      *
-     * @param int[] $categoryIds
+     * @param  int[]  $categoryIds
      * @return int[]
      */
     private static function withMainCategory(array $categoryIds, ?int $mainCategoryId): array
@@ -424,6 +425,18 @@ class ProductService
         return [...$categoryIds, $mainCategoryId];
     }
 
+    private function syncCategories(Product $product, array $ids, bool $detach = true): void
+    {
+        $changes = $product->categories()->sync($ids, $detach);
+        foreach (['attached' => 'created', 'detached' => 'deleted'] as $change => $operation) {
+            foreach ($changes[$change] as $id) {
+                $values = ['idProduct' => $product->id, 'idCategory' => (int) $id];
+                app(AuditTrail::class)->record('category_product', $product->id.':'.$id, $operation,
+                    $operation === 'deleted' ? $values : null, $operation === 'created' ? $values : null);
+            }
+        }
+    }
+
     /**
      * Reemplaza la imagen del producto: sube la nueva y borra la anterior.
      */
@@ -431,47 +444,52 @@ class ProductService
     {
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return null;
         }
 
-        $previous = [$product->image, $product->image_thumb];
-        $stored   = $this->imageService->store($file, "products/{$product->id}");
+        $stored = $this->imageService->store($file, "products/{$product->id}");
 
-        $product->update([
-            'image'       => $stored['path'],
-            'image_thumb' => $stored['thumb'],
-        ]);
+        try {
+            return Audit::transaction(function () use ($id, $stored) {
+                $product = Product::lockForUpdate()->findOrFail($id);
+                $previous = [$product->image, $product->image_thumb];
+                $product->update(['image' => $stored['path'], 'image_thumb' => $stored['thumb']]);
+                DB::afterCommit(fn () => $this->imageService->deleteAfterCommit(...$previous));
 
-        $this->imageService->delete(...$previous);
-
-        return $product->fresh(self::variantRelations());
+                return $product->fresh(self::variantRelations());
+            });
+        } catch (\Throwable $exception) {
+            $this->imageService->delete(...array_values($stored));
+            throw $exception;
+        }
     }
 
     public function clearImage(int $id): ?Product
     {
-        $product = Product::find($id);
+        return Audit::transaction(function () use ($id) {
+            $product = Product::lockForUpdate()->find($id);
+            if (! $product) {
+                return null;
+            }
+            $previous = [$product->image, $product->image_thumb];
+            $product->update(['image' => null, 'image_thumb' => null]);
+            DB::afterCommit(fn () => $this->imageService->deleteAfterCommit(...$previous));
 
-        if (!$product) {
-            return null;
-        }
-
-        $this->imageService->delete($product->image, $product->image_thumb);
-
-        $product->update(['image' => null, 'image_thumb' => null]);
-
-        return $product->fresh(self::variantRelations());
+            return $product->fresh(self::variantRelations());
+        });
     }
 
     public function destroy(int $id): bool
     {
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return false;
         }
 
-        DB::transaction(function () use ($product) {
+        Audit::transaction(function () use ($product) {
+            $product = Product::lockForUpdate()->findOrFail($product->id);
             $product->update(['status' => 'inactive']);
 
             // Incondicional: repetir el DELETE sobre un producto ya inactivo
@@ -493,6 +511,6 @@ class ProductService
      */
     private function cascadeStatusToVariants(Product $product): void
     {
-        $product->variants()->update(['status' => $product->status]);
+        app(AuditTrail::class)->bulkUpdate($product->variants(), ['status' => $product->status]);
     }
 }
