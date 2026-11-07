@@ -19,6 +19,8 @@ Guía de pantallas, campos y consumo para frontend:
 4. Comprobar un cambio de prueba y su consulta con un administrador. Registrar en la
    entrega la fecha UTC de activación de cada etapa; el primer evento de cada módulo
    permite comprobar el inicio efectivo de captura.
+5. Opcional, una sola vez: importar el historial previo (ver
+   [Historial previo a la auditoría](#historial-previo-a-la-auditoría)).
 
 Por defecto se habilita toda la cobertura implementada:
 
@@ -68,7 +70,7 @@ también para rutas de consulta. Consultar la propia bitácora no crea eventos r
 ## Contenido y garantías
 
 El evento conserva acción, módulo, resultado, fecha UTC con microsegundos,
-identificador de petición, origen (`api` o `system`), usuario, nombre de usuario,
+identificador de petición, origen (`api`, `system` o `legacy`), usuario, nombre de usuario,
 código/nombre del rol históricos, entidad principal, ruta sin query string, método,
 IP y agente del cliente. El ID de usuario y los sujetos son referencias históricas:
 eliminar o renombrar una entidad no elimina su auditoría.
@@ -216,7 +218,8 @@ propio; no reutilizar contextos HTTP. Para SQL masivo utilizar `bulkUpdate()` o
 `bulkDelete()` dentro de la unidad, o `record()` con valores permitidos antes/después.
 No enviar payloads, credenciales ni excepciones completas a `metadata()`.
 
-La captura inicia con la activación. No se reconstruye el pasado, ni se registran
+La captura inicia con la activación. Del pasado solo se puede importar el historial que
+ya existía en tablas propias (sección siguiente). No se registran
 seeders/migraciones, caché, colas o `document_sequences` como cambios de negocio.
 El folio asignado sí aparece en el pedido. Los cambios hechos fuera de esta capa
 (SQL externo, consola SQL/Tinker con escrituras directas, eventos silenciados) requieren
@@ -228,6 +231,39 @@ El canal JSON `api_requests` conserva logs técnicos rotativos por 14 días en
 no cuerpos ni query strings. Buscar `audit.write_failed`, `auth.blacklist_failed` e
 `images.cleanup_dispatch_failed`. Los eventos de BD no tienen borrado automático.
 Supervisar tamaño de ambas tablas, eventos diarios y duración de las consultas.
+
+## Historial previo a la auditoría
+
+Antes de la bitácora ya existían tres historiales con fecha y usuario. Se importan con:
+
+```bash
+php artisan audit:backfill-legacy --dry-run   # solo cuenta lo que se importaría
+php artisan audit:backfill-legacy             # importa
+php artisan audit:backfill-legacy --only=kardex --only=orders   # fuentes: kardex, orders, sessions
+```
+
+| Fuente | Evento generado | Cambios antes/después |
+|---|---|---|
+| `inventory_movements` manuales | `inventory.movements_registered` (módulo `inventory`) | Existencia de la variante y alta del movimiento |
+| `inventory_movements` de recepción (`order_detail`) | `orders.received` (módulo `orders`) | Existencia, alta del movimiento, `quantityReceived` acumulado de la línea y, si hubo, el cambio de estado de esa recepción |
+| `order_status_history` | `orders.created`, `orders.confirmed`, `orders.cancelled`, `orders.received` | `status` del pedido (y `dateReceived` al completarse) y alta del historial |
+| `user_sessions` | `auth.login` (módulo `security`) | Alta de la sesión (`idUser`, `expiresAt`), sin token |
+
+Reglas:
+
+- `source = legacy`, `outcome = success`, sin ruta, método, IP ni agente.
+  `metadata = { "backfilled": true, "actorDataIsCurrent": true, "legacy": { "<tabla>": [ids] } }`.
+- **Actor y rol son los actuales** del usuario: las tablas originales solo guardaron su ID.
+- `occurredAt` es el `created_at` original convertido de `app.timezone` a UTC (precisión de segundos).
+- Los movimientos se agrupan como los generó una petición: mismo segundo, usuario,
+  referencia (pedido) y notas. Dos peticiones idénticas en el mismo segundo quedan en un evento.
+- Idempotente: se omite cada fila cuya alta ya existe en `audit_changes` (capturada en vivo o
+  ya importada). Se puede volver a ejecutar sin duplicar y no requiere fecha de corte.
+- Ejecutar `kardex` y `orders` juntos (o `kardex` primero): si se importa `orders` sin
+  `kardex`, el estado de cada recepción queda en un evento aparte de sus movimientos.
+- No se importa (no existe el dato): catálogos, productos y usuarios (quién/qué cambió),
+  registros borrados, logins fallidos, 401/403, cierres de sesión (`revoked_at` no distingue
+  la causa), PDF y ediciones de pedidos en borrador.
 
 ## Verificación
 
