@@ -150,6 +150,11 @@ Se conservan las convenciones existentes:
 - `totalCount` es true por defecto; false evita la consulta COUNT.
 - `f` selecciona campos permitidos del resumen; `o` ordena y `w` filtra mediante
   objetos planos o condiciones `{f, ao, v, lo}`. Se preserva la agrupación AND/OR de grids.
+- La validación (`AuditQueryRequest`) sigue el mismo contrato que `TranslatesGridFilters`:
+  `p`/`f`/`o`/`w` vacíos o null equivalen a omitirlos, llaves extra se ignoran,
+  `direction`/`lo` no distinguen mayúsculas, `anyof`/`noneof` y operadores desconocidos se
+  interpretan como en `mapGridOperator()`. Solo da 422 ante campos fuera de la lista blanca,
+  tamaño de página fuera de 1–100, fechas inválidas o valores de filtro mal formados.
 
 Campos de resumen permitidos: `id`, `requestId`, `module`, `action`, `outcome`, `actorId`,
 `actorName`, `roleCode`, `roleName`, `entityType`, `entityId`, `source`, `occurredAt`.
