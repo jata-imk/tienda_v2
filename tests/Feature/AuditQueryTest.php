@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Requests\Audit\AuditQueryRequest;
 use App\Models\User;
 use App\Models\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -77,6 +78,40 @@ class AuditQueryTest extends TestCase
         ])->assertOk()->assertJsonCount(0, 'data.items');
     }
 
+    public function test_shared_grid_payload_is_accepted_like_other_grids(): void
+    {
+        $this->insertEvents(25);
+        $query = fn (array $payload) => $this->withToken($this->token)->postJson('/api/audit-events/query', $payload);
+
+        // Payload exacto del grid compartido (el mismo que se envía a /users/query).
+        $query(['p' => ['r' => 0, 's' => 10], 'f' => [], 'o' => ['column' => 'occurredAt', 'direction' => 'desc'], 'w' => [], 'totalCount' => true])
+            ->assertOk()->assertJsonCount(10, 'data.items')->assertJsonPath('data.perPage', 10)
+            ->assertJsonPath('data.totalCount', 26)->assertJsonPath('data.summary', [26])
+            ->assertJsonStructure(['data' => ['items' => [AuditQueryRequest::EVENT_FIELDS]]]);
+
+        // null equivale a omitir; direction/lo sin distinguir mayúsculas; llaves extra ignoradas.
+        $query(['p' => null, 'f' => null, 'o' => null, 'w' => null, 'dateFrom' => null, 'entityId' => null])
+            ->assertOk()->assertJsonCount(15, 'data.items')->assertJsonPath('data.totalCount', 26);
+        $query(['p' => ['r' => 0, 's' => 5, 'extra' => 1], 'o' => ['column' => 'id', 'direction' => 'DESC', 'extra' => 1]])
+            ->assertOk()->assertJsonPath('data.items.0.id', DB::table('audit_events')->max('id'));
+        $query(['w' => [['f' => 'module', 'ao' => '==', 'v' => 'products', 'lo' => 'AND', 'extra' => 'x']]])
+            ->assertOk()->assertJsonPath('data.totalCount', 25);
+
+        // Operadores con el mismo significado que mapGridOperator().
+        $query(['w' => [['f' => 'module', 'ao' => 'anyof', 'v' => ['products']]]])->assertOk()->assertJsonPath('data.totalCount', 25);
+        $query(['w' => [['f' => 'module', 'ao' => 'noneof', 'v' => ['products']]]])->assertOk()->assertJsonPath('data.totalCount', 1);
+        $query(['w' => [['f' => 'module', 'ao' => 'unknown', 'v' => 'products']]])->assertOk()->assertJsonPath('data.totalCount', 25);
+
+        // totalCount no booleano se interpreta como false, igual que en los demás grids.
+        $query(['totalCount' => 'abc'])->assertOk()->assertJsonMissingPath('data.totalCount');
+
+        // dateTo sin dateFrom es válido.
+        $query(['dateTo' => '2026-01-01'])->assertOk()->assertJsonPath('data.totalCount', 25);
+
+        $id = DB::table('audit_events')->min('id');
+        $this->withToken($this->token)->getJson("/api/audit-events/$id/changes?f=&w=&o[direction]=DESC&p[page]=1&p[per_page]=10")->assertOk();
+    }
+
     public function test_changes_have_separate_mandatory_pagination_and_detail_contains_metadata(): void
     {
         $this->insertEvents(1);
@@ -111,9 +146,10 @@ class AuditQueryTest extends TestCase
         foreach ([
             ['p' => ['per_page' => 101]], ['p' => ['s' => 0]], ['p' => ['r' => -1]],
             ['f' => ['password']], ['o' => ['column' => 'metadata']], ['o' => ['direction' => 'unsafe']],
-            ['w' => ['token_hash' => 'secret']], ['w' => [['f' => 'action', 'ao' => 'raw', 'v' => 'unsafe']]],
-            ['w' => [['f' => 'action', 'ao' => 'between', 'v' => []]]],
-            ['totalCount' => 'invalid'], ['dateFrom' => '2026-02-01', 'dateTo' => '2026-01-01'],
+            ['f' => ['metadata']], ['f' => ['beforeValues']], ['w' => ['token_hash' => 'secret']],
+            ['w' => [['f' => 'metadata', 'ao' => '==', 'v' => 'x']]], ['w' => [['f' => 'action', 'ao' => ['raw'], 'v' => 'x']]],
+            ['w' => [['f' => 'action', 'ao' => 'between', 'v' => []]]], ['w' => [['f' => 'action', 'ao' => 'in', 'v' => []]]],
+            ['p' => ['s' => 1000000]], ['dateFrom' => 'xyz'], ['dateFrom' => '2026-02-01', 'dateTo' => '2026-01-01'],
             ['w' => ['occurredAt' => 'invalid-date']],
             ['w' => [['f' => 'occurredAt', 'ao' => 'contains', 'v' => '2026-01-01']]],
         ] as $payload) {

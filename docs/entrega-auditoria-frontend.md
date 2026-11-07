@@ -224,18 +224,32 @@ condiciones `||` se agrupa con la condición anterior y los bloques se unen con 
 No enviar el árbol anidado de DevExtreme sin adaptarlo a este contrato.
 
 Operadores aceptados: `==`, `!=`, `<>`, `>`, `>=`, `<`, `<=`, `contains`, `notcontains`,
-`startswith`, `endswith`, `in`, `notin`, `between`. `in`/`notin` llevan un array no vacío
-(máximo 100 valores); `between` lleva dos valores. `occurredAt` acepta comparaciones y
-rangos de fecha, no operadores de texto. Máximo 50 condiciones.
+`startswith`, `endswith`, `in`, `notin`, `between`, y los alias `anyof`/`noneof` del
+filterBuilder. `in`/`notin` llevan un array no vacío (máximo 100 valores); `between`
+lleva dos valores. Un operador desconocido se trata como `=` (o `in` si el valor es un
+array), igual que en los demás grids. `occurredAt` acepta comparaciones y rangos de
+fecha, no operadores de texto. Máximo 50 condiciones.
 
-Si el grid produce `anyof`/`noneof`, traducirlos a `in`/`notin` antes de enviarlos.
-Las direcciones de orden son `asc`/`desc`. `o.field`/`o.type` son alias de
-`o.column`/`o.direction`. Usar ordenamiento de una sola columna.
+Las direcciones de orden son `asc`/`desc`, sin distinguir mayúsculas; `lo` también.
+`o.field`/`o.type` son alias de `o.column`/`o.direction`. Usar ordenamiento de una sola
+columna.
 
 `f`, si se usa, es un array de campos del resumen que se desean cargar; el backend
 siempre incluye `id`. No solicitar `metadata`, `beforeValues` o `afterValues` en el
-listado: se obtienen desde los endpoints de detalle. Sin `f` llegan todos los campos
-del resumen.
+listado: se obtienen desde los endpoints de detalle. Omitir `f`, o enviarlo como `[]`
+o `null`, devuelve todos los campos del resumen.
+
+### Mismo contrato que los demás grids
+
+El payload del grid compartido funciona igual que en `/users/query` y el resto de
+endpoints: `p`, `f`, `o` y `w` vacíos o `null` equivalen a omitirlos, las llaves
+desconocidas se ignoran y `totalCount` no booleano se interpreta como `false`. Solo hay
+dos diferencias, intencionales:
+
+| Regla | Otros grids | Auditoría |
+|---|---|---|
+| Paginación | Sin `p` devuelven todo | Siempre paginada: 15 por defecto, máximo 100 |
+| Campos en `f`, `o`, `w` | Columnas de la tabla | Solo los del resumen; otro campo da 422 |
 
 ## 5. Historial de un registro, detalle y comparación
 
