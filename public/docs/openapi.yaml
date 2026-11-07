@@ -192,23 +192,28 @@ paths:
                       type: integer
                       description: 'Must be at least 1.'
                       example: 16
+                      nullable: true
                     r:
                       type: integer
                       description: 'Must be at least 0.'
                       example: 39
+                      nullable: true
                     per_page:
                       type: integer
                       description: 'Must be at least 1. Must not be greater than 100.'
                       example: 7
+                      nullable: true
                     s:
                       type: integer
                       description: 'Must be at least 1. Must not be greater than 100.'
                       example: 16
+                      nullable: true
+                  nullable: true
                 f:
                   type: array
                   description: ''
                   example:
-                    - entityId
+                    - outcome
                   items:
                     type: string
                     enum:
@@ -233,24 +238,6 @@ paths:
                     column:
                       type: string
                       description: ''
-                      example: occurredAt
-                      enum:
-                        - id
-                        - requestId
-                        - module
-                        - action
-                        - outcome
-                        - actorId
-                        - actorName
-                        - roleCode
-                        - roleName
-                        - entityType
-                        - entityId
-                        - source
-                        - occurredAt
-                    field:
-                      type: string
-                      description: ''
                       example: requestId
                       enum:
                         - id
@@ -266,45 +253,63 @@ paths:
                         - entityId
                         - source
                         - occurredAt
+                      nullable: true
+                    field:
+                      type: string
+                      description: ''
+                      example: roleName
+                      enum:
+                        - id
+                        - requestId
+                        - module
+                        - action
+                        - outcome
+                        - actorId
+                        - actorName
+                        - roleCode
+                        - roleName
+                        - entityType
+                        - entityId
+                        - source
+                        - occurredAt
+                      nullable: true
                     direction:
                       type: string
                       description: ''
-                      example: asc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
                     type:
                       type: string
                       description: ''
-                      example: desc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
+                  nullable: true
                 w:
                   type: object
                   description: 'Must not have more than 50 items.'
                   example: null
                   properties: {  }
-                totalCount:
-                  type: string
-                  description: ''
-                  example: null
+                  nullable: true
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 dateTo:
                   type: string
-                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-11-29'
+                  description: 'Must be a valid date.'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 entityType:
                   type: string
                   description: 'Must not be greater than 64 characters.'
-                  example: 'n'
+                  example: m
+                  nullable: true
                 entityId:
                   type: string
                   description: ''
                   example: null
+                  nullable: true
   /api/audit-events/query:
     post:
       summary: 'Query audit events (POST)'
@@ -386,23 +391,28 @@ paths:
                       type: integer
                       description: 'Desplazamiento desde cero.'
                       example: 0
+                      nullable: true
                     r:
                       type: integer
                       description: 'Must be at least 0.'
                       example: 39
+                      nullable: true
                     per_page:
                       type: integer
                       description: 'Tamaño entre 1 y 100. Default 15.'
                       example: 15
+                      nullable: true
                     s:
                       type: integer
                       description: 'Must be at least 1. Must not be greater than 100.'
                       example: 16
+                      nullable: true
+                  nullable: true
                 f:
                   type: array
                   description: ''
                   example:
-                    - id
+                    - actorId
                   items:
                     type: string
                     enum:
@@ -427,7 +437,7 @@ paths:
                     column:
                       type: string
                       description: ''
-                      example: roleCode
+                      example: requestId
                       enum:
                         - id
                         - requestId
@@ -442,6 +452,7 @@ paths:
                         - entityId
                         - source
                         - occurredAt
+                      nullable: true
                     field:
                       type: string
                       description: ''
@@ -460,45 +471,48 @@ paths:
                         - entityId
                         - source
                         - occurredAt
+                      nullable: true
                     direction:
                       type: string
                       description: ''
-                      example: desc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
                     type:
                       type: string
                       description: ''
-                      example: asc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
+                  nullable: true
                 w:
                   type: object
                   description: 'Must not have more than 50 items.'
                   example: null
                   properties: {  }
-                totalCount:
-                  type: boolean
-                  description: 'Incluir conteo total.'
-                  example: true
+                  nullable: true
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 dateTo:
                   type: string
-                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-11-29'
+                  description: 'Must be a valid date.'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 entityType:
                   type: string
                   description: 'Must not be greater than 64 characters.'
-                  example: 'n'
+                  example: m
+                  nullable: true
                 entityId:
                   type: string
                   description: ''
                   example: null
+                  nullable: true
+                totalCount:
+                  type: boolean
+                  description: 'Incluir conteo total.'
+                  example: true
   '/api/audit-events/{id}/changes':
     get:
       summary: 'List changes before/after'
@@ -650,23 +664,28 @@ paths:
                       type: integer
                       description: 'Must be at least 1.'
                       example: 16
+                      nullable: true
                     r:
                       type: integer
                       description: 'Must be at least 0.'
                       example: 39
+                      nullable: true
                     per_page:
                       type: integer
                       description: 'Must be at least 1. Must not be greater than 100.'
                       example: 7
+                      nullable: true
                     s:
                       type: integer
                       description: 'Must be at least 1. Must not be greater than 100.'
                       example: 16
+                      nullable: true
+                  nullable: true
                 f:
                   type: array
                   description: ''
                   example:
-                    - auditEventId
+                    - entityId
                   items:
                     type: string
                     enum:
@@ -683,16 +702,6 @@ paths:
                     column:
                       type: string
                       description: ''
-                      example: entityType
-                      enum:
-                        - id
-                        - auditEventId
-                        - entityType
-                        - entityId
-                        - operation
-                    field:
-                      type: string
-                      description: ''
                       example: id
                       enum:
                         - id
@@ -700,45 +709,55 @@ paths:
                         - entityType
                         - entityId
                         - operation
+                      nullable: true
+                    field:
+                      type: string
+                      description: ''
+                      example: auditEventId
+                      enum:
+                        - id
+                        - auditEventId
+                        - entityType
+                        - entityId
+                        - operation
+                      nullable: true
                     direction:
                       type: string
                       description: ''
-                      example: desc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
                     type:
                       type: string
                       description: ''
-                      example: asc
-                      enum:
-                        - asc
-                        - desc
+                      example: null
+                      nullable: true
+                  nullable: true
                 w:
                   type: object
                   description: 'Must not have more than 50 items.'
                   example: null
                   properties: {  }
-                totalCount:
-                  type: string
-                  description: ''
-                  example: null
+                  nullable: true
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 dateTo:
                   type: string
-                  description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-11-29'
+                  description: 'Must be a valid date.'
+                  example: '2026-11-07T13:16:31'
+                  nullable: true
                 entityType:
                   type: string
                   description: 'Must not be greater than 64 characters.'
-                  example: 'n'
+                  example: m
+                  nullable: true
                 entityId:
                   type: string
                   description: ''
                   example: null
+                  nullable: true
     parameters:
       -
         in: path
@@ -1535,7 +1554,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -1843,7 +1862,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 quantityIntegers:
                   type: integer
                   description: 'Must be at least 0. Must not be greater than 255.'
@@ -1861,7 +1880,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -2033,7 +2052,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2198,7 +2217,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -2611,11 +2630,11 @@ paths:
                 dateFrom:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:32'
                 dateTo:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>dateFrom</code>.'
-                  example: '2052-11-29'
+                  example: '2052-11-30'
                 lowStockThreshold:
                   type: number
                   description: 'Must be at least 0.'
@@ -3055,7 +3074,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: active
                   enum:
                     - active
                     - inactive
@@ -3880,7 +3899,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -4276,7 +4295,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -5730,7 +5749,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -5760,7 +5779,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -5812,7 +5831,7 @@ paths:
                     movementType:
                       type: string
                       description: 'This field is required when <code>initialMovement</code> is present.'
-                      example: entry
+                      example: adjustment
                       enum:
                         - entry
                         - sale
@@ -6028,7 +6047,7 @@ paths:
                 stockControl:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 discount:
                   type: number
                   description: 'Must be at least 0. Must not be greater than 100.'
@@ -6036,7 +6055,7 @@ paths:
                 typeIva:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -6063,7 +6082,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -6634,64 +6653,64 @@ paths:
             description: 'Descargar en lugar de mostrar.'
             example: true
       responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  ok: false
+                  code: 401
+                  status: Unauthorized
+                  message: 'Token inválido o malformado.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 401
+                  status:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Token inválido o malformado.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
         404:
           description: ''
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      ok: false
-                      code: 404
-                      status: 'Not Found'
-                      message: 'Order not found.'
-                      data: null
-                    properties:
-                      ok:
-                        type: boolean
-                        example: false
-                      code:
-                        type: integer
-                        example: 404
-                      status:
-                        type: string
-                        example: 'Not Found'
-                      message:
-                        type: string
-                        example: 'Order not found.'
-                      data:
-                        type: string
-                        example: null
-                        nullable: true
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      ok: false
-                      code: 404
-                      status: 'Not Found'
-                      message: 'Order not found.'
-                      data: null
-                    properties:
-                      ok:
-                        type: boolean
-                        example: false
-                      code:
-                        type: integer
-                        example: 404
-                      status:
-                        type: string
-                        example: 'Not Found'
-                      message:
-                        type: string
-                        example: 'Order not found.'
-                      data:
-                        type: string
-                        example: null
-                        nullable: true
+                type: object
+                example:
+                  ok: false
+                  code: 404
+                  status: 'Not Found'
+                  message: 'Order not found.'
+                  data: null
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  status:
+                    type: string
+                    example: 'Not Found'
+                  message:
+                    type: string
+                    example: 'Order not found.'
+                  data:
+                    type: string
+                    example: null
+                    nullable: true
       tags:
         - Orders
     parameters:
@@ -7240,11 +7259,11 @@ paths:
                 dateOrder:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:32'
                 dateExpected:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-11-06T10:27:29'
+                  example: '2026-11-07T13:16:32'
                   nullable: true
                 supplierName:
                   type: string
@@ -7259,12 +7278,12 @@ paths:
                 shippingAddress:
                   type: string
                   description: 'Must not be greater than 2000 characters.'
-                  example: m
+                  example: c
                   nullable: true
                 notes:
                   type: string
                   description: 'Must not be greater than 2000 characters.'
-                  example: i
+                  example: u
                   nullable: true
                 details:
                   type: array
@@ -7813,7 +7832,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive
@@ -7990,7 +8009,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: active
+                  example: inactive
                   enum:
                     - active
                     - inactive

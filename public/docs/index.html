@@ -365,7 +365,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: November 6, 2026</li>
+        <li>Last updated: November 7, 2026</li>
     </ul>
 </div>
 
@@ -389,7 +389,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
         <h1 id="audit">Audit</h1>
 
-
+    
 
                                 <h2 id="audit-GETapi-audit-events">List audit events</h2>
 
@@ -418,17 +418,15 @@ Soporta p, f, o, w, totalCount, dateFrom/dateTo y entityType/entityId.</p>
         \"s\": 16
     },
     \"f\": [
-        \"entityId\"
+        \"outcome\"
     ],
     \"o\": {
-        \"column\": \"occurredAt\",
-        \"field\": \"requestId\",
-        \"direction\": \"asc\",
-        \"type\": \"desc\"
+        \"column\": \"requestId\",
+        \"field\": \"roleName\"
     },
-    \"dateFrom\": \"2026-11-06T10:27:29\",
-    \"dateTo\": \"2052-11-29\",
-    \"entityType\": \"n\"
+    \"dateFrom\": \"2026-11-07T13:16:31\",
+    \"dateTo\": \"2026-11-07T13:16:31\",
+    \"entityType\": \"m\"
 }"
 </code></pre></div>
 
@@ -464,17 +462,15 @@ let body = {
         "s": 16
     },
     "f": [
-        "entityId"
+        "outcome"
     ],
     "o": {
-        "column": "occurredAt",
-        "field": "requestId",
-        "direction": "asc",
-        "type": "desc"
+        "column": "requestId",
+        "field": "roleName"
     },
-    "dateFrom": "2026-11-06T10:27:29",
-    "dateTo": "2052-11-29",
-    "entityType": "n"
+    "dateFrom": "2026-11-07T13:16:31",
+    "dateTo": "2026-11-07T13:16:31",
+    "entityType": "m"
 };
 
 fetch(url, {
@@ -781,10 +777,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.column"                data-endpoint="GETapi-audit-events"
-               value="occurredAt"
+               value="requestId"
                data-component="body">
     <br>
-<p>Example: <code>occurredAt</code></p>
+<p>Example: <code>requestId</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
                     </div>
@@ -795,10 +791,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.field"                data-endpoint="GETapi-audit-events"
-               value="requestId"
+               value="roleName"
                data-component="body">
     <br>
-<p>Example: <code>requestId</code></p>
+<p>Example: <code>roleName</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
                     </div>
@@ -809,12 +805,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.direction"                data-endpoint="GETapi-audit-events"
-               value="asc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -823,12 +817,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.type"                data-endpoint="GETapi-audit-events"
-               value="desc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                     </details>
         </div>
@@ -845,28 +837,16 @@ Must be one of:
 <p>Must not have more than 50 items.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="totalCount"                data-endpoint="GETapi-audit-events"
-               value=""
-               data-component="body">
-    <br>
-
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-audit-events"
-               value="2026-11-06T10:27:29"
+               value="2026-11-07T13:16:31"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -875,10 +855,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-audit-events"
-               value="2052-11-29"
+               value="2026-11-07T13:16:31"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
@@ -887,10 +867,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="entityType"                data-endpoint="GETapi-audit-events"
-               value="n"
+               value="m"
                data-component="body">
     <br>
-<p>Must not be greater than 64 characters. Example: <code>n</code></p>
+<p>Must not be greater than 64 characters. Example: <code>m</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
@@ -932,18 +912,16 @@ Must be one of:
         \"s\": 16
     },
     \"f\": [
-        \"id\"
+        \"actorId\"
     ],
     \"o\": {
-        \"column\": \"roleCode\",
-        \"field\": \"actorName\",
-        \"direction\": \"desc\",
-        \"type\": \"asc\"
+        \"column\": \"requestId\",
+        \"field\": \"actorName\"
     },
-    \"totalCount\": true,
-    \"dateFrom\": \"2026-11-06T10:27:29\",
-    \"dateTo\": \"2052-11-29\",
-    \"entityType\": \"n\"
+    \"dateFrom\": \"2026-11-07T13:16:31\",
+    \"dateTo\": \"2026-11-07T13:16:31\",
+    \"entityType\": \"m\",
+    \"totalCount\": true
 }"
 </code></pre></div>
 
@@ -967,18 +945,16 @@ let body = {
         "s": 16
     },
     "f": [
-        "id"
+        "actorId"
     ],
     "o": {
-        "column": "roleCode",
-        "field": "actorName",
-        "direction": "desc",
-        "type": "asc"
+        "column": "requestId",
+        "field": "actorName"
     },
-    "totalCount": true,
-    "dateFrom": "2026-11-06T10:27:29",
-    "dateTo": "2052-11-29",
-    "entityType": "n"
+    "dateFrom": "2026-11-07T13:16:31",
+    "dateTo": "2026-11-07T13:16:31",
+    "entityType": "m",
+    "totalCount": true
 };
 
 fetch(url, {
@@ -1190,10 +1166,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.column"                data-endpoint="POSTapi-audit-events-query"
-               value="roleCode"
+               value="requestId"
                data-component="body">
     <br>
-<p>Example: <code>roleCode</code></p>
+<p>Example: <code>requestId</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>requestId</code></li> <li><code>module</code></li> <li><code>action</code></li> <li><code>outcome</code></li> <li><code>actorId</code></li> <li><code>actorName</code></li> <li><code>roleCode</code></li> <li><code>roleName</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>source</code></li> <li><code>occurredAt</code></li></ul>
                     </div>
@@ -1218,12 +1194,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.direction"                data-endpoint="POSTapi-audit-events-query"
-               value="desc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -1232,12 +1206,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.type"                data-endpoint="POSTapi-audit-events-query"
-               value="asc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                     </details>
         </div>
@@ -1252,6 +1224,54 @@ Must be one of:
                data-component="body">
     <br>
 <p>Must not have more than 50 items.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateFrom"                data-endpoint="POSTapi-audit-events-query"
+               value="2026-11-07T13:16:31"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="dateTo"                data-endpoint="POSTapi-audit-events-query"
+               value="2026-11-07T13:16:31"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityType"                data-endpoint="POSTapi-audit-events-query"
+               value="m"
+               data-component="body">
+    <br>
+<p>Must not be greater than 64 characters. Example: <code>m</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="entityId"                data-endpoint="POSTapi-audit-events-query"
+               value=""
+               data-component="body">
+    <br>
+
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
@@ -1274,54 +1294,6 @@ Must be one of:
         </label>
     <br>
 <p>Incluir conteo total. Example: <code>true</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="dateFrom"                data-endpoint="POSTapi-audit-events-query"
-               value="2026-11-06T10:27:29"
-               data-component="body">
-    <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="dateTo"                data-endpoint="POSTapi-audit-events-query"
-               value="2052-11-29"
-               data-component="body">
-    <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="entityType"                data-endpoint="POSTapi-audit-events-query"
-               value="n"
-               data-component="body">
-    <br>
-<p>Must not be greater than 64 characters. Example: <code>n</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="entityId"                data-endpoint="POSTapi-audit-events-query"
-               value=""
-               data-component="body">
-    <br>
-
         </div>
         </form>
 
@@ -1351,17 +1323,15 @@ Must be one of:
         \"s\": 16
     },
     \"f\": [
-        \"auditEventId\"
+        \"entityId\"
     ],
     \"o\": {
-        \"column\": \"entityType\",
-        \"field\": \"id\",
-        \"direction\": \"desc\",
-        \"type\": \"asc\"
+        \"column\": \"id\",
+        \"field\": \"auditEventId\"
     },
-    \"dateFrom\": \"2026-11-06T10:27:29\",
-    \"dateTo\": \"2052-11-29\",
-    \"entityType\": \"n\"
+    \"dateFrom\": \"2026-11-07T13:16:31\",
+    \"dateTo\": \"2026-11-07T13:16:31\",
+    \"entityType\": \"m\"
 }"
 </code></pre></div>
 
@@ -1392,17 +1362,15 @@ let body = {
         "s": 16
     },
     "f": [
-        "auditEventId"
+        "entityId"
     ],
     "o": {
-        "column": "entityType",
-        "field": "id",
-        "direction": "desc",
-        "type": "asc"
+        "column": "id",
+        "field": "auditEventId"
     },
-    "dateFrom": "2026-11-06T10:27:29",
-    "dateTo": "2052-11-29",
-    "entityType": "n"
+    "dateFrom": "2026-11-07T13:16:31",
+    "dateTo": "2026-11-07T13:16:31",
+    "entityType": "m"
 };
 
 fetch(url, {
@@ -1666,10 +1634,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.column"                data-endpoint="GETapi-audit-events--id--changes"
-               value="entityType"
+               value="id"
                data-component="body">
     <br>
-<p>Example: <code>entityType</code></p>
+<p>Example: <code>id</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>auditEventId</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>operation</code></li></ul>
                     </div>
@@ -1680,10 +1648,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.field"                data-endpoint="GETapi-audit-events--id--changes"
-               value="id"
+               value="auditEventId"
                data-component="body">
     <br>
-<p>Example: <code>id</code></p>
+<p>Example: <code>auditEventId</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>auditEventId</code></li> <li><code>entityType</code></li> <li><code>entityId</code></li> <li><code>operation</code></li></ul>
                     </div>
@@ -1694,12 +1662,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.direction"                data-endpoint="GETapi-audit-events--id--changes"
-               value="desc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -1708,12 +1674,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="o.type"                data-endpoint="GETapi-audit-events--id--changes"
-               value="asc"
+               value=""
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+
                     </div>
                                     </details>
         </div>
@@ -1730,28 +1694,16 @@ Must be one of:
 <p>Must not have more than 50 items.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>totalCount</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="totalCount"                data-endpoint="GETapi-audit-events--id--changes"
-               value=""
-               data-component="body">
-    <br>
-
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateFrom</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-audit-events--id--changes"
-               value="2026-11-06T10:27:29"
+               value="2026-11-07T13:16:31"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -1760,10 +1712,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-audit-events--id--changes"
-               value="2052-11-29"
+               value="2026-11-07T13:16:31"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:31</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>entityType</code></b>&nbsp;&nbsp;
@@ -1772,10 +1724,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="entityType"                data-endpoint="GETapi-audit-events--id--changes"
-               value="n"
+               value="m"
                data-component="body">
     <br>
-<p>Must not be greater than 64 characters. Example: <code>n</code></p>
+<p>Must not be greater than 64 characters. Example: <code>m</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>entityId</code></b>&nbsp;&nbsp;
@@ -2729,7 +2681,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"stockControl\": true,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -2762,7 +2714,7 @@ let body = {
     "stockControl": true,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -3106,10 +3058,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -3568,10 +3520,10 @@ Must be one of:
     \"postalCode\": \"y\",
     \"neighborhood\": \"v\",
     \"city\": \"d\",
-    \"stockControl\": true,
+    \"stockControl\": false,
     \"quantityIntegers\": 5,
     \"quantityDecimals\": 19,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -3601,10 +3553,10 @@ let body = {
     "postalCode": "y",
     "neighborhood": "v",
     "city": "d",
-    "stockControl": true,
+    "stockControl": false,
     "quantityIntegers": 5,
     "quantityDecimals": 19,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -3903,7 +3855,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantityIntegers</code></b>&nbsp;&nbsp;
@@ -3948,10 +3900,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-company-info"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4270,7 +4222,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
     \"exchangeRate\": 0,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -4291,7 +4243,7 @@ let body = {
     "code": "ngzmiy",
     "symbol": "vdljni",
     "exchangeRate": 0,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -4456,10 +4408,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-currencies"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -4653,7 +4605,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"ngzmiy\",
     \"symbol\": \"vdljni\",
     \"exchangeRate\": 0,
-    \"status\": \"inactive\"
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -4674,7 +4626,7 @@ let body = {
     "code": "ngzmiy",
     "symbol": "vdljni",
     "exchangeRate": 0,
-    "status": "inactive"
+    "status": "active"
 };
 
 fetch(url, {
@@ -4869,10 +4821,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-currencies--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -5312,8 +5264,8 @@ alerts omit zero-stock variants that have never had inventory movements.</p>
     --header "Accept: application/json" \
     --data "{
     \"limit\": 1,
-    \"dateFrom\": \"2026-11-06T10:27:29\",
-    \"dateTo\": \"2052-11-29\",
+    \"dateFrom\": \"2026-11-07T13:16:32\",
+    \"dateTo\": \"2052-11-30\",
     \"lowStockThreshold\": 39
 }"
 </code></pre></div>
@@ -5341,8 +5293,8 @@ const headers = {
 
 let body = {
     "limit": 1,
-    "dateFrom": "2026-11-06T10:27:29",
-    "dateTo": "2052-11-29",
+    "dateFrom": "2026-11-07T13:16:32",
+    "dateTo": "2052-11-30",
     "lowStockThreshold": 39
 };
 
@@ -5543,10 +5495,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateFrom"                data-endpoint="GETapi-dashboard"
-               value="2026-11-06T10:27:29"
+               value="2026-11-07T13:16:32"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:32</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateTo</code></b>&nbsp;&nbsp;
@@ -5555,10 +5507,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateTo"                data-endpoint="GETapi-dashboard"
-               value="2052-11-29"
+               value="2052-11-30"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-29</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>dateFrom</code>. Example: <code>2052-11-30</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>lowStockThreshold</code></b>&nbsp;&nbsp;
@@ -6467,7 +6419,7 @@ responde la vista previa <code>{ totals, products, variants, conflicts }</code>.
     \"key\": \"bngzmi\",
     \"name\": \"y\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"inactive\",
+    \"status\": \"active\",
     \"cascadeKeys\": false,
     \"dryRun\": false
 }"
@@ -6489,7 +6441,7 @@ let body = {
     "key": "bngzmi",
     "name": "y",
     "description": "Eius et animi quos velit et.",
-    "status": "inactive",
+    "status": "active",
     "cascadeKeys": false,
     "dryRun": false
 };
@@ -6674,10 +6626,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-categories--id-"
-               value="inactive"
+               value="active"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>active</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -8683,7 +8635,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"idSizeGroup\": 16,
     \"name\": \"ngzmiyvdljnikhwa\",
     \"sortOrder\": 50,
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -8703,7 +8655,7 @@ let body = {
     "idSizeGroup": 16,
     "name": "ngzmiyvdljnikhwa",
     "sortOrder": 50,
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -8886,10 +8838,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-sizes--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -9726,7 +9678,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"b\",
     \"hexColor\": \"#fEEeDb\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -9745,7 +9697,7 @@ const headers = {
 let body = {
     "name": "b",
     "hexColor": "#fEEeDb",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -9916,10 +9868,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-colors--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -11726,7 +11678,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "image=@C:\Users\jose.tejero\AppData\Local\Temp\php5908.tmp" </code></pre></div>
+    --form "image=@C:\Users\jatai\AppData\Local\Temp\phpA8B7.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11898,7 +11850,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jose.tejero\AppData\Local\Temp\php5908.tmp</code></p>
+<p>Image file (jpeg, png, webp; max 4MB). Example: <code>C:\Users\jatai\AppData\Local\Temp\phpA8B7.tmp</code></p>
         </div>
         </form>
 
@@ -12281,7 +12233,7 @@ imagen se agrega a la galeria del color; no reemplaza las existentes.</p>
     --header "Authorization: Bearer {TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "images[]=@C:\Users\jose.tejero\AppData\Local\Temp\php593A.tmp" </code></pre></div>
+    --form "images[]=@C:\Users\jatai\AppData\Local\Temp\phpAD00.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12949,16 +12901,16 @@ activo puede haber variantes <code>inactive</code> (por ejemplo una talla descon
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"discount\": 19,
     \"typeIva\": 1,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"active\",
+    \"status\": \"inactive\",
     \"initialMovement\": {
-        \"movementType\": \"entry\",
+        \"movementType\": \"adjustment\",
         \"referenceType\": \"w\",
         \"referenceId\": 16,
         \"notes\": \"architecto\",
@@ -13003,16 +12955,16 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": false,
+    "stockControl": true,
     "discount": 19,
     "typeIva": 1,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "active",
+    "status": "inactive",
     "initialMovement": {
-        "movementType": "entry",
+        "movementType": "adjustment",
         "referenceType": "w",
         "referenceId": 16,
         "notes": "architecto",
@@ -13279,7 +13231,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -13360,10 +13312,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-products"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -13470,10 +13422,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="initialMovement.movementType"                data-endpoint="POSTapi-products"
-               value="entry"
+               value="adjustment"
                data-component="body">
     <br>
-<p>This field is required when <code>initialMovement</code> is present. Example: <code>entry</code></p>
+<p>This field is required when <code>initialMovement</code> is present. Example: <code>adjustment</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>sale</code></li> <li><code>adjustment</code></li> <li><code>return</code></li> <li><code>cancel</code></li></ul>
                     </div>
@@ -13730,14 +13682,14 @@ responde la vista previa <code>{ totals, products, variants, conflicts }</code>.
     \"codeBar\": \"v\",
     \"price\": 42,
     \"cost\": 37,
-    \"stockControl\": false,
+    \"stockControl\": true,
     \"discount\": 19,
-    \"typeIva\": 4,
+    \"typeIva\": 3,
     \"rateIva\": 17,
     \"quotaIva\": 8,
     \"isr\": 8,
     \"impEsp\": 14,
-    \"status\": \"active\",
+    \"status\": \"inactive\",
     \"cascadeKeys\": false,
     \"dryRun\": false
 }"
@@ -13767,14 +13719,14 @@ let body = {
     "codeBar": "v",
     "price": 42,
     "cost": 37,
-    "stockControl": false,
+    "stockControl": true,
     "discount": 19,
-    "typeIva": 4,
+    "typeIva": 3,
     "rateIva": 17,
     "quotaIva": 8,
     "isr": 8,
     "impEsp": 14,
-    "status": "active",
+    "status": "inactive",
     "cascadeKeys": false,
     "dryRun": false
 };
@@ -14046,7 +13998,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>discount</code></b>&nbsp;&nbsp;
@@ -14067,10 +14019,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="typeIva"                data-endpoint="PUTapi-products--id-"
-               value="4"
+               value="3"
                data-component="body">
     <br>
-<p>Example: <code>4</code></p>
+<p>Example: <code>3</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -14129,10 +14081,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-products--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -15326,20 +15278,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-orders--order--pdf">
             <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;ok&quot;: false,
-    &quot;code&quot;: 404,
-    &quot;status&quot;: &quot;Not Found&quot;,
-    &quot;message&quot;: &quot;Order not found.&quot;,
-    &quot;data&quot;: null
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -15347,9 +15286,23 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-x-request-id: cfd09fe6-13ed-4f29-a5fb-9e73449c2b8b
+x-request-id: d2b0cb7a-e594-46e7-aba2-55ef300ef0a6
 access-control-allow-origin: *
+access-control-expose-headers: X-Request-Id
  </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;ok&quot;: false,
+    &quot;code&quot;: 401,
+    &quot;status&quot;: &quot;Unauthorized&quot;,
+    &quot;message&quot;: &quot;Token inv&aacute;lido o malformado.&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;ok&quot;: false,
@@ -16325,12 +16278,12 @@ por <code>idProductVariant</code>). Mismos campos que el alta.</p>
     --data "{
     \"idCurrency\": 16,
     \"exchangeRate\": 22,
-    \"dateOrder\": \"2026-11-06T10:27:29\",
-    \"dateExpected\": \"2026-11-06T10:27:29\",
+    \"dateOrder\": \"2026-11-07T13:16:32\",
+    \"dateExpected\": \"2026-11-07T13:16:32\",
     \"supplierName\": \"g\",
     \"supplierDetails\": \"z\",
-    \"shippingAddress\": \"m\",
-    \"notes\": \"i\",
+    \"shippingAddress\": \"c\",
+    \"notes\": \"u\",
     \"details\": [
         {
             \"idProductVariant\": 16,
@@ -16357,12 +16310,12 @@ const headers = {
 let body = {
     "idCurrency": 16,
     "exchangeRate": 22,
-    "dateOrder": "2026-11-06T10:27:29",
-    "dateExpected": "2026-11-06T10:27:29",
+    "dateOrder": "2026-11-07T13:16:32",
+    "dateExpected": "2026-11-07T13:16:32",
     "supplierName": "g",
     "supplierDetails": "z",
-    "shippingAddress": "m",
-    "notes": "i",
+    "shippingAddress": "c",
+    "notes": "u",
     "details": [
         {
             "idProductVariant": 16,
@@ -16542,10 +16495,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateOrder"                data-endpoint="PUTapi-orders--order-"
-               value="2026-11-06T10:27:29"
+               value="2026-11-07T13:16:32"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:32</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>dateExpected</code></b>&nbsp;&nbsp;
@@ -16554,10 +16507,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="dateExpected"                data-endpoint="PUTapi-orders--order-"
-               value="2026-11-06T10:27:29"
+               value="2026-11-07T13:16:32"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-11-06T10:27:29</code></p>
+<p>Must be a valid date. Example: <code>2026-11-07T13:16:32</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>supplierName</code></b>&nbsp;&nbsp;
@@ -16590,10 +16543,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="shippingAddress"                data-endpoint="PUTapi-orders--order-"
-               value="m"
+               value="c"
                data-component="body">
     <br>
-<p>Must not be greater than 2000 characters. Example: <code>m</code></p>
+<p>Must not be greater than 2000 characters. Example: <code>c</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>notes</code></b>&nbsp;&nbsp;
@@ -16602,10 +16555,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="notes"                data-endpoint="PUTapi-orders--order-"
-               value="i"
+               value="u"
                data-component="body">
     <br>
-<p>Must not be greater than 2000 characters. Example: <code>i</code></p>
+<p>Must not be greater than 2000 characters. Example: <code>u</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -17369,7 +17322,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -17392,7 +17345,7 @@ let body = {
     "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -17581,10 +17534,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-users"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>
@@ -17780,7 +17733,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"userName\": \"z\",
     \"email\": \"rempel.chadrick@example.org\",
     \"password\": \"NvYgxwmi\\/#iw\\/kX\",
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
@@ -17803,7 +17756,7 @@ let body = {
     "userName": "z",
     "email": "rempel.chadrick@example.org",
     "password": "NvYgxwmi\/#iw\/kX",
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -18022,10 +17975,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-users--id-"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li></ul>
         </div>

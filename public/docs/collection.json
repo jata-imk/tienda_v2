@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "TiendaBackend API Documentation",
-        "_postman_id": "e41613e8-138d-47f1-8cd1-a58fd8f17498",
+        "_postman_id": "639883f9-269b-49d5-9c86-6d687b5238f5",
         "description": "Backend API del sistema de ventas Tienda. Autenticaci\u00f3n JWT y acceso para Administrador, Vendedor y Almac\u00e9n.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -84,7 +84,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"p\":{\"page\":16,\"r\":39,\"per_page\":7,\"s\":16},\"f\":[\"entityId\"],\"o\":{\"column\":\"occurredAt\",\"field\":\"requestId\",\"direction\":\"asc\",\"type\":\"desc\"},\"dateFrom\":\"2026-11-06T10:27:29\",\"dateTo\":\"2052-11-29\",\"entityType\":\"n\"}"
+                            "raw": "{\"p\":{\"page\":16,\"r\":39,\"per_page\":7,\"s\":16},\"f\":[\"outcome\"],\"o\":{\"column\":\"requestId\",\"field\":\"roleName\"},\"dateFrom\":\"2026-11-07T13:16:31\",\"dateTo\":\"2026-11-07T13:16:31\",\"entityType\":\"m\"}"
                         },
                         "description": "Solo administrador. Siempre paginado: 15 por defecto, m\u00e1ximo 100.\nSoporta p, f, o, w, totalCount, dateFrom\/dateTo y entityType\/entityId."
                     },
@@ -119,7 +119,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"p\":{\"page\":0,\"r\":39,\"per_page\":15,\"s\":16},\"f\":[\"id\"],\"o\":{\"column\":\"roleCode\",\"field\":\"actorName\",\"direction\":\"desc\",\"type\":\"asc\"},\"totalCount\":true,\"dateFrom\":\"2026-11-06T10:27:29\",\"dateTo\":\"2052-11-29\",\"entityType\":\"n\"}"
+                            "raw": "{\"p\":{\"page\":0,\"r\":39,\"per_page\":15,\"s\":16},\"f\":[\"actorId\"],\"o\":{\"column\":\"requestId\",\"field\":\"actorName\"},\"dateFrom\":\"2026-11-07T13:16:31\",\"dateTo\":\"2026-11-07T13:16:31\",\"entityType\":\"m\",\"totalCount\":true}"
                         },
                         "description": "Mismos filtros que GET. p.page y p.r son desplazamientos desde cero."
                     },
@@ -175,7 +175,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"p\":{\"page\":16,\"r\":39,\"per_page\":7,\"s\":16},\"f\":[\"auditEventId\"],\"o\":{\"column\":\"entityType\",\"field\":\"id\",\"direction\":\"desc\",\"type\":\"asc\"},\"dateFrom\":\"2026-11-06T10:27:29\",\"dateTo\":\"2052-11-29\",\"entityType\":\"n\"}"
+                            "raw": "{\"p\":{\"page\":16,\"r\":39,\"per_page\":7,\"s\":16},\"f\":[\"entityId\"],\"o\":{\"column\":\"id\",\"field\":\"auditEventId\"},\"dateFrom\":\"2026-11-07T13:16:31\",\"dateTo\":\"2026-11-07T13:16:31\",\"entityType\":\"m\"}"
                         },
                         "description": "Siempre paginado: 15 por defecto, m\u00e1ximo 100. Soporta p, f, o, w y totalCount."
                     },
@@ -432,7 +432,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": "Single-row table: fails with 409 if a record already exists.\n`logo` accepts a base64 string (with or without data-URI prefix)."
                     },
@@ -514,7 +514,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":true,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"rfc\":\"n\",\"legalName\":\"g\",\"taxRegime\":\"z\",\"idCurrency\":16,\"logo\":\"n\",\"street\":\"g\",\"externalNumber\":\"z\",\"crossStreetOne\":\"m\",\"crossStreetTwo\":\"i\",\"postalCode\":\"y\",\"neighborhood\":\"v\",\"city\":\"d\",\"stockControl\":false,\"quantityIntegers\":5,\"quantityDecimals\":19,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -619,7 +619,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -708,7 +708,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"inactive\"}"
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"symbol\":\"vdljni\",\"exchangeRate\":0,\"status\":\"active\"}"
                         },
                         "description": ""
                     },
@@ -867,7 +867,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-11-06T10:27:29\",\"dateTo\":\"2052-11-29\",\"lowStockThreshold\":39}"
+                            "raw": "{\"limit\":1,\"dateFrom\":\"2026-11-07T13:16:32\",\"dateTo\":\"2052-11-30\",\"lowStockThreshold\":39}"
                         },
                         "description": "Returns best-selling products, stock ranking (lowest\/highest), critical\nproduct-size combinations and inventory KPIs in a single payload. Stock\nalerts omit zero-stock variants that have never had inventory movements.\n\nEvery stock metric reflects the **current** inventory state: only\n`topProducts` is affected by the date range."
                     },
@@ -1113,7 +1113,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"inactive\",\"cascadeKeys\":false,\"dryRun\":false}"
+                            "raw": "{\"key\":\"bngzmi\",\"name\":\"y\",\"description\":\"Eius et animi quos velit et.\",\"status\":\"active\",\"cascadeKeys\":false,\"dryRun\":false}"
                         },
                         "description": "Con `cascadeKeys: true`, cambiar `key` renombra tambien sus productos (prefijo `CAT-`) y sus SKU\n(solo lo que sigue el patron automatico; todo o nada: si algo choca responde\n422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:\nresponde la vista previa `{ totals, products, variants, conflicts }`."
                     },
@@ -1593,7 +1593,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"active\"}"
+                            "raw": "{\"idSizeGroup\":16,\"name\":\"ngzmiyvdljnikhwa\",\"sortOrder\":50,\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -1833,7 +1833,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"active\"}"
+                            "raw": "{\"name\":\"b\",\"hexColor\":\"#fEEeDb\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -2628,7 +2628,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[1,2],\"idMainCategory\":1,\"idSizeGroup\":16,\"key\":\"CAM-043\",\"keySegment\":\"DAM\",\"name\":\"z\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"initialMovement\":{\"movementType\":\"entry\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
+                            "raw": "{\"categories\":[1,2],\"idMainCategory\":1,\"idSizeGroup\":16,\"key\":\"CAM-043\",\"keySegment\":\"DAM\",\"name\":\"z\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":1,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"initialMovement\":{\"movementType\":\"adjustment\",\"referenceType\":\"w\",\"referenceId\":16,\"notes\":\"architecto\",\"idUser\":16},\"variants\":[{\"idSize\":16,\"idColor\":16,\"sku\":\"n\",\"codeBar\":\"g\",\"stock\":12,\"status\":\"active\"}]}"
                         },
                         "description": "Si se crea con `status: inactive`, sus variantes nacen `inactive` aunque el\npayload las mande como `active`. Lo inverso si se respeta: en un producto\nactivo puede haber variantes `inactive` (por ejemplo una talla descontinuada).\n\n`key` y `variants[].sku` son opcionales: si no vienen se generan (ver\n`GET \/api\/products\/next-key` y la regla `CLAVE-S{idTalla}-C{idColor}`)."
                     },
@@ -2717,7 +2717,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"categories\":[16],\"idMainCategory\":16,\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":false,\"discount\":19,\"typeIva\":4,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"active\",\"cascadeKeys\":false,\"dryRun\":false}"
+                            "raw": "{\"categories\":[16],\"idMainCategory\":16,\"idSizeGroup\":16,\"key\":\"n\",\"name\":\"g\",\"description\":\"Eius et animi quos velit et.\",\"codeBar\":\"v\",\"price\":42,\"cost\":37,\"stockControl\":true,\"discount\":19,\"typeIva\":3,\"rateIva\":17,\"quotaIva\":8,\"isr\":8,\"impEsp\":14,\"status\":\"inactive\",\"cascadeKeys\":false,\"dryRun\":false}"
                         },
                         "description": "Cambiar `status` cascadea a todas las variantes del producto: `inactive` las\ndesactiva, `active` las reactiva. Solo se dispara si el valor cambia, asi que\nreenviar el formulario completo con el mismo `status` no las toca.\n\nCon `cascadeKeys: true`, cambiar `key` renombra tambien los SKU de sus variantes\n(solo lo que sigue el patron automatico; todo o nada: si algo choca responde\n422 con `data.conflicts` y no guarda nada). Con `dryRun: true` no guarda:\nresponde la vista previa `{ totals, products, variants, conflicts }`."
                     },
@@ -3011,12 +3011,6 @@
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Order not found.\",\"data\":null}",
-                            "name": ""
-                        },
-                        {
                             "header": [
                                 {
                                     "key": "cache-control",
@@ -3028,13 +3022,23 @@
                                 },
                                 {
                                     "key": "x-request-id",
-                                    "value": "cfd09fe6-13ed-4f29-a5fb-9e73449c2b8b"
+                                    "value": "d2b0cb7a-e594-46e7-aba2-55ef300ef0a6"
                                 },
                                 {
                                     "key": "access-control-allow-origin",
                                     "value": "*"
+                                },
+                                {
+                                    "key": "access-control-expose-headers",
+                                    "value": "X-Request-Id"
                                 }
                             ],
+                            "code": 401,
+                            "body": "{\"ok\":false,\"code\":401,\"status\":\"Unauthorized\",\"message\":\"Token inv\\u00e1lido o malformado.\",\"data\":null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
                             "code": 404,
                             "body": "{\"ok\":false,\"code\":404,\"status\":\"Not Found\",\"message\":\"Order not found.\",\"data\":null}",
                             "name": ""
@@ -3213,7 +3217,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-11-06T10:27:29\",\"dateExpected\":\"2026-11-06T10:27:29\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"m\",\"notes\":\"i\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
+                            "raw": "{\"idCurrency\":16,\"exchangeRate\":22,\"dateOrder\":\"2026-11-07T13:16:32\",\"dateExpected\":\"2026-11-07T13:16:32\",\"supplierName\":\"g\",\"supplierDetails\":\"z\",\"shippingAddress\":\"c\",\"notes\":\"u\",\"details\":[{\"idProductVariant\":16,\"quantityOrdered\":22,\"unitCost\":7,\"notes\":\"z\"}]}"
                         },
                         "description": "Solo en `draft` (409 en cualquier otro estatus). Los campos omitidos no se\ntocan. Si se envia `details`, reemplaza todas las lineas (se identifican\npor `idProductVariant`). Mismos campos que el alta."
                     },
@@ -3422,7 +3426,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },
@@ -3511,7 +3515,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"active\"}"
+                            "raw": "{\"idUserType\":16,\"firstName\":\"n\",\"lastName\":\"g\",\"userName\":\"z\",\"email\":\"rempel.chadrick@example.org\",\"password\":\"NvYgxwmi\\\/#iw\\\/kX\",\"status\":\"inactive\"}"
                         },
                         "description": ""
                     },

@@ -37,7 +37,8 @@ adicionales para crear logs. No existen endpoints para editar o borrar la bitác
 
 ### Alcance del historial
 
-- La captura empieza al activar esta versión/módulo. No existe reconstrucción del pasado.
+- La captura empieza al activar esta versión/módulo. Del periodo anterior solo se importan
+  el Kardex, los cambios de estado de pedidos y los inicios de sesión, con `source=legacy` (ver abajo).
 - Los listados, búsquedas, dashboard, detalles y simulaciones `dryRun` no generan eventos
   de negocio; sí se auditan sus rechazos 401/403. La generación del PDF sí tiene evento.
 - Las consultas técnicas se escriben en archivos del servidor y no forman parte de esta API.
@@ -163,7 +164,7 @@ Ejemplo de respuesta del listado:
 | `roleCode` / `roleName` | string o null | Rol histórico al realizar la acción |
 | `entityType` | string o null | Tipo de la entidad principal |
 | `entityId` | string o null | Identificador de esa entidad; conservar como texto |
-| `source` | string | `api` o `system` |
+| `source` | string | `api`, `system` o `legacy` (historial importado) |
 | `occurredAt` | string | Fecha UTC ISO 8601, con sufijo `Z` |
 
 Usar `id` como clave de fila. Varios eventos pueden compartir `requestId` cuando
@@ -172,6 +173,22 @@ una petición contiene más de una acción de seguridad.
 Mostrar `actorName` y `roleName` guardados, sin sustituirlos por datos actuales de
 usuarios o roles: pueden haber cambiado. Si `source=system` y no hay actor, mostrar
 **Proceso del sistema**; si `source=api` y no hay actor, **No autenticado**.
+
+### Historial importado (`source=legacy`)
+
+Eventos previos a la auditoría, reconstruidos desde el Kardex, el historial de estados de
+pedidos y las sesiones. Etiqueta sugerida: **Histórico importado**.
+
+- `metadata.backfilled = true` y `metadata.legacy` con las tablas/IDs de origen.
+- `metadata.actorDataIsCurrent = true`: `actorName`/`roleName` son los **actuales** del
+  usuario, no los que tenía en ese momento. Mostrar una nota, por ejemplo
+  *"Usuario y rol según datos actuales"*.
+- No tienen ruta, método, IP ni agente (`null`). La hora tiene precisión de segundos.
+- Acciones posibles: `inventory.movements_registered`, `orders.received`, `orders.created`,
+  `orders.confirmed`, `orders.cancelled`, `auth.login`. Los cambios antes/después tienen el
+  mismo formato que los capturados en vivo; un `orders.created` importado solo trae el alta
+  del historial de estado, no los valores originales del pedido.
+- Para listarlos: `"w": { "source": "legacy" }`.
 
 Para mostrar la hora local, por ejemplo:
 
