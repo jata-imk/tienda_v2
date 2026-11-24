@@ -70,7 +70,7 @@ trait ValidatesVariantInput
         foreach ($variants as $i => $variant) {
             $combo = ($variant['idSize'] ?? '') . '-' . ($variant['idColor'] ?? '');
 
-            if (in_array($combo, $existing, true)) {
+            if (in_array($combo, $existing, true) && (!isset($variant['stock']) || !is_numeric($variant['stock']) || (float) $variant['stock'] != 0)) {
                 $validator->errors()->add(
                     "variants.{$i}.idColor",
                     'El producto ya tiene una variante con esa combinacion de talla y color.'

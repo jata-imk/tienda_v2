@@ -7,10 +7,12 @@ use App\DTOs\Product\UpdateVariantDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Size;
 use App\Services\Concerns\AppliesGridConditions;
 use App\Support\Audit;
 use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Alta, edicion y baja de variantes sobre un producto ya creado. El `stock` de
@@ -156,18 +158,40 @@ class ProductVariantService
     }
 
     /**
-     * Crea las variantes y, si se pidio `initialMovement`, un movimiento por
-     * cada una con existencia inicial > 0. Todo dentro de una transaccion.
+     * Crea variantes y registra la inicialización en cero. Para existencias
+     * positivas, crea el movimiento opcional. Todo dentro de una transacción.
      *
      * @return Collection<int, ProductVariant>
      */
     public function store(Product $product, CreateVariantsDTO $dto): Collection
     {
         return Audit::transaction(function () use ($product, $dto) {
+            $product = Product::whereKey($product->id)->lockForUpdate()->firstOrFail();
+            $sizes = Size::whereIn('id', array_map(fn ($input) => $input->sizeId, $dto->variants))
+                ->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+            foreach ($dto->variants as $i => $input) {
+                if (! isset($sizes[$input->sizeId]) || (int) $sizes[$input->sizeId]->id_size_group !== (int) $product->id_size_group) {
+                    throw ValidationException::withMessages([
+                        "variants.{$i}.idSize" => 'La talla seleccionada no pertenece al grupo de tallas del producto.',
+                    ]);
+                }
+            }
             $created = new Collection;
-            $skus = VariantSku::resolve($product->key, $dto->variants);
+            $existingByCombo = ProductVariant::where('id_product', $product->id)->get()->keyBy(fn ($variant) => $variant->id_size.'-'.$variant->id_color);
+            $newInputs = array_filter($dto->variants, fn ($input) => ! $existingByCombo->has($input->sizeId.'-'.$input->colorId));
+            $skus = VariantSku::resolve($product->key, $newInputs);
 
             foreach ($dto->variants as $i => $variantInput) {
+                $existing = $existingByCombo->get($variantInput->sizeId.'-'.$variantInput->colorId);
+                if ($existing) {
+                    if ($variantInput->stock != 0) {
+                        throw ValidationException::withMessages([
+                            "variants.{$i}.idColor" => 'El producto ya tiene una variante con esa combinacion de talla y color.',
+                        ]);
+                    }
+                    $created->push($existing->load(['size', 'color']));
+                    continue;
+                }
                 $variant = ProductVariant::create([
                     'id_product' => $product->id,
                     'id_size' => $variantInput->sizeId,
@@ -178,8 +202,11 @@ class ProductVariantService
                     'status' => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
-                // Movimiento inicial por cada variante con existencia > 0.
-                if ($dto->initialMovement !== null && $variantInput->stock > 0) {
+                // El cero tiene una inicialización propia; los positivos usan el movimiento opcional.
+                if ((float) $variant->stock == 0) {
+                    $initialization = app(VariantInitializationService::class);
+                    $initialization->recordZero($variant, $initialization->actorId());
+                } elseif ($dto->initialMovement !== null) {
                     InventoryMovement::create([
                         'id_product_variant' => $variant->id,
                         'movement_type' => $dto->initialMovement->movementType,

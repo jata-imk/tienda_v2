@@ -4,10 +4,14 @@ namespace App\Services;
 
 use App\DTOs\Size\CreateSizeDTO;
 use App\DTOs\Size\UpdateSizeDTO;
+use App\Models\Color;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Size;
 use App\Services\Concerns\AppliesGridConditions;
 use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 
 class SizeService
 {
@@ -78,6 +82,31 @@ class SizeService
                 'status' => $dto->status,
             ]);
 
+            $initialization = app(VariantInitializationService::class);
+            $withoutColors = [];
+            Product::where('id_size_group', $size->id_size_group)->orderBy('id')->chunkById(100, function ($products) use ($size, $initialization, &$withoutColors) {
+                foreach ($products as $candidate) {
+                    $product = Product::whereKey($candidate->id)->lockForUpdate()->firstOrFail();
+                    if ((int) $product->id_size_group !== (int) $size->id_size_group) {
+                        continue;
+                    }
+                    // Lectura actual tras bloquear el producto, incluso si el lote ya
+                    // abrió una vista anterior de InnoDB mientras esperaba el lock.
+                    $colorIds = ProductVariant::where('id_product', $product->id)->orderBy('id')
+                        ->lockForUpdate()->get(['id', 'id_color'])->pluck('id_color')->unique();
+                    if ($colorIds->isEmpty()) {
+                        $withoutColors[] = $product->id;
+                        continue;
+                    }
+                    foreach (Color::whereIn('id', $colorIds)->orderBy('id')->get() as $color) {
+                        $initialization->createMissing($product, $size, $color, $initialization->actorId());
+                    }
+                }
+            });
+            if ($withoutColors !== []) {
+                app(AuditTrail::class)->metadata(['productsWithoutColors' => $withoutColors]);
+            }
+
             return $size->fresh('sizeGroup');
         });
     }
@@ -89,6 +118,16 @@ class SizeService
 
             if (! $size) {
                 return null;
+            }
+
+            if ($dto->sizeGroupId !== null && (int) $size->id_size_group !== $dto->sizeGroupId) {
+                $productIds = ProductVariant::where('id_size', $size->id)->distinct()->pluck('id_product');
+                $products = Product::whereIn('id', $productIds)->orderBy('id')->lockForUpdate()->get();
+                if ($products->contains(fn ($product) => (int) $product->id_size_group !== $dto->sizeGroupId)) {
+                    throw ValidationException::withMessages([
+                        'idSizeGroup' => 'No se puede cambiar el grupo: la talla está asociada a productos de otro grupo.',
+                    ]);
+                }
             }
 
             $fields = array_filter([

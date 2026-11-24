@@ -173,6 +173,29 @@ Además `POST /{recurso}/query`.
 
 Filtra tallas de un grupo con `w[id_size_group]`.
 
+Crear una talla también crea, con stock cero, la variante de esa talla para cada
+producto del grupo y cada color ya presente en sus variantes. Se incluyen productos,
+tallas y colores inactivos; si cualquiera de los tres está inactivo, la variante nace
+inactiva. Los productos sin colores no generan variantes y sus IDs quedan en los
+metadatos de auditoría. Toda el alta es transaccional.
+
+No se puede cambiar el grupo de un producto o de una talla si eso deja variantes
+asociadas a una talla de otro grupo: la API responde `422`.
+
+Para diagnosticar y completar datos históricos:
+
+```bash
+php artisan inventory:backfill-variants --dry-run
+php artisan inventory:backfill-variants --user-id=1
+```
+
+La simulación muestra combinaciones faltantes, variantes en cero sin movimientos,
+incompatibilidades de grupo y productos sin colores. La aplicación crea las variantes
+faltantes y registra las variantes existentes en cero sin movimientos. Procesa por
+lotes, conserva existencias y se puede repetir sin duplicar registros. La referencia
+`variant_backfill` identifica los movimientos de regularización y la fecha es la de
+ejecución. El usuario indicado debe existir y queda como responsable del Kardex.
+
 ### `/api/colors`
 | Campo | Tipo | Req. | Descripción |
 |---|---|---|---|
@@ -331,8 +354,11 @@ diálogo con `totals` y `conflicts` → al confirmar, el `PUT` sin `dryRun`.
 | `notes` | string | no | Comentario |
 | `idUser` | int | sí* | Usuario que genera el movimiento |
 
-\* Requeridos sólo si se envía `initialMovement`. El backend crea **un movimiento por cada
-variante con `stock > 0`** (`previous_stock=0`, `new_stock=stock`) dentro de una transacción.
+\* Requeridos sólo si se envía `initialMovement`. Para variantes con `stock > 0`, el
+backend crea el movimiento indicado solamente cuando se proporciona `initialMovement`.
+Toda variante nueva con `stock = 0` genera un movimiento `entry` con cantidad, existencia
+anterior y nueva en cero, referencia `variant_initialization` y usuario autenticado,
+independientemente de `initialMovement`. El alta también se registra en auditoría.
 
 ### Categorías del producto — entrada vs salida
 
@@ -482,13 +508,15 @@ Validaciones (`422` si fallan, no se crea nada del lote):
 
 - El producto debe tener `stockControl = true`.
 - Cada `idSize` debe pertenecer al `idSizeGroup` del producto.
-- La combinación `idSize + idColor` no puede repetirse dentro del payload **ni existir ya** en el
-  producto (`product_variants` tiene un unique `id_product + id_size + id_color`).
-- `sku` es único en toda la tabla.
+- La combinación `idSize + idColor` no puede repetirse dentro del payload. Si ya existe en el
+  producto, se acepta únicamente con `stock = 0` y se devuelve sin modificarla. Con stock
+  positivo se rechaza.
+- `sku` es único en toda la tabla para las variantes nuevas. En una combinación existente
+  reenviada con stock cero se conserva su SKU, aunque el payload envíe otro.
 
-Igual que en el alta del producto, `initialMovement` genera **un movimiento por cada variante con
-`stock > 0`** (`previous_stock = 0`, `new_stock = stock`). Sin `initialMovement` la variante nace
-con su `stock` y sin historial.
+Igual que en el alta del producto, `initialMovement` genera un movimiento por variante con
+`stock > 0`. Cada variante nueva en cero genera siempre el movimiento `variant_initialization`;
+una variante existente reenviada en cero no genera otro movimiento ni cambia su existencia.
 
 Producto inexistente → `404`.
 

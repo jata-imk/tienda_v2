@@ -119,7 +119,7 @@ servicio (sin grupo de tallas ni variantes, p. ej. `SERV-001`) nunca aparecen aq
 interno los descarta.
 
 Para las alertas, una variante tiene el inventario inicializado cuando su existencia actual es
-mayor que cero o cuando tiene al menos un movimiento histórico. De esta forma, las combinaciones
+mayor que cero o cuando tiene al menos un movimiento histórico de cantidad distinta de cero. De esta forma, las combinaciones
 creadas automáticamente en cero no se reportan como agotadas, mientras que una combinación que
 sí tuvo existencias y llegó a cero continúa apareciendo. Este criterio también se aplica a
 `lowestStock`, `lowStockCount` y `outOfStockCount`.

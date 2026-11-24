@@ -8,6 +8,7 @@ use App\DTOs\Product\VariantInputDTO;
 use App\Http\Requests\Product\Concerns\UppercasesSkuInput;
 use App\Http\Requests\Product\Concerns\ValidatesVariantInput;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -39,7 +40,7 @@ class CreateProductVariantsRequest extends FormRequest
             'variants.*.idSize'  => 'required|integer|exists:sizes,id',
             'variants.*.idColor' => 'required|integer|exists:colors,id',
             // Sin SKU se genera con la clave actual del producto (ver VariantSku).
-            'variants.*.sku'     => 'nullable|string|max:80|distinct|unique:product_variants,sku',
+            'variants.*.sku'     => 'nullable|string|max:80|distinct',
             'variants.*.codeBar' => 'nullable|string|max:50',
             'variants.*.stock'   => 'required|numeric|min:0',
             'variants.*.status'  => 'sometimes|in:active,inactive',
@@ -82,6 +83,20 @@ class CreateProductVariantsRequest extends FormRequest
             $this->validateSizesBelongToGroup($validator, $variants, $product->id_size_group);
             $this->validateCombosAreUniqueInPayload($validator, $variants);
             $this->validateCombosAreNewForProduct($validator, $variants, $product->id);
+
+            foreach ($variants as $i => $variant) {
+                if (!is_array($variant) || !isset($variant['sku']) || !is_string($variant['sku']) || $variant['sku'] === '') {
+                    continue;
+                }
+                $existing = ProductVariant::where('id_product', $product->id)
+                    ->where('id_size', $variant['idSize'] ?? null)->where('id_color', $variant['idColor'] ?? null)->exists();
+                if ($existing && isset($variant['stock']) && is_numeric($variant['stock']) && (float) $variant['stock'] == 0) {
+                    continue;
+                }
+                if (ProductVariant::where('sku', $variant['sku'])->exists()) {
+                    $validator->errors()->add("variants.{$i}.sku", 'El SKU ya está en uso.');
+                }
+            }
         });
     }
 

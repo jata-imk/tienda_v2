@@ -8,12 +8,14 @@ use App\DTOs\Product\UpdateProductDTO;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Size;
 use App\Services\Concerns\AppliesGridConditions;
 use App\Support\Audit;
 use App\Support\VariantSku;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ProductService
 {
@@ -297,6 +299,16 @@ class ProductService
 
             $this->syncCategories($product, self::withMainCategory($dto->categoryIds, $dto->mainCategoryId));
 
+            $sizes = Size::whereIn('id', array_map(fn ($input) => $input->sizeId, $dto->variants))
+                ->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+            foreach ($dto->variants as $i => $input) {
+                if (! isset($sizes[$input->sizeId]) || ($product->id_size_group !== null
+                    && (int) $sizes[$input->sizeId]->id_size_group !== (int) $product->id_size_group)) {
+                    throw ValidationException::withMessages([
+                        "variants.{$i}.idSize" => 'La talla seleccionada no pertenece al grupo de tallas del producto.',
+                    ]);
+                }
+            }
             $skus = VariantSku::resolve($product->key, $dto->variants);
 
             foreach ($dto->variants as $i => $variantInput) {
@@ -310,8 +322,11 @@ class ProductService
                     'status' => ProductVariant::statusUnder($product, $variantInput->status),
                 ]);
 
-                // Movimiento inicial por cada variante con existencia > 0.
-                if ($dto->initialMovement !== null && $variantInput->stock > 0) {
+                // El cero tiene una inicialización propia; los positivos usan el movimiento opcional.
+                if ((float) $variant->stock == 0) {
+                    $initialization = app(VariantInitializationService::class);
+                    $initialization->recordZero($variant, $initialization->actorId());
+                } elseif ($dto->initialMovement !== null) {
                     InventoryMovement::create([
                         'id_product_variant' => $variant->id,
                         'movement_type' => $dto->initialMovement->movementType,
@@ -371,6 +386,15 @@ class ProductService
             $dto->cascadeKeys,
             fn (Product $locked) => $this->keyRenamePlan($locked, $dto),
             function (Product $locked) use ($fields, $dto) {
+                if ($dto->sizeGroupId !== null && (int) $locked->id_size_group !== $dto->sizeGroupId) {
+                    $sizeIds = $locked->variants()->distinct()->pluck('id_size');
+                    $sizes = Size::whereIn('id', $sizeIds)->orderBy('id')->lockForUpdate()->get();
+                    if ($sizes->contains(fn ($size) => (int) $size->id_size_group !== $dto->sizeGroupId)) {
+                        throw ValidationException::withMessages([
+                            'idSizeGroup' => 'No se puede cambiar el grupo: el producto tiene variantes de otro grupo.',
+                        ]);
+                    }
+                }
                 if ($fields !== []) {
                     $locked->update($fields);
 

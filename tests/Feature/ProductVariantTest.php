@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\User;
+use App\Services\VariantInitializationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -72,8 +74,9 @@ class ProductVariantTest extends TestCase
         $this->assertSame($before, InventoryMovement::count());
     }
 
-    public function test_store_with_initial_movement_creates_one_movement_per_variant_with_stock(): void
+    public function test_store_with_initial_movement_records_positive_and_zero_stock(): void
     {
+        $this->actingAs(User::findOrFail(1));
         $this->withoutMiddleware()->postJson('/api/products/1/variants', [
             'variants' => [
                 ['idSize' => self::SIZE_34, 'idColor' => self::COLOR_BEIGE, 'sku' => 'CAM-001-34-BEI', 'stock' => 3],
@@ -100,8 +103,15 @@ class ProductVariantTest extends TestCase
             'id_user'            => 1,
         ]);
 
-        // La variante con stock 0 no genera movimiento.
-        $this->assertSame(0, InventoryMovement::where('id_product_variant', $noStock->id)->count());
+        $this->assertDatabaseHas('inventory_movements', [
+            'id_product_variant' => $noStock->id,
+            'movement_type' => 'entry',
+            'quantity' => 0,
+            'previous_stock' => 0,
+            'new_stock' => 0,
+            'reference_type' => VariantInitializationService::INITIAL_REFERENCE,
+            'id_user' => 1,
+        ]);
     }
 
     public function test_store_rejects_a_combination_that_already_exists(): void

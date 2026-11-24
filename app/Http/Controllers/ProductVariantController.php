@@ -78,7 +78,9 @@ class ProductVariantController extends Controller
      *
      * Agrega una o varias variantes (talla x color) a un producto existente, por
      * ejemplo un color nuevo. Si se envia `initialMovement` se genera un movimiento
-     * de inventario por cada variante con existencia inicial mayor a cero.
+     * de inventario por cada variante con existencia inicial mayor a cero. Las
+     * variantes nuevas en cero generan siempre un movimiento de inicializacion.
+     * Una combinacion existente enviada en cero se devuelve sin modificarla.
      *
      * Si el producto esta inactivo, las variantes nuevas nacen `inactive` aunque el
      * payload las mande como `active`: un producto inactivo no tiene variantes activas.

@@ -230,6 +230,7 @@ class DashboardService
                 ->orWhereExists(function ($movements) {
                     $movements->selectRaw('1')
                         ->from('inventory_movements')
+                        ->where('inventory_movements.quantity', '!=', 0)
                         ->whereColumn(
                             'inventory_movements.id_product_variant',
                             'product_variants.id',

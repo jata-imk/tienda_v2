@@ -54,7 +54,7 @@ explícita. Una prueba exige clasificar también las rutas nuevas.
 | Pedidos | `orders.created`, `orders.updated`, `orders.confirmed`, `orders.cancelled`, `orders.received` |
 | PDF | `orders.pdf_generated`, tanto inline como attachment |
 | Productos | `products.created`, `products.updated`, `products.deactivated`, `products.image_changed`, `products.image_deleted` |
-| Variantes e imágenes | `variants.created/updated/deactivated`, `product_images.created/deleted` |
+| Variantes e imágenes | `variants.created/updated/deactivated`, `variants.backfilled`, `variants.zero_stock_backfilled`, `product_images.created/deleted` |
 | Catálogos | `categories`, `size_groups`, `sizes`, `colors`: `created/updated/deactivated` |
 | Configuración | `company_info.created/updated`, `currencies.created/updated/deactivated` |
 
