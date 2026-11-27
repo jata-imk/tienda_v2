@@ -28,6 +28,8 @@ class SizeController extends Controller
      *
      * Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.
      * Filter by group with `w[id_size_group]`.
+     * Groups always sort by name A-Z. `o` only sorts sizes within each group;
+     * without `o`, sizes sort by sortOrder ascending. Ties use sortOrder, then ID.
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Sizes retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
@@ -42,6 +44,7 @@ class SizeController extends Controller
      * Query sizes (POST)
      *
      * Same payload formats as `POST /products/query`.
+     * Groups always sort by name A-Z; `o` changes only the order within each group.
      *
      * @response 200 {"ok":true,"code":200,"status":"OK","message":"Sizes retrieved.","data":{"items":[],"totalCount":0,"summary":[0]}}
      */
@@ -74,6 +77,8 @@ class SizeController extends Controller
     /**
      * Create size
      *
+     * Names are unique within each group, including inactive sizes. Conflicts return 422 in errors.name.
+     *
      * @response 201 {"ok":true,"code":201,"status":"Created","message":"Size created.","data":{}}
      */
     public function store(CreateSizeRequest $request): JsonResponse
@@ -83,6 +88,9 @@ class SizeController extends Controller
 
     /**
      * Update size
+     *
+     * Names are unique within each group, including when changing only idSizeGroup.
+     * The current size is excluded; conflicts return 422 in errors.name.
      *
      * @urlParam id integer required Size ID. Example: 1
      *

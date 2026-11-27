@@ -30,7 +30,7 @@ class CatalogService
             'categories' => CategoryResource::collection(Category::orderBy('name')->get()),
             'colors' => ColorResource::collection(Color::orderBy('name')->get()),
             'sizeGroups' => SizeGroupResource::collection(SizeGroup::orderBy('name')->get()),
-            'sizes' => SizeResource::collection(Size::orderBy('sort_order')->get()),
+            'sizes' => SizeResource::collection(Size::with('sizeGroup')->orderedForDisplay()->get()),
             'userTypes' => UserTypeResource::collection(UserType::orderBy('name')->get()),
             'ivaTypes' => $this->ivaTypes(),
         ];

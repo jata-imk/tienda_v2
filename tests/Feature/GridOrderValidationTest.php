@@ -148,10 +148,10 @@ class GridOrderValidationTest extends TestCase
     public function test_default_orderings_are_preserved(): void
     {
         $sizes = $this->withoutMiddleware()->postJson('/api/sizes/query', [])->assertOk()->json('data.items');
-        $sortOrders = array_column($sizes, 'sortOrder');
-        $sorted = $sortOrders;
-        sort($sorted);
-        $this->assertSame($sorted, $sortOrders, 'Las tallas deben seguir ordenadas por sortOrder.');
+        $expectedSizes = collect($sizes)->sortBy([
+            ['sizeGroup', 'asc'], ['idSizeGroup', 'asc'], ['sortOrder', 'asc'], ['id', 'asc'],
+        ])->values()->all();
+        $this->assertSame($expectedSizes, $sizes, 'Las tallas deben ordenarse por grupo y luego sortOrder.');
 
         $movements = $this->withoutMiddleware()
             ->postJson('/api/inventory/movements/query', [])
