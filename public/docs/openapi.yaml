@@ -3579,7 +3579,7 @@ paths:
     post:
       summary: 'Query sizes (POST)'
       operationId: querySizesPOST
-      description: 'Same payload formats as `POST /products/query`.'
+      description: "Same payload formats as `POST /products/query`.\nGroups always sort by name A-Z; `o` changes only the order within each group."
       parameters: []
       responses:
         200:
@@ -3632,7 +3632,7 @@ paths:
     get:
       summary: 'List sizes'
       operationId: listSizes
-      description: "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.\nFilter by group with `w[id_size_group]`."
+      description: "Supports filters: `p[page]`, `p[per_page]`, `f[]`, `o[column]`, `o[direction]`, `w[column]`, `totalCount`.\nFilter by group with `w[id_size_group]`.\nGroups always sort by name A-Z. `o` only sorts sizes within each group;\nwithout `o`, sizes sort by sortOrder ascending. Ties use sortOrder, then ID."
       parameters: []
       responses:
         200:
@@ -3684,7 +3684,7 @@ paths:
     post:
       summary: 'Create size'
       operationId: createSize
-      description: ''
+      description: 'Names are unique within each group, including inactive sizes. Conflicts return 422 in errors.name.'
       parameters: []
       responses:
         201:
@@ -3815,7 +3815,7 @@ paths:
     put:
       summary: 'Update size'
       operationId: updateSize
-      description: ''
+      description: "Names are unique within each group, including when changing only idSizeGroup.\nThe current size is excluded; conflicts return 422 in errors.name."
       parameters: []
       responses:
         200:

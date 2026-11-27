@@ -365,7 +365,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: November 7, 2026</li>
+        <li>Last updated: November 27, 2026</li>
     </ul>
 </div>
 
@@ -7959,7 +7959,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Same payload formats as <code>POST /products/query</code>.</p>
+<p>Same payload formats as <code>POST /products/query</code>.
+Groups always sort by name A-Z; <code>o</code> changes only the order within each group.</p>
 
 <span id="example-requests-POSTapi-sizes-query">
 <blockquote>Example request:</blockquote>
@@ -8105,7 +8106,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </p>
 
 <p>Supports filters: <code>p[page]</code>, <code>p[per_page]</code>, <code>f[]</code>, <code>o[column]</code>, <code>o[direction]</code>, <code>w[column]</code>, <code>totalCount</code>.
-Filter by group with <code>w[id_size_group]</code>.</p>
+Filter by group with <code>w[id_size_group]</code>.
+Groups always sort by name A-Z. <code>o</code> only sorts sizes within each group;
+without <code>o</code>, sizes sort by sortOrder ascending. Ties use sortOrder, then ID.</p>
 
 <span id="example-requests-GETapi-sizes">
 <blockquote>Example request:</blockquote>
@@ -8250,7 +8253,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Names are unique within each group, including inactive sizes. Conflicts return 422 in errors.name.</p>
 
 <span id="example-requests-POSTapi-sizes">
 <blockquote>Example request:</blockquote>
@@ -8619,7 +8622,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Names are unique within each group, including when changing only idSizeGroup.
+The current size is excluded; conflicts return 422 in errors.name.</p>
 
 <span id="example-requests-PUTapi-sizes--id-">
 <blockquote>Example request:</blockquote>

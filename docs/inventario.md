@@ -39,6 +39,12 @@ variantes, donde se aceptan dos alias:
 listado de productos, `o` ordena los productos y nunca las variantes (ver
 [Orden de las variantes](#orden-de-las-variantes)).
 
+En **tallas**, el nombre del grupo siempre tiene prioridad y va de A-Z. `o` cambia
+únicamente el orden dentro de cada grupo; sin `o` se usa `sortOrder` ascendente.
+Los empates se resuelven por `sortOrder` ascendente y luego ID ascendente. Si dos
+grupos tienen el mismo nombre, se separan por ID de grupo antes de ordenar sus tallas.
+La misma regla por defecto se aplica a `catalogs.sizes` del login y a `GET /api/catalogs`.
+
 ### Operadores de `POST /{recurso}/query`
 
 El `w` en formato array (`{f, ao, v, lo}`) es el que manda el `filterRow` de DevExtreme.
@@ -172,6 +178,43 @@ Además `POST /{recurso}/query`.
 | `status` | string | no | active / inactive |
 
 Filtra tallas de un grupo con `w[id_size_group]`.
+
+El nombre es **único dentro de su grupo**, incluso si la talla está inactiva. Se
+permite el mismo nombre en grupos distintos. En altas y actualizaciones, incluidos
+cambios solo de `idSizeGroup`, un conflicto responde `422` en `errors.name`:
+
+```json
+{
+  "message": "Ya existe una talla con este nombre en el grupo.",
+  "errors": { "name": ["Ya existe una talla con este nombre en el grupo."] }
+}
+```
+
+Se conserva la comparación de la collation de la columna en MariaDB (la configuración
+habitual `utf8mb4_unicode_ci` no distingue mayúsculas). La edición permite conservar
+el nombre de la propia talla. El índice único protege también escrituras simultáneas.
+
+Ejemplo de `POST /api/sizes/query` para ordenar nombres descendentes **dentro** de cada grupo:
+
+```json
+{ "o": { "column": "name", "direction": "desc" } }
+```
+
+Los grupos siguen A-Z. Para volver al orden de presentación, omite `o` o envía
+`{ "o": { "column": "sortOrder", "direction": "asc" } }`. Los formatos existentes
+`column/direction` y `field/type` siguen aceptándose en GET y POST. `sizeGroup` es
+un nombre de respuesta, no una columna ordenable; `idSizeGroup` no cambia la prioridad
+fija por nombre de grupo.
+
+La integración del grid, el manejo de errores y la actualización de cachés se
+detallan en [Entrega para frontend: validación y ordenamiento de tallas](entrega-validacion-orden-tallas-frontend.md).
+
+**Despliegue:** la migración `2026_11_27_000001_add_unique_name_per_group_to_sizes`
+comprueba los datos antes de crear el índice `(id_size_group, name)`. Si encuentra
+duplicados, se detiene mostrando grupo, nombre e IDs; no renombra, fusiona ni elimina
+registros. Resolver esos conflictos explícitamente, considerando sus variantes e
+inventario asociados, y volver a ejecutar `php artisan migrate --force`. El rollback
+de esta migración retira únicamente el índice.
 
 Crear una talla también crea, con stock cero, la variante de esa talla para cada
 producto del grupo y cada color ya presente en sus variantes. Se incluyen productos,

@@ -11,15 +11,18 @@ use App\Models\Size;
 use App\Services\Concerns\AppliesGridConditions;
 use App\Support\Audit;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Validation\ValidationException;
 
 class SizeService
 {
     use AppliesGridConditions;
 
+    private const DUPLICATE_NAME_MESSAGE = 'Ya existe una talla con este nombre en el grupo.';
+
     public function index(array $filters = []): array|Collection
     {
-        $query = Size::with('sizeGroup');
+        $query = Size::with('sizeGroup')->orderedByGroup();
 
         if (! empty($filters['w'])) {
             if (array_is_list($filters['w'])) {
@@ -37,9 +40,9 @@ class SizeService
 
         if (! empty($filters['o'])) {
             $this->applyGridOrder($query, $filters, 'sizes');
-        } else {
-            $query->orderBy('sort_order');
         }
+
+        $query->orderBy('sizes.sort_order')->orderBy('sizes.id');
 
         $totalCount = isset($filters['totalCount'])
             ? (bool) filter_var($filters['totalCount'], FILTER_VALIDATE_BOOLEAN)
@@ -75,12 +78,15 @@ class SizeService
     public function store(CreateSizeDTO $dto): Size
     {
         return Audit::transaction(function () use ($dto) {
-            $size = Size::create([
+            $this->assertNameAvailable($dto->sizeGroupId, $dto->name);
+
+            $size = new Size([
                 'id_size_group' => $dto->sizeGroupId,
                 'name' => $dto->name,
                 'sort_order' => $dto->sortOrder,
                 'status' => $dto->status,
             ]);
+            $this->saveSize($size);
 
             $initialization = app(VariantInitializationService::class);
             $withoutColors = [];
@@ -96,6 +102,7 @@ class SizeService
                         ->lockForUpdate()->get(['id', 'id_color'])->pluck('id_color')->unique();
                     if ($colorIds->isEmpty()) {
                         $withoutColors[] = $product->id;
+
                         continue;
                     }
                     foreach (Color::whereIn('id', $colorIds)->orderBy('id')->get() as $color) {
@@ -120,6 +127,12 @@ class SizeService
                 return null;
             }
 
+            $this->assertNameAvailable(
+                $dto->sizeGroupId ?? (int) $size->id_size_group,
+                $dto->name ?? $size->name,
+                $size->id,
+            );
+
             if ($dto->sizeGroupId !== null && (int) $size->id_size_group !== $dto->sizeGroupId) {
                 $productIds = ProductVariant::where('id_size', $size->id)->distinct()->pluck('id_product');
                 $products = Product::whereIn('id', $productIds)->orderBy('id')->lockForUpdate()->get();
@@ -137,7 +150,8 @@ class SizeService
                 'status' => $dto->status,
             ], fn ($v) => $v !== null);
 
-            $size->update($fields);
+            $size->fill($fields);
+            $this->saveSize($size);
 
             return $size->fresh('sizeGroup');
         });
@@ -156,6 +170,33 @@ class SizeService
 
             return true;
         });
+    }
+
+    private function assertNameAvailable(int $groupId, string $name, ?int $ignoreId = null): void
+    {
+        $duplicate = Size::where('id_size_group', $groupId)->where('name', $name)
+            ->when($ignoreId !== null, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->exists();
+
+        if ($duplicate) {
+            throw ValidationException::withMessages(['name' => self::DUPLICATE_NAME_MESSAGE]);
+        }
+    }
+
+    /** El índice resuelve la carrera entre comprobar disponibilidad y guardar. */
+    private function saveSize(Size $size): void
+    {
+        try {
+            $size->save();
+        } catch (UniqueConstraintViolationException $exception) {
+            // MariaDB reporta el índice; SQLite reporta las columnas.
+            if ($exception->index !== 'sizes_group_name_unique'
+                && $exception->columns !== ['id_size_group', 'name']) {
+                throw $exception;
+            }
+
+            throw ValidationException::withMessages(['name' => self::DUPLICATE_NAME_MESSAGE]);
+        }
     }
 
     /**
